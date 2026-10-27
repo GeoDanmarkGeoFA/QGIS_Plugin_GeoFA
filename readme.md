@@ -1,13 +1,32 @@
-# GeoFA-plugin til QGIS 3
-Et plugin til QGIS 3, der gør det let at tilføje lag fra GeoFA til QGIS.
+# GeoFA-plugin til QGIS
 
-Plugin'et er baseret på <a href="https://github.com/SDFIdk/Qgis-dataforsyningen" target="_blank">dataforsyningens plugin</a> udviklet af <a href="https://dataforsyningen.dk/" target="_blank">Dataforsyningen, Klimadatastyrelsen</a> og <a href="https://septima.dk/" targer="_blank">Septima</a>
+> Et plugin til QGIS 3, der gør det let at tilføje lag fra GeoFA.
 
-## Installation: og vejledning
-Pluginet installeres direkte fra QGIS gennem plugin manager.
+Med pluginet kan du hente GeoFA's temaer direkte ind i QGIS uden selv at skulle opsætte forbindelser til tjenesterne. Det er til kommunale GIS-medarbejdere, konsulenter og alle andre, der arbejder med GeoFA-data i QGIS.
 
-Mere information om pluginet, herunder installation og opsætning, findes i <a href="https://github.com/GeoDanmarkGeoFA/QGIS_GeoFA/blob/main/geofa_plugin/GeoFA_plugin_vejledning.pdf">vejledningen til pluginet</a>
+Pluginet er baseret på [Dataforsyningens plugin](https://github.com/SDFIdk/Qgis-dataforsyningen), udviklet af [Dataforsyningen, Klimadatastyrelsen](https://dataforsyningen.dk/) og [Septima](https://septima.dk/).
 
-## Fejl og forbedringer
-Finder du en fejl i pluginet, må du meget gerne rapportere denne i <a href="https://github.com/GeoDanmarkGeoFA/QGIS_GeoFA/issues">issue tracker</a>.
-Har du forslag til forbedringer af pluginet, må du ligeledes meget gerne beskrive disse i <a href="https://github.com/GeoDanmarkGeoFA/QGIS_GeoFA/issues">issue tracker</a>.
+## Indhold
+
+| Fil / mappe | Hvad er det |
+|---|---|
+| [`geofa_plugin/`](geofa_plugin) | Selve pluginet (kildekode og `metadata.txt`) |
+| [`.github/ISSUE_TEMPLATE/`](.github/ISSUE_TEMPLATE) | Skabeloner til fejlmeldinger og forslag |
+
+## Sådan bruger du det
+
+1. Åbn QGIS og gå til **Plugins → Administrer og installer plugins**.
+2. Søg efter **GeoFA** og klik **Installer**.
+3. Vejledning til opsætning og brug: [geodanmark.dk – GeoFA-vejledninger](https://www.geodanmark.dk/home/vejledninger/geofa/).
+
+## Fejl og forslag
+
+Finder du en fejl, eller har du forslag til forbedringer, så opret et [issue](https://github.com/GeoDanmarkGeoFA/QGIS_Plugin_GeoFA/issues). Du kan også skrive til [geofa@geodanmark.dk](mailto:geofa@geodanmark.dk).
+
+## Licens
+
+GPL-2.0 – se [`LICENSE`](LICENSE).
+
+---
+
+<sub>Del af [GeoDanmarkGeoFA](https://github.com/GeoDanmarkGeoFA) · [Om GeoFA](https://confluence.kds.dk/pages/viewpage.action?pageId=191398876)</sub>
