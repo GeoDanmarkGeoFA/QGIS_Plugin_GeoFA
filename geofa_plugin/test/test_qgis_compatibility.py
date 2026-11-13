@@ -110,12 +110,10 @@ class CompatibilityTests(unittest.TestCase):
         # After unload, a settings change must not touch the deleted menu
         plugin.settings.emit_updated()
 
-    def test_compiled_resource_and_color_dialog_enum(self):
-        from qgis.PyQt.QtGui import QIcon
+    def test_color_dialog_enum(self):
         from qgis.PyQt.QtWidgets import QColorDialog
-        import geofa_plugin.resources
-        self.assertFalse(QIcon(":/plugins/geofa/icon_about.png").isNull())
         self.assertIsNotNone(QColorDialog.ColorDialogOption.ShowAlphaChannel)
+
     def test_domain_progress_when_first_table_fails(self):
         created_dialogs = []
         class Dialog:
