@@ -1,6 +1,6 @@
 # GeoFA-plugin til QGIS
 
-> Et plugin til QGIS 3, der gør det let at tilføje lag fra GeoFA.
+> Et plugin til QGIS 3.34+ og QGIS 4, der gør det let at tilføje lag fra GeoFA.
 
 Med pluginet kan du hente GeoFA's temaer direkte ind i QGIS uden selv at skulle opsætte forbindelser til tjenesterne. Det er til kommunale GIS-medarbejdere, konsulenter og alle andre, der arbejder med GeoFA-data i QGIS.
 
@@ -18,6 +18,18 @@ Pluginet er baseret på [Dataforsyningens plugin](https://github.com/SDFIdk/Qgis
 1. Åbn QGIS og gå til **Plugins → Administrer og installer plugins**.
 2. Søg efter **GeoFA** og klik **Installer**.
 3. Vejledning til opsætning og brug: [geodanmark.dk – GeoFA-vejledninger](https://www.geodanmark.dk/home/vejledninger/geofa/).
+
+## Udvikling
+
+Testene kører uden netværk i en midlertidig QGIS-profil. Kør dem fra repoets rod med OSGeo4W:
+
+```
+python-qgis.bat -m unittest geofa_plugin.test.test_qgis_compatibility
+```
+
+Brug `python-qgis-ltr.bat` for at teste i QGIS LTR.
+
+**Ny version:** opdatér `version` og `changelog` i `metadata.txt`. ZIP-filen til plugins.qgis.org skal indeholde mappen `geofa/` med indholdet af `geofa_plugin/`, men uden `test/`, `Vejledning/` og `.env`.
 
 ## Fejl og forslag
 

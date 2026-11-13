@@ -4,3 +4,10 @@ symbol_opsætning.qgz
 # Local credentials - never commit
 .env
 **/.env
+
+# Build output and editor/Python files
+zip_build/
+*.zip
+.idea/
+__pycache__/
+*.pyc
