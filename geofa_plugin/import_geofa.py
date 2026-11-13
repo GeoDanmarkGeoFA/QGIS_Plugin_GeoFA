@@ -2,7 +2,7 @@ from qgis.core import QgsVectorLayer, QgsProject, QgsDataSourceUri, Qgis, QgsMap
 import os
 import os.path
 from qgis.utils import iface
-from PyQt5.QtWidgets import QProgressDialog, QProgressBar, QApplication
+from qgis.PyQt.QtWidgets import QProgressDialog, QProgressBar, QApplication
 class import_geofa:
 
     @staticmethod
@@ -93,6 +93,8 @@ class import_geofa:
         # Get all layers
         layers = [layer.name() for layer in QgsProject.instance().mapLayers().values()]
 
+        dialog = None
+
         # Add missing layers
         for idx, d_table in enumerate(d_tables):
 
@@ -120,8 +122,8 @@ class import_geofa:
                             # Update layer
                             layer.setDataSource(url, d_table, "ogr")
 
-                            # if idx is 0 create and show progress dialog
-                            if idx == 0:
+                            # Create the progress dialog when the first table is processed
+                            if dialog is None:
                                 # Create progress bar
                                 dialog = QProgressDialog()
                                 bar = QProgressBar(dialog)
@@ -139,9 +141,6 @@ class import_geofa:
                             # Process other events to update UI
                             QApplication.processEvents()
 
-                            # if idx is the last layer close progress dialog
-                            if idx == len(d_tables) - 1:
-                                dialog.close()
 
                 else:
                     # Create layer
@@ -150,14 +149,14 @@ class import_geofa:
                     # Set layer properties
                     # https://gis.stackexchange.com/questions/318506/setting-layer-identifiable-seachable-and-removable-with-python-in-qgis-3
                     dlayer.setFlags(
-                    QgsMapLayer.LayerFlag(QgsMapLayer.Private + QgsMapLayer.Removable + QgsMapLayer.Searchable))
+                    (QgsMapLayer.LayerFlag.Private | QgsMapLayer.LayerFlag.Removable | QgsMapLayer.LayerFlag.Searchable))
 
                     # Check if the layer was loaded successfully
                     if dlayer.isValid():
                         QgsProject.instance().addMapLayer(dlayer)
 
-                        # if idx is 0 create and show progress dialog
-                        if idx == 0:
+                        # Create the progress dialog when the first table is processed
+                        if dialog is None:
                             # Create progress bar
                             dialog = QProgressDialog()
                             bar = QProgressBar(dialog)
@@ -175,16 +174,13 @@ class import_geofa:
                         # Process other events to update UI
                         QApplication.processEvents()
 
-                        # if idx is the last layer close progress dialog
-                        if idx == len(d_tables) - 1:
-                            dialog.close()
 
 
                     else:
-                        iface.messageBar().pushMessage("Error", f'{dlayer.name()} could not be loaded.', level=Qgis.Critical)
+                        iface.messageBar().pushMessage("Error", f'{dlayer.name()} could not be loaded.', level=Qgis.MessageLevel.Critical)
 
-                        if idx > 0:
-                            dialog.close()
+        if dialog is not None:
+            dialog.close()
 
     def create_geofa_layer(self, layer_name, typename, plugin_path, update=False, ):
         """Create a layer from WFS service."""
@@ -292,9 +288,9 @@ class import_geofa:
                     # Refresh the map view
                     iface.mapCanvas().refresh()
                 else:
-                    iface.messageBar().pushMessage("Error", f'{layer_name} could not be loaded.',level=Qgis.Critical)
+                    iface.messageBar().pushMessage("Error", f'{layer_name} could not be loaded.',level=Qgis.MessageLevel.Critical)
         else:
-            iface.messageBar().pushMessage("Info", f'{layer_name} already exists.', level=Qgis.Info, duration=5)
+            iface.messageBar().pushMessage("Info", f'{layer_name} already exists.', level=Qgis.MessageLevel.Info, duration=5)
 
         if run_update_flag:
-            iface.messageBar().pushMessage("Info", f'GeoFA lag opdateret.', level=Qgis.Info, duration=15)
+            iface.messageBar().pushMessage("Info", f'GeoFA lag opdateret.', level=Qgis.MessageLevel.Info, duration=15)

@@ -23,19 +23,25 @@
 """
 from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication
 from qgis.PyQt.QtGui import QIcon
-from qgis.PyQt.QtWidgets import QAction, QMenu
+from qgis.PyQt.QtWidgets import QMenu
+try:
+    from qgis.PyQt.QtGui import QAction
+except ImportError:
+    from qgis.PyQt.QtWidgets import QAction
 import os
 import os.path
 from .config import Settings, OptionsFactory
-from PyQt5.QtGui import QDesktopServices
+from qgis.PyQt.QtGui import QDesktopServices
 from qgis.PyQt.QtCore import QUrl
 from .layerlocatorfilter import LayerLocatorFilter
 from .import_geofa import import_geofa
-import webbrowser
 from qgis.core import QgsProject, QgsExpressionContextUtils
 
 OM_GEOFA_URL = (
         "https://www.geodanmark.dk/home/vejledninger/geofa/"
+)
+VEJLEDNING_URL = (
+        "https://github.com/GeoDanmarkGeoFA/QGIS_Plugin_GeoFA/blob/main/geofa_plugin/GeoFA_plugin_vejledning.md"
 )
 
 class GeoFA:
@@ -175,6 +181,8 @@ class GeoFA:
         """Create the menu entries and toolbar icons inside the QGIS GUI."""
 
         self.menu = QMenu("&GeoFA", self.iface.mainWindow().menuBar())
+        self.update_environment_label()
+        self.settings.settings_updated.connect(self.update_environment_label)
         actions = self.iface.mainWindow().menuBar().actions()
         self.iface.mainWindow().menuBar().insertMenu(self.iface.firstRightStandardMenu().menuAction(), self.menu)
 
@@ -183,7 +191,8 @@ class GeoFA:
         for main_menu, submenus in menu_items.items():
             menu = self.menu.addMenu(main_menu)
             for submenu in submenus:
-                q_action = menu.addAction(submenu, lambda submenu=submenu: self.run_action(submenu, self.plugin_dir))
+                q_action = menu.addAction(submenu)
+                q_action.triggered.connect(lambda checked=False, submenu=submenu: self.run_action(submenu, self.plugin_dir))
                 searchable_layers.append(
                     {
                         "title": submenu,
@@ -205,8 +214,15 @@ class GeoFA:
         icon_path_manual = os.path.join(os.path.dirname(__file__), "manual_icon.png")
         self.manual_menu = QAction(QIcon(icon_path_manual), self.tr("Vejledning"), self.iface.mainWindow(),)
         self.manual_menu.setObjectName(self.tr("Vejledning"))
-        self.manual_menu.triggered.connect(self.open_pdf_manual)
+        self.manual_menu.triggered.connect(self.open_manual)
         self.menu.addAction(self.manual_menu)
+
+    def update_environment_label(self):
+        # Production is the normal case, so only the test environment is marked
+        title = self.tr("&GeoFA")
+        if self.settings.value("testmiljo"):
+            title += " — TESTMILJØ"
+        self.menu.setTitle(title)
 
     def run_action(self, submenu, plugin_path):
         self.readconfig()
@@ -215,9 +231,9 @@ class GeoFA:
     def about_dialog(self):
         QDesktopServices.openUrl(QUrl(OM_GEOFA_URL))
 
-    def open_pdf_manual(self):
-        # Open pdf manual
-        webbrowser.open_new(os.path.join(self.plugin_dir, "GeoFA_plugin_vejledning.pdf"))
+    def open_manual(self):
+        # The manual is maintained as Markdown on GitHub
+        QDesktopServices.openUrl(QUrl(VEJLEDNING_URL))
 
     def readconfig(self):
         settings = Settings()  # new config
@@ -230,4 +246,13 @@ class GeoFA:
         QgsExpressionContextUtils.setProjectVariable(QgsProject.instance(), 'geofa_bruger_id', self.username)
 
     def unload(self):
+        # Undo everything registered in __init__/initGui, so a plugin reload or update
+        # does not leave a second options page, a second locator filter, or a settings
+        # signal pointing at this (deleted) menu.
+        try:
+            self.settings.settings_updated.disconnect(self.update_environment_label)
+        except (TypeError, RuntimeError):
+            pass
+        self.iface.unregisterOptionsWidgetFactory(self.options_factory)
+        self.iface.deregisterLocatorFilter(self.layer_locator_filter)
         self.menu.deleteLater()

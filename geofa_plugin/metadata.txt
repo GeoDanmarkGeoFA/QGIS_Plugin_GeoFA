@@ -4,8 +4,8 @@
 
 [general]
 name=GeoFA
-qgisMinimumVersion=3.00
-qgisMaximumVersion=3.99
+qgisMinimumVersion=3.34
+qgisMaximumVersion=4.99
 description=Gratis og let adgang til GeoFA (Geografiske Fagdata i GeoDanmark) i QGIS. <br>
 
 	Free and easy access to GeoFA (Geographical Professional Data in GeoDanmark) in QGIS.
@@ -41,8 +41,8 @@ about=See english version below.
 	
 	This plugin is developed by <a href="https://geopartner.dk/" target="_blank">Geopartner</a> and <a href="https://www.geodanmark.dk/home/vejledninger/geofa/" targer="_blank">GeoDanmark</a>.
 
-tracker=https://github.com/GeoDanmarkGeoFA/QGIS_GeoFA/issues
-repository=https://github.com/GeoDanmarkGeoFA/QGIS_GeoFA
+tracker=https://github.com/GeoDanmarkGeoFA/QGIS_Plugin_GeoFA/issues
+repository=https://github.com/GeoDanmarkGeoFA/QGIS_Plugin_GeoFA
 # End of mandatory metadata
 
 # Recommended items:

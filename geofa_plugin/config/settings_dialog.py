@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 import os
-from PyQt5 import QtGui, uic
-from PyQt5.QtWidgets import QFileDialog
+from qgis.PyQt import QtGui, uic
+from qgis.PyQt.QtWidgets import QFileDialog
 from qgis.gui import (QgsOptionsPageWidget)
 from qgis.core import QgsProject
 from qgis.PyQt.QtWidgets import QVBoxLayout, QLineEdit, QCheckBox, QPushButton
-from qgis.PyQt.QtGui import QRegExpValidator
-from qgis.PyQt.QtCore import QRegExp, Qt
 from .qgissettingmanager import *
 from ..import_geofa import import_geofa
 from qgis.core import QgsProject, QgsExpressionContextUtils
@@ -24,7 +22,6 @@ class ConfigOptionsPage(QgsOptionsPageWidget):
         self.config_widget = ConfigDialog(self.settings)
         layout = QVBoxLayout()
         layout.setContentsMargins(0, 0, 0, 0)
-        layout.setMargin(0)
         self.setLayout(layout)
         layout.addWidget(self.config_widget)
         self.setObjectName('geofaOptions')
@@ -55,11 +52,11 @@ class ConfigOptionsPage(QgsOptionsPageWidget):
 
     def show_password(self):
         # Temporarily set the echo mode of the password edit to "Normal" (plain text)
-        self.password_edit.setEchoMode(QLineEdit.Normal)
+        self.password_edit.setEchoMode(QLineEdit.EchoMode.Normal)
 
     def hide_password(self):
         # Reset the echo mode of the password edit to "Password" (masked input)
-        self.password_edit.setEchoMode(QLineEdit.Password)
+        self.password_edit.setEchoMode(QLineEdit.EchoMode.Password)
 
     def on_text_changed(self):
         # Enable or disable the checkbox based on the content of the QLineEdits
