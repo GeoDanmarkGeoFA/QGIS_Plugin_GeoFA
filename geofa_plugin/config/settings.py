@@ -12,7 +12,7 @@ class Settings(SettingManager):
 
         # The order here is the order results are displayed in
         self.add_setting(String('username', Scope.Global, ''))
-        self.add_setting(String('password', Scope.Global, ''))
+        # The password is not a setting: it lives in QGIS's password store (see credentials.py)
         self.add_setting(Bool('wfst', Scope.Global, False))
         self.add_setting(Bool('testmiljo', Scope.Global, False))
 

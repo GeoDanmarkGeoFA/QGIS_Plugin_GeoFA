@@ -3,6 +3,9 @@ import os
 import os.path
 from qgis.utils import iface
 from qgis.PyQt.QtWidgets import QProgressDialog, QProgressBar, QApplication
+from . import credentials
+
+
 class import_geofa:
 
     @staticmethod
@@ -217,9 +220,16 @@ class import_geofa:
 
             # Create connection string
             if self.wfst:
+                # The login comes from QGIS's password store, never from the layer source
+                if not credentials.ensure_login(self.username):
+                    iface.messageBar().pushMessage(
+                        "GeoFA",
+                        "Der er ikke gemt et GeoFA-login. Indtast brugernavn og kode under "
+                        "Indstillinger › Indstillinger › GeoFA for at kunne editere.",
+                        level=Qgis.MessageLevel.Warning, duration=15)
+                    return
 
-                connection_string = f"user={self.username}@fkg " \
-                                    f"password={self.password} " \
+                connection_string = f"authcfg={credentials.AUTHCFG_ID} " \
                                     f"pagingEnabled={pagingEnabled} " \
                                     f"preferCoordinatesForWfsT11={preferCoordinatesForWfsT11} " \
                                     f"restrictToRequestBBOX={restrictToRequestBBOX} " \

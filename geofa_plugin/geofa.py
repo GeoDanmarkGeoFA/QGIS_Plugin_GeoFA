@@ -21,9 +21,9 @@
  *                                                                         *
  ***************************************************************************/
 """
-from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication
+from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication, QTimer
 from qgis.PyQt.QtGui import QIcon
-from qgis.PyQt.QtWidgets import QMenu
+from qgis.PyQt.QtWidgets import QMenu, QMessageBox
 try:
     from qgis.PyQt.QtGui import QAction
 except ImportError:
@@ -31,11 +31,13 @@ except ImportError:
 import os
 import os.path
 from .config import Settings, OptionsFactory
+from .config.settings_dialog import OPTIONS_PAGE_NAME
 from qgis.PyQt.QtGui import QDesktopServices
 from qgis.PyQt.QtCore import QUrl
 from .layerlocatorfilter import LayerLocatorFilter
 from .import_geofa import import_geofa
-from qgis.core import QgsProject, QgsExpressionContextUtils
+from . import credentials
+from qgis.core import QgsProject, QgsExpressionContextUtils, Qgis
 
 OM_GEOFA_URL = (
         "https://www.geodanmark.dk/home/vejledninger/geofa/"
@@ -79,6 +81,7 @@ class GeoFA:
 
         # Declare instance attributes
         self.actions = []
+        self.login_sources = {}  # GeoFA layers in the open project that need the stored login
         self.menu = self.tr(u'&GeoFA')
 
         self.layer_locator_filter = LayerLocatorFilter()
@@ -182,7 +185,8 @@ class GeoFA:
 
         self.menu = QMenu("&GeoFA", self.iface.mainWindow().menuBar())
         self.update_environment_label()
-        self.settings.settings_updated.connect(self.update_environment_label)
+        for signal, slot in self.signal_connections():
+            signal.connect(slot)
         actions = self.iface.mainWindow().menuBar().actions()
         self.iface.mainWindow().menuBar().insertMenu(self.iface.firstRightStandardMenu().menuAction(), self.menu)
 
@@ -235,24 +239,146 @@ class GeoFA:
         # The manual is maintained as Markdown on GitHub
         QDesktopServices.openUrl(QUrl(VEJLEDNING_URL))
 
+    def secure_project_layers(self, *args):
+        """Replace plain-text passwords in GeoFA layers (saved by older versions) with the stored login."""
+        project = QgsProject.instance()
+        updates = []
+        for layer in project.mapLayers().values():
+            if layer.providerType() == "WFS" and "geodanmark.dk" in layer.source():
+                source = credentials.secure_layer_source(layer.source())
+                if source:
+                    updates.append((layer, source))
+        if not updates:
+            return
+        self.readconfig()
+        if not credentials.ensure_login(self.username):
+            # No login of our own yet; leave the layers so the project still opens as before
+            return
+        for layer, source in updates:
+            layer.setDataSource(source, layer.name(), "WFS")
+        project.setDirty(True)
+        self.iface.messageBar().pushMessage(
+            "GeoFA",
+            "Koden er fjernet fra projektets GeoFA-lag. Gem projektet for at fjerne den fra filen.",
+            level=Qgis.MessageLevel.Info, duration=15)
+
+    @staticmethod
+    def project_login_sources(document=None):
+        """{layer id: source} for the project's GeoFA layers that use the stored login.
+
+        Read from the project file when QGIS passes it: if the user cancels QGIS's master
+        password prompt, QGIS keeps such layers but empties their source.
+        """
+        sources = {}
+        if hasattr(document, "elementsByTagName"):
+            nodes = document.elementsByTagName("maplayer")
+            for i in range(nodes.count()):
+                element = nodes.at(i).toElement()
+                source = element.firstChildElement("datasource").text()
+                if credentials.uses_login(source):
+                    sources[element.firstChildElement("id").text()] = source
+        else:
+            for layer_id, layer in QgsProject.instance().mapLayers().items():
+                if credentials.uses_login(layer.source()):
+                    sources[layer_id] = layer.source()
+        return sources
+
+    def check_project_login(self, document=None, *args):
+        """A project with editable GeoFA layers (e.g. shared by a colleague) needs a login of
+        our own. Without one the layers cannot load, so say why and offer to enter it."""
+        self.login_sources = self.project_login_sources(document)
+        count = len(self.login_sources)
+        if not count or credentials.ensure_login(self.settings.value('username')):
+            return
+        # Let QGIS finish opening the project before showing a dialog
+        QTimer.singleShot(0, lambda: self.ask_for_login(count))
+
+    def ask_for_login(self, count):
+        if self.confirm_enter_login(count):
+            self.open_settings()
+        if not credentials.has_login():
+            self.iface.messageBar().pushMessage(
+                "GeoFA",
+                f"{count} GeoFA-lag kan ikke vises uden et GeoFA-login. "
+                "Indtast dit login under Indstillinger › Indstillinger › GeoFA.",
+                level=Qgis.MessageLevel.Warning, duration=15)
+
+    def confirm_enter_login(self, count):
+        box = QMessageBox(self.iface.mainWindow())
+        box.setIcon(QMessageBox.Icon.Warning)
+        box.setWindowTitle("GeoFA")
+        box.setText(f"Projektet har {count} GeoFA-lag, der kræver et GeoFA-login, "
+                    "men der er ikke gemt et login i QGIS.")
+        box.setInformativeText("Indtast dit eget brugernavn og din kode, og sæt hak i "
+                               "»WFS-T (muligt at editere)«. Så indlæses lagene.")
+        enter = box.addButton("Indtast login", QMessageBox.ButtonRole.AcceptRole)
+        box.addButton("Ikke nu", QMessageBox.ButtonRole.RejectRole)
+        box.exec()
+        return box.clickedButton() == enter
+
+    def open_settings(self):
+        self.iface.showOptionsDialog(self.iface.mainWindow(), OPTIONS_PAGE_NAME)
+
+    def reload_login_layers(self):
+        """Once a login is stored, load the GeoFA layers that were waiting for it."""
+        if not credentials.has_login():
+            return
+        project = QgsProject.instance()
+        found = {layer_id: project.mapLayer(layer_id) for layer_id in self.login_sources}
+        # If QGIS's master password prompt was cancelled while the project opened, QGIS
+        # replaced these layers with empty placeholders; only reopening the project helps
+        missing = [layer_id for layer_id, layer in found.items() if layer is None]
+        waiting = [(found[layer_id], source) for layer_id, source in self.login_sources.items()
+                   if found[layer_id] is not None and not found[layer_id].isValid()]
+        for layer, source in waiting:
+            layer.setDataSource(source, layer.name(), layer.providerType() or "WFS")
+        # Keep only what may still load on a later try (e.g. after a corrected login)
+        self.login_sources = {layer_id: source for layer_id, source in self.login_sources.items()
+                              if found[layer_id] is not None and not found[layer_id].isValid()}
+        if waiting:
+            self.iface.mapCanvas().refresh()
+            if self.login_sources:
+                self.iface.messageBar().pushMessage(
+                    "GeoFA",
+                    f"{len(self.login_sources)} af {len(waiting)} GeoFA-lag kunne stadig ikke "
+                    "indlæses med dit login.",
+                    level=Qgis.MessageLevel.Warning, duration=15)
+            else:
+                self.iface.messageBar().pushMessage(
+                    "GeoFA", "GeoFA-lagene er indlæst med dit login.",
+                    level=Qgis.MessageLevel.Success, duration=10)
+        if missing:
+            self.iface.messageBar().pushMessage(
+                "GeoFA",
+                f"Dit login er gemt. Åbn projektet igen for at indlæse {len(missing)} GeoFA-lag.",
+                level=Qgis.MessageLevel.Info, duration=0)
+
     def readconfig(self):
         settings = Settings()  # new config
         self.username = settings.value('username')
-        self.password = settings.value('password')
         self.wfst = settings.value('wfst')
         self.testmiljo = settings.value('testmiljo')
 
         # Set project variables
         QgsExpressionContextUtils.setProjectVariable(QgsProject.instance(), 'geofa_bruger_id', self.username)
 
+    def signal_connections(self):
+        return [
+            (self.settings.settings_updated, self.update_environment_label),
+            (self.settings.settings_updated, self.reload_login_layers),
+            (QgsProject.instance().readProject, self.secure_project_layers),
+            (QgsProject.instance().readProject, self.check_project_login),
+        ]
+
     def unload(self):
         # Undo everything registered in __init__/initGui, so a plugin reload or update
         # does not leave a second options page, a second locator filter, or a settings
         # signal pointing at this (deleted) menu.
-        try:
-            self.settings.settings_updated.disconnect(self.update_environment_label)
-        except (TypeError, RuntimeError):
-            pass
+        for signal, slot in self.signal_connections():
+            try:
+                signal.disconnect(slot)
+            except (TypeError, RuntimeError):
+                pass
         self.iface.unregisterOptionsWidgetFactory(self.options_factory)
         self.iface.deregisterLocatorFilter(self.layer_locator_filter)
         self.menu.deleteLater()

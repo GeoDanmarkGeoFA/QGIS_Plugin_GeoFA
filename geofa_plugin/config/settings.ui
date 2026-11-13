@@ -157,18 +157,6 @@
               </layout>
              </item>
              <item>
-              <widget class="QLabel" name="label">
-               <property name="font">
-                <font>
-                 <pointsize>7</pointsize>
-                </font>
-               </property>
-               <property name="text">
-                <string>Hvis brugernavn og adgangskode ændres så skal QGIS genstartes</string>
-               </property>
-              </widget>
-             </item>
-             <item>
               <widget class="QCheckBox" name="wfst">
                <property name="enabled">
                 <bool>true</bool>
