@@ -23,13 +23,13 @@ class LayerLocatorFilter(QgsLocatorFilter):
         return self.tr("GeoFA")
 
     def priority(self):
-        return QgsLocatorFilter.Low
+        return QgsLocatorFilter.Priority.Low
 
     def prefix(self):
         return "geofa"
 
     def flags(self):
-        return QgsLocatorFilter.FlagFast
+        return QgsLocatorFilter.Flag.FlagFast
 
     def fetchResults(self, query, context, feedback):
         matching_layers = self.data.get_matching_layers(query)
@@ -44,7 +44,7 @@ class LayerLocatorFilter(QgsLocatorFilter):
 
     def triggerResult(self, result):
         action = self.data.get_action(result.userData)
-        action.activate(0)
+        action.trigger()
 
 
 class LayerLocatorFilterData:
