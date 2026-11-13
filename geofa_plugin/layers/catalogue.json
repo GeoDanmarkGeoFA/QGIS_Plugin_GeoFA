@@ -1,0 +1,873 @@
+{
+ "source": {
+  "spec_commit": "unknown",
+  "webmap": "geofa-kort.geodanmark.dk (tag:udgivet)"
+ },
+ "groups": [
+  {
+   "name": "Administration",
+   "datasets": [
+    {
+     "table": "t_5711_and_dis",
+     "code": "5711",
+     "title": "Andre distrikter (5711)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_5711_and_dis.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353541",
+     "purpose": "Vise hvor grænserne går mellem distrikterne og kunne benytte dem til analysegrundlag til at servicere automatiske stedbestemte forespørgsler. På denne måde kan der foretages opslag og borgere/forvaltninger kan få information om borgers tilhørsforhold på grundlag af f.eks. en adresse."
+    },
+    {
+     "table": "t_5710_born_skole_dis",
+     "code": "5710",
+     "title": "Børne- og skoledistrikter (5710)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_5710_born_skole_dis.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353539",
+     "purpose": "Vise hvor grænserne går i børne- og skoledistrikterne og kunne benytte dem til analysegrundlag."
+    },
+    {
+     "table": "t_5715_botilbud",
+     "code": "5715",
+     "title": "Botilbud (5715)",
+     "geometry": "MultiPoint",
+     "style": "styles/t_5715_botilbud.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353585",
+     "purpose": "Oplyse sagsbehandler og borger via selvbetjeningsløsninger, hvilken institutioner der ligger i lokalområdet. Evt. også nærmeste Plejecenter m.v."
+    },
+    {
+     "table": "t_5705_forp_are",
+     "code": "5705",
+     "title": "Forpagtningsareal (5705)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_5705_forp_are.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353582",
+     "purpose": "Skabe overblik over hvad de kommunale ejendomme er udlejet til og hvor længe."
+    },
+    {
+     "table": "t_5700_grundej",
+     "code": "5700",
+     "title": "Grundejerforeninger/Vejlav (5700)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_5700_grundej.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353580",
+     "purpose": "Registreringen gøres for at lettere/automatisk at kunne kontakte grundejerforeningen ved bl.a. nabo-/partshøring. Og for at kunne danne sig et billede af grundejerforeningens geografiske område"
+    },
+    {
+     "table": "t_5707_grunds",
+     "code": "5707",
+     "title": "Grundsalg (5707)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_5707_grunds.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353578",
+     "purpose": "Oplyse borger via selvbetjeningsløsninger, hvor der ligger byggegrunde og evt. andre kommuneejendommer der er sat til salg i lokalområdet."
+    },
+    {
+     "table": "t_5706_havn_are",
+     "code": "5706",
+     "title": "Havneareal (5706)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_5706_havn_are.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353576",
+     "purpose": "Oplyse sagsbehandler og borger via selvbetjeningsløsninger, om hvem der administrerer et givent havneareal. Til brug for høringer i forbindelse med planforslag mv."
+    },
+    {
+     "table": "t_5717_hoeringspart",
+     "code": "5717",
+     "title": "Høringspart (5717)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_5717_hoeringspart.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353574",
+     "purpose": "Registreringen understøtter kommunens udsendelse af høringer og opgaver ift. overholdelse af Århus-konventionen, som giver foreninger og organisationer ret til at blive hørt inden for et givet geografisk område, hvor foreningen har en miljømæssig interesse\nRegistreringen gøres for lettere/automatisk at kunne kontakte foreningen ved bl.a. inddragelse og høring."
+    },
+    {
+     "table": "t_5701_lok_omr",
+     "code": "5701",
+     "title": "Lokaludvalgsområde (5701)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_5701_lok_omr.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353572",
+     "purpose": "Oplyse sagsbehandler og borger via selvbetjeningsløsninger, hvilket lokalråd/-udvalg de dækker deres by/bydel m.v."
+    },
+    {
+     "table": "t_5712_plej_aeldr_dis",
+     "code": "5712",
+     "title": "Pleje- og ældredistrikter (5712)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_5712_plej_aeldr_dis.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353537",
+     "purpose": "Vise hvor grænserne går i plejedistrikterne og kunne benytte dem til analysegrundlag."
+    },
+    {
+     "table": "t_5713_prog_stat_dis",
+     "code": "5713",
+     "title": "Prognose- og statistik distrikter (5713)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_5713_prog_stat_dis.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353535",
+     "purpose": "Vise hvor grænserne går i prognosedistrikterne og kunne benytte dem til analysegrundlag."
+    },
+    {
+     "table": "t_5716_servicetilbud",
+     "code": "5716",
+     "title": "Servicetilbud (5716)",
+     "geometry": "MultiPoint",
+     "style": "styles/t_5716_servicetilbud.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353570",
+     "purpose": "Oplyse sagsbehandler og borger via selvbetjeningsløsninger, hvilken institutioner der ligger i lokalområdet. Evt. også nærmeste borgerservice m.v."
+    },
+    {
+     "table": "t_5702_skorst_fej",
+     "code": "5702",
+     "title": "Skorstensfejerdistrikt (5702)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_5702_skorst_fej.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353568",
+     "purpose": "Oplyse sagsbehandler og borger via selvbetjeningsløsninger, hvilken skorstensfejer som dækker deres bolig/adresse."
+    }
+   ]
+  },
+  {
+   "name": "Affald og genbrug",
+   "datasets": [
+    {
+     "table": "t_5400_affalds_dis",
+     "code": "5400",
+     "title": "Affaldsområde (5400)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_5400_affalds_dis.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213355194",
+     "purpose": ""
+    },
+    {
+     "table": "t_5402_genbr_con",
+     "code": "5402",
+     "title": "Container (5402)",
+     "geometry": "MultiPoint",
+     "style": "styles/t_5402_genbr_con.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213355188",
+     "purpose": "Oplys borger via selvbenoglegsløsninger om nærmeste container."
+    },
+    {
+     "table": "t_5401_genbr_st",
+     "code": "5401",
+     "title": "Genbrugsplads (5401)",
+     "geometry": "MultiPoint",
+     "style": "styles/t_5401_genbr_st.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213355191",
+     "purpose": "Oplys borger via selvbetjeningslønogler om nærmeste genbrugsplads."
+    }
+   ]
+  },
+  {
+   "name": "Beredskab",
+   "datasets": [
+    {
+     "table": "t_6122_beskyt_rum_eftersyn",
+     "code": "6122",
+     "title": "Beskyttelsesrum (eftersyn) (6122)",
+     "geometry": "MultiPoint",
+     "style": "styles/t_6122_beskyt_rum_eftersyn.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=223379825",
+     "purpose": "Formålet med temaet er at foretage eftersyn og registrere de tilhørende observationer for at kortlægge både kapaciteten og den aktuelle stand af betondækningsgrave."
+    }
+   ]
+  },
+  {
+   "name": "Forsyning",
+   "datasets": [
+    {
+     "table": "t_5506_spildev_pl_pkt",
+     "code": "5506",
+     "title": "Spildevandsplanpunkter (5506)",
+     "geometry": "MultiPoint",
+     "style": "styles/t_5506_spildev_pl_pkt.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213355166",
+     "purpose": "Vise de tekniske anlæg der hører under en spildevandsplan."
+    }
+   ]
+  },
+  {
+   "name": "Jord og råstoffer",
+   "datasets": [
+    {
+     "table": "t_5902_jordv_anl",
+     "code": "5902",
+     "title": "Jordvarmeanlæg (5902)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_5902_jordv_anl.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213355243",
+     "purpose": "Oplyse sagsbehandler og borger via selvbetjeningsløsninger, hvor der er et nedgravet jordvarmeanlæg når der skal søges om f.eks. \nvandindvindingstilladelse. Forvaltningsopgaver i forhold til opretholdelse afstandskrav – også på tværs af kommuner."
+    }
+   ]
+  },
+  {
+   "name": "Landbrug",
+   "datasets": [
+    {
+     "table": "t_5300_genopd_ret",
+     "code": "5300",
+     "title": "Genopdyrkningsret (5300)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_5300_genopd_ret.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353522",
+     "purpose": "noglerere hvor der er anmeldt ret til genopdyrkning."
+    }
+   ]
+  },
+  {
+   "name": "Natur",
+   "datasets": [
+    {
+     "table": "t_5104_art_invas",
+     "code": "5104",
+     "title": "Arter Invasive Flade (5104)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_5104_art_invas.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353508",
+     "purpose": "http://www.skovognatur.dk/DyrOgPlanter/Formaal"
+    },
+    {
+     "table": "t_5107_art_invas_p",
+     "code": "5107",
+     "title": "Arter Invasive Punkt (5107)",
+     "geometry": "MultiPoint",
+     "style": "styles/t_5107_art_invas_p.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353503",
+     "purpose": "http://www.skovognatur.dk/DyrOgPlant"
+    },
+    {
+     "table": "t_5106_nat_pl",
+     "code": "5106",
+     "title": "Naturpleje (5106)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_5106_nat_pl.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353499",
+     "purpose": "Driftdatabase m.h.t. NBL §-3 beskyttede arealer eller lokaliteter, som kommunnogle under vedligeholdende pleje."
+    }
+   ]
+  },
+  {
+   "name": "Miljø",
+   "datasets": [
+    {
+     "table": "t_5200_aff_prod_udbr",
+     "code": "5200",
+     "title": "Affaldsprodukter og udbringning (5200)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_5200_aff_prod_udbr.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=216596483",
+     "purpose": "Kontrol af, at der ikke bliver kørt slam ud på samme areal for ofte. Overblik over seneste tilladte udkørsel"
+    }
+   ]
+  },
+  {
+   "name": "Overfladevand",
+   "datasets": [
+    {
+     "table": "t_5012_afloebsledning",
+     "code": "5012",
+     "title": "Afløbsledning (5012)",
+     "geometry": "MultiLineString",
+     "style": "styles/t_5012_afloebsledning.qml",
+     "spec": "pending",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861293",
+     "purpose": ""
+    },
+    {
+     "table": "t_5013_afvandingskanal",
+     "code": "5013",
+     "title": "Afvandingskanal (5013)",
+     "geometry": "MultiLineString",
+     "style": "styles/t_5013_afvandingskanal.qml",
+     "spec": "pending",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861295",
+     "purpose": ""
+    },
+    {
+     "table": "t_5014_bassin",
+     "code": "5014",
+     "title": "Bassin (5014)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_5014_bassin.qml",
+     "spec": "pending",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861297",
+     "purpose": ""
+    },
+    {
+     "table": "t_5015_begraenser",
+     "code": "5015",
+     "title": "Begrænser (5015)",
+     "geometry": "MultiPoint",
+     "style": "styles/t_5015_begraenser.qml",
+     "spec": "pending",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861299",
+     "purpose": ""
+    },
+    {
+     "table": "t_5016_broend",
+     "code": "5016",
+     "title": "Brønd (5016)",
+     "geometry": "MultiPoint",
+     "style": "styles/t_5016_broend.qml",
+     "spec": "pending",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861301",
+     "purpose": ""
+    },
+    {
+     "table": "t_5017_broendbygvaerk",
+     "code": "5017",
+     "title": "Brøndbygværk (5017)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_5017_broendbygvaerk.qml",
+     "spec": "pending",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861303",
+     "purpose": ""
+    },
+    {
+     "table": "t_5022_byrum_og_landskabselementer_f",
+     "code": "5022",
+     "title": "Byrums- og landskabselementer flade (5022)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_5022_byrum_og_landskabselementer_f.qml",
+     "spec": "pending",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861313",
+     "purpose": ""
+    },
+    {
+     "table": "t_5021_byrum_og_landskabselementer_l",
+     "code": "5021",
+     "title": "Byrums- og landskabselementer linje (5021)",
+     "geometry": "MultiLineString",
+     "style": "styles/t_5021_byrum_og_landskabselementer_l.qml",
+     "spec": "pending",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861311",
+     "purpose": ""
+    },
+    {
+     "table": "t_5011_draenbroend",
+     "code": "5011",
+     "title": "Drænbrønd (5011)",
+     "geometry": "MultiPoint",
+     "style": "styles/t_5011_draenbroend.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353495",
+     "purpose": "Datasættet er til brug i sagsbehandlingen vedr. vandløbslov m.m"
+    },
+    {
+     "table": "t_5003_draenledn",
+     "code": "5003",
+     "title": "Drænledning (5003)",
+     "geometry": "MultiLineString",
+     "style": "styles/t_5003_draenledn.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=193921277",
+     "purpose": "Datasættet er til brug i sagsbehandlingen vedr. vandløbslov m.m"
+    },
+    {
+     "table": "t_5004_draenomr",
+     "code": "5004",
+     "title": "Drænområde (5004)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_5004_draenomr.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353493",
+     "purpose": "Datasættet er til brug i sagsbehandlingen vedr. vandløbslov m.m"
+    },
+    {
+     "table": "t_5019_etagebroend",
+     "code": "5019",
+     "title": "Etagebrønd (5019)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_5019_etagebroend.qml",
+     "spec": "pending",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861307",
+     "purpose": ""
+    },
+    {
+     "table": "t_5018_fordelerbygvaerk",
+     "code": "5018",
+     "title": "Fordelerbygværk (5018)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_5018_fordelerbygvaerk.qml",
+     "spec": "pending",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861305",
+     "purpose": ""
+    },
+    {
+     "table": "t_5020_groent_tag",
+     "code": "5020",
+     "title": "Grønt tag (5020)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_5020_groent_tag.qml",
+     "spec": "pending",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861309",
+     "purpose": ""
+    },
+    {
+     "table": "t_5023_nedsivningsanlaeg",
+     "code": "5023",
+     "title": "Nedsivningsanlæg (5023)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_5023_nedsivningsanlaeg.qml",
+     "spec": "pending",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861316",
+     "purpose": ""
+    },
+    {
+     "table": "t_5024_permeabel_belaegning",
+     "code": "5024",
+     "title": "Permeabel belægning (5024)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_5024_permeabel_belaegning.qml",
+     "spec": "pending",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861318",
+     "purpose": ""
+    },
+    {
+     "table": "t_5035_projekt",
+     "code": "5035",
+     "title": "Projekt (5035)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_5035_projekt.qml",
+     "spec": "pending",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861340",
+     "purpose": ""
+    },
+    {
+     "table": "t_5025_pumpestation",
+     "code": "5025",
+     "title": "Pumpestation (5025)",
+     "geometry": "MultiPoint",
+     "style": "styles/t_5025_pumpestation.qml",
+     "spec": "pending",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861320",
+     "purpose": ""
+    },
+    {
+     "table": "t_5026_regnbed",
+     "code": "5026",
+     "title": "Regnbed (5026)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_5026_regnbed.qml",
+     "spec": "pending",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861322",
+     "purpose": ""
+    },
+    {
+     "table": "t_5027_reguleringsbygvaerk",
+     "code": "5027",
+     "title": "Reguleringsbygværk (5027)",
+     "geometry": "MultiLineString",
+     "style": "styles/t_5027_reguleringsbygvaerk.qml",
+     "spec": "pending",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861324",
+     "purpose": ""
+    },
+    {
+     "table": "t_5028_rist",
+     "code": "5028",
+     "title": "Rist (5028)",
+     "geometry": "MultiPoint",
+     "style": "styles/t_5028_rist.qml",
+     "spec": "pending",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861326",
+     "purpose": ""
+    },
+    {
+     "table": "t_5029_samlekonstruktion",
+     "code": "5029",
+     "title": "Samlekonstruktion (5029)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_5029_samlekonstruktion.qml",
+     "spec": "pending",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861328",
+     "purpose": ""
+    },
+    {
+     "table": "t_5030_sandfang",
+     "code": "5030",
+     "title": "Sandfang (5030)",
+     "geometry": "MultiPoint",
+     "style": "styles/t_5030_sandfang.qml",
+     "spec": "pending",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861330",
+     "purpose": ""
+    },
+    {
+     "table": "t_5031_spunsvaeg",
+     "code": "5031",
+     "title": "Spunsvæg (5031)",
+     "geometry": "MultiLineString",
+     "style": "styles/t_5031_spunsvaeg.qml",
+     "spec": "pending",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861332",
+     "purpose": ""
+    },
+    {
+     "table": "t_5032_tank",
+     "code": "5032",
+     "title": "Tank (5032)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_5032_tank.qml",
+     "spec": "pending",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861334",
+     "purpose": ""
+    },
+    {
+     "table": "t_5033_udskiller",
+     "code": "5033",
+     "title": "Udskiller (5033)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_5033_udskiller.qml",
+     "spec": "pending",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861336",
+     "purpose": ""
+    },
+    {
+     "table": "t_5034_udskillerbygvaerk",
+     "code": "5034",
+     "title": "Udskillerbygværk (5034)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_5034_udskillerbygvaerk.qml",
+     "spec": "pending",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861338",
+     "purpose": ""
+    },
+    {
+     "table": "t_5036_vandopland",
+     "code": "5036",
+     "title": "Vandopland (5036)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_5036_vandopland.qml",
+     "spec": "pending",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861342",
+     "purpose": ""
+    }
+   ]
+  },
+  {
+   "name": "Park og grønne områder",
+   "datasets": [
+    {
+     "table": "t_6800_parl_fl",
+     "code": "6800",
+     "title": "Park og grønne områder flade (6800)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_6800_parl_fl.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353491",
+     "purpose": "Oplyse sagsbehandler og privat/offentlig entreprenør via selvbetjeningsløsninger om, hvordan arealer plejes"
+    },
+    {
+     "table": "t_6801_parl_li",
+     "code": "6801",
+     "title": "Park og grønne områder linje (6801)",
+     "geometry": "MultiLineString",
+     "style": "styles/t_6801_parl_li.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353489",
+     "purpose": "Oplyse sagsbehandler og privat/offentlig entreprenører via selvbetjeningsløsninger,  om plejen af linjeelementer"
+    },
+    {
+     "table": "t_6802_parl_pkt",
+     "code": "6802",
+     "title": "Park og grønne områder punkt (6802)",
+     "geometry": "MultiPoint",
+     "style": "styles/t_6802_parl_pkt.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353483",
+     "purpose": "Oplyse sagsbehandler og private/offentlige entreprenører via selvbetjeningsløsninger, hvordan objekter/punkter plejes"
+    },
+    {
+     "table": "t_6803_parl_omr",
+     "code": "6803",
+     "title": "Park og grønne områders distrikt (6803)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_6803_parl_omr.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353480",
+     "purpose": "At kunne registrer hvem der står for og/eller betaler for den grønne pleje indenfor et område, så det ikke er nødvendigt at registrere dette på hvert element/objekt."
+    }
+   ]
+  },
+  {
+   "name": "Planlægning",
+   "datasets": [
+    {
+     "table": "t_6205_bygningsvurdering",
+     "code": "6205",
+     "title": "Bygningsvurdering (6205)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_6205_bygningsvurdering.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=273744643",
+     "purpose": "Bygningsvurderingen skal sikre, at bevaringsværdige bygninger kan blive beskyttet i den kommunale planlægning ligesom det kan have betydning for ejendommens værdi."
+    },
+    {
+     "table": "t_6204_bygningsvurderingsgruppe",
+     "code": "6204",
+     "title": "Bygningsvurderingsgruppe (6204)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_6204_bygningsvurderingsgruppe.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=273744641",
+     "purpose": "Bygningsvurderingsgruppen bliver ikke i sig selv vurderet eller karaktersat, men har alene til formål at sammenknytte en relevant samling af vurderede bygninger. En vurderet bygning kan høre til flere bygningsvurderingsgrupper."
+    },
+    {
+     "table": "t_6201_kult_geo",
+     "code": "6201",
+     "title": "Kulturgeografi (6201)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_6201_kult_geo.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213355235",
+     "purpose": "Den kulturgeografiske analyse er en del af landskabsanalysen, som benyttes til planlægning og administration i det åbne land. (danner \ngrundlag for særlige landskabsområder, udpeget i kommuneplanen)."
+    },
+    {
+     "table": "t_6202_landk_omr",
+     "code": "6202",
+     "title": "Landskabkarakterområder (6202)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_6202_landk_omr.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213355231",
+     "purpose": "Landskabskarakteranalysen benyttes til planlægning og administration i det åbne land. (danner grundlag for særlige landskabsområder, \nudpeget i kommuneplanen)."
+    },
+    {
+     "table": "t_6203_landk_vur",
+     "code": "6203",
+     "title": "Landskabskaraktervurderinger (6203)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_6203_landk_vur.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213355229",
+     "purpose": "Landskabskarakteranalysen benyttes til planlægning og administration i det åbne land. (danner grundlag for særlige landskabsområder, \nudpeget i kommuneplanen)."
+    },
+    {
+     "table": "t_6200_nat_geo",
+     "code": "6200",
+     "title": "Naturgeografi (6200)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_6200_nat_geo.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213355224",
+     "purpose": "Den naturgeografiske analyse er en del af landskabsanalysen, som benyttes til planlægning og administration i det åbne land. (danner \ngrundlag for særlige landskabsområder, udpeget i kommuneplanen)."
+    }
+   ]
+  },
+  {
+   "name": "Sport, fritid og friluftsliv",
+   "datasets": [
+    {
+     "table": "t_5801_fac_fl",
+     "code": "5801",
+     "title": "Friluftsliv faciliteter, flader (5801)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_5801_fac_fl.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353527",
+     "purpose": "Oplyse sagsbehandler og borger via selvbetjeningsløsninger, hvilken sports- og fritidsfaciliteter, der ligger i lokalområdet. Evt. også \nnærmeste svømmehal m.v."
+    },
+    {
+     "table": "t_5802_fac_li",
+     "code": "5802",
+     "title": "Friluftsliv faciliteter, linjer (5802)",
+     "geometry": "MultiLineString",
+     "style": "styles/t_5802_fac_li.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353531",
+     "purpose": "Oplyse sagsbehandler og borger via selvbetjeningsløsninger, hvilken sports- og fritidsfaciliteter, der ligger i lokalområdet. Evt. også \nnærmeste riderute m.v."
+    },
+    {
+     "table": "t_5800_fac_pkt",
+     "code": "5800",
+     "title": "Friluftsliv faciliteter, punkter (5800)",
+     "geometry": "MultiPoint",
+     "style": "styles/t_5800_fac_pkt.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=199983821",
+     "purpose": "Oplyse sagsbehandler og borger via selvbetjeningsløsninger, hvilken sports- og fritidsfaciliteter, der ligger i lokalområdet. Evt. også \nnærmeste svømmehal m.v."
+    }
+   ]
+  },
+  {
+   "name": "Vej og trafik",
+   "datasets": [
+    {
+     "table": "t_5608_cykelkrydspunkter",
+     "code": "5608",
+     "title": "Cykelkrydspunkter (5608)",
+     "geometry": "MultiPoint",
+     "style": "styles/t_5608_cykelkrydspunkter.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353564",
+     "purpose": "Anvendes til visning og kvalificering af det rekreative cykelnet."
+    },
+    {
+     "table": "t_5609_cykelkrydspunktsstraekninger",
+     "code": "5609",
+     "title": "Cykelkrydspunktsstrækninger (5609)",
+     "geometry": "MultiLineString",
+     "style": "styles/t_5609_cykelkrydspunktsstraekninger.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353562",
+     "purpose": "Anvendes til visning og kvalificering af det rekreative cykelnet"
+    },
+    {
+     "table": "t_5610_cykelplanlaegning",
+     "code": "5610",
+     "title": "Cykelplanlægning (5610)",
+     "geometry": "MultiLineString",
+     "style": "styles/t_5610_cykelplanlaegning.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353472",
+     "purpose": "Formålet med kortet er at kunne arbejde på tværs af administrative grænser med planlægningen af cykelruter."
+    },
+    {
+     "table": "t_5601_hasti_daemp",
+     "code": "5601",
+     "title": "Hastighedsdæmpning (5601)",
+     "geometry": "MultiPoint",
+     "style": "styles/t_5601_hasti_daemp.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353470",
+     "purpose": "Give overblik over hvor der er hastighedsdæmpende foranstaltninger."
+    },
+    {
+     "table": "t_5603_hasti_omraade",
+     "code": "5603",
+     "title": "Hastighedsomraade (5603)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_5603_hasti_omraade.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353468",
+     "purpose": "Oplyse sagsbehandler og borger via selvbetjeningsløsninger, hvordan hastigheden er begrænset i zonen."
+    },
+    {
+     "table": "t_5604_koer_begr",
+     "code": "5604",
+     "title": "Kørselsregulering (5604)",
+     "geometry": "MultiLineString",
+     "style": "styles/t_5604_koer_begr.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353462",
+     "purpose": "Oplyse sagsbehandler og borger via selvbetjeningsløsninger, hvordan vejen er begrænset i tilladt kørsel."
+    },
+    {
+     "table": "t_5607_ladefacilitet",
+     "code": "5607",
+     "title": "Ladefacilitet (5607)",
+     "geometry": "MultiPoint",
+     "style": "styles/t_5607_ladefacilitet.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=199983826",
+     "purpose": "Anvendes til planlægning og registrering af ladeinfrastruktur."
+    },
+    {
+     "table": "t_5613_p_plads",
+     "code": "5613",
+     "title": "P-plads (5613)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_5613_p_plads.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353454",
+     "purpose": "Oplyse sagsbehandler og borger via selvbetjeningsløsninger, om de konkrete parkeringsmuligheder (ift. det køretøj man anvender)"
+    },
+    {
+     "table": "t_5602_p_zoner",
+     "code": "5602",
+     "title": "P-zoner (5602)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_5602_p_zoner.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353451",
+     "purpose": "Oplyse sagsbehandler og borger via selvbetjeningsløsninger, hvordan parkeringsforholdene er begrænset i zonen."
+    },
+    {
+     "table": "t_5614_stationering_cykelplanlaegning",
+     "code": "5614",
+     "title": "Stationering til kort til cykelplanlægning (5614)",
+     "geometry": "MultiPoint",
+     "style": "styles/t_5614_stationering_cykelplanlaegning.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353446",
+     "purpose": "At kunne påføre stationering til planlagte ruter i temaet kort til cykelplanlægning (5610)"
+    },
+    {
+     "table": "t_5605_vejbyggel",
+     "code": "5605",
+     "title": "Trafik byggelinje (5605)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_5605_vejbyggel.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353441",
+     "purpose": "Oplyse sagsbehandler og borger via selvbetjeningsløsninger, hvor der noglebyggelinjer og evt. givet dispensationer."
+    },
+    {
+     "table": "t_5606_vejinv",
+     "code": "5606",
+     "title": "Vejinventar (5606)",
+     "geometry": "MultiPoint",
+     "style": "styles/t_5606_vejinv.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353429",
+     "purpose": "Skabe et geografisk overblik over hvad der står hvor langs de kommunale veje. Bl.a. til at udbyde vedligeholdelsesarbejdet."
+    },
+    {
+     "table": "t_5611_vinterute",
+     "code": "5611",
+     "title": "Vinterrute (5611)",
+     "geometry": "MultiLineString",
+     "style": "styles/t_5611_vinterute.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353414",
+     "purpose": "Give mulighed for at kommunen kan gemme en ruteopdeling, fx til genbrug i forbindelse med et udbud af vintervedligehold. Hvis der \nikke benyttes et ”vintersystem” til dannelse af ruter, tildeling af ruter, m.m. kan rutenettet her måske være en hjælp i \nsagsbehandling. GeoFA indeholder ikke en ”ruteplanlægger” – og kan derfor ikke umiddelbart bruges til at danne ruter."
+    },
+    {
+     "table": "t_5612_vinterserviceomraade",
+     "code": "5612",
+     "title": "Vinterserviceområde (5612)",
+     "geometry": "MultiPolygon",
+     "style": "styles/t_5612_vinterserviceomraade.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=193921281",
+     "purpose": "At skabe et geografisk overblik over vintervedligeholdelse i kommunen – her specielt i forhold til ”bløde trafikanter”. Understøtte \nkommunenes tilrettelæggelse af vintervedlighold."
+    },
+    {
+     "table": "t_5600_vintervedl",
+     "code": "5600",
+     "title": "Vintervedligeholdelse (5600)",
+     "geometry": "MultiLineString",
+     "style": "styles/t_5600_vintervedl.qml",
+     "spec": "published",
+     "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353402",
+     "purpose": "Oplyse sagsbehandler og borger via selvbetjeningsløsninger, hvornår veje og stier ryddes for sne, gruses og/eller saltes.\nKan også anvendes til estimering af omkostninger til vintervedligehold samt grundlag for ruteplanlægning"
+    }
+   ]
+  }
+ ]
+}
