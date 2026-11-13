@@ -11,3 +11,6 @@ zip_build/
 .idea/
 __pycache__/
 *.pyc
+
+# Local developer folder: generator, spec copy, test profiles (never committed)
+dev/
