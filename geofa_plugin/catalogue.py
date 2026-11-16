@@ -55,6 +55,8 @@ class Dataset:
     form_version: str = ""  # fingerprint of the style's fields and form, stored on the layers
     code_lists: tuple = field(default=())  # ((field, Source, required), ...)
     geometry: str = ""  # "MultiPoint", "MultiLineString" or "MultiPolygon" (empty when unknown)
+    # Environments ("production", "test") where GeoFA has a photo-link version of the table
+    photo_environments: tuple = field(default=())
 
     @property
     def style_path(self):
@@ -88,7 +90,8 @@ class Catalogue:
                                      spec_page=d.get("spec_page") or "", purpose=d.get("purpose") or "",
                                      form_version=d.get("form_version") or "",
                                      code_lists=self._code_lists(d.get("code_lists") or {}),
-                                     geometry=d.get("geometry") or "")
+                                     geometry=d.get("geometry") or "",
+                                     photo_environments=tuple(d.get("photo_environments") or ()))
                              for d in group["datasets"] if d.get("table")])
             for group in data["groups"]
         ]

@@ -12,7 +12,7 @@ from qgis.PyQt.QtXml import QDomDocument
 from qgis.core import (Qgis, QgsDataSourceUri, QgsExpressionContextUtils, QgsMapLayer, QgsProject, QgsSettings,
                        QgsVectorLayer)
 
-from . import credentials
+from . import credentials, municipalities
 from .catalogue import RENAMED_TABLES, SYMBOLS_DIR, catalogue
 
 PRODUCTION_HOST = "https://geofa.geodanmark.dk"
@@ -21,6 +21,7 @@ TABLE_PROPERTY = "geofa/table"  # set on every layer the plugin adds
 FORM_PROPERTY = "geofa/form"  # the form version the layer got (see Dataset.form_version)
 FORM_CATEGORIES = QgsMapLayer.StyleCategory.Fields | QgsMapLayer.StyleCategory.Forms
 OLD_DOMAIN_SOURCE = "/api/v2/sql/fkg"  # how 0.36 loaded the fkg.d_* tables into projects
+PHOTO_SCHEMA = "fkg_foto_gpx_link"  # GeoFA's photo-link versions of some tables
 USER_VARIABLE = "geofa_bruger_id"  # the forms fill bruger_id (and cvr_kode) from it
 TEST_SUFFIX = " [TEST]"
 # Only the objects in the map view are fetched, page by page
@@ -33,33 +34,55 @@ class Mode:
     edit: bool
     test: bool
     username: str
+    kommune: str = ""  # komkode of the municipality filter (municipalities.py); empty: the whole country
 
     @classmethod
     def from_settings(cls, settings):
         # Editing needs a stored GeoFA login; without one the plugin only shows the layers
         return cls(edit=bool(settings.value("wfst")) and credentials.has_login(), test=bool(settings.value("testmiljo")),
-                   username=(settings.value("username") or "").strip())
+                   username=(settings.value("username") or "").strip(),
+                   kommune=(settings.value("kommune") or "").strip())
+
+
+def environment(mode):
+    return "test" if mode.test else "production"
 
 
 def layer_source(table, mode):
-    """The WFS source for a GeoFA table in the given mode. Never holds a password."""
+    """The WFS source for a GeoFA table in the given mode. Never holds a password.
+
+    Read-only layers come from GeoFA's photo-link version of the table (schema fkg_foto_gpx_link)
+    where there is one: the same layer, with links to GeoFA's photos filled in. Editing always
+    uses the normal table, which is the one that can be edited.
+    """
     host = TEST_HOST if mode.test else PRODUCTION_HOST
+    dataset = catalogue().get(table)
     uri = QgsDataSourceUri()
     if mode.edit:
         uri.setAuthConfigId(credentials.AUTHCFG_ID)
         uri.setParam("url", f"{host}/wfs/{mode.username}@fkg/fkg/25832")
         uri.setParam("typename", f"fkg:{table}")
+    elif dataset is not None and environment(mode) in dataset.photo_environments:
+        uri.setParam("url", f"{host}/ows/fkg/{PHOTO_SCHEMA}")
+        uri.setParam("typename", f"fkg:{PHOTO_SCHEMA}.{table}")
     else:
         uri.setParam("url", f"{host}/ows/fkg/fkg")
         uri.setParam("typename", f"fkg:fkg.{table}")
     for key, value in COMMON_PARAMS.items():
         uri.setParam(key, value)
+    municipality_filter = municipalities.intersects_filter(mode.kommune)
+    if municipality_filter:
+        uri.setParam("filter", municipality_filter)
+        # With a municipality the layer holds that municipality's objects, read once; QGIS would
+        # otherwise combine the filter with the map view's box, re-serialised at more than twice
+        # its length, which takes larger municipalities over GeoFA's ~8,190-character URL limit
+        uri.removeParam("restrictToRequestBBOX")
     return uri.uri(False)
 
 
 def _source_key(source):
     uri = QgsDataSourceUri(source)
-    return uri.param("url"), uri.param("typename"), uri.authConfigId(), uri.param("version")
+    return uri.param("url"), uri.param("typename"), uri.authConfigId(), uri.param("version"), uri.param("filter")
 
 
 def table_of(layer):
@@ -174,7 +197,9 @@ def replace_layer(project, layer, source, name):
     new.importNamedStyle(style)
     for key in layer.customPropertyKeys():
         new.setCustomProperty(key, layer.customProperty(key))
-    if layer.subsetString():
+    # The user's own filter carries over. A WFS layer's subset string is its "filter" setting, so
+    # the plugin's municipality filter shows up here too; that one comes from the new source instead
+    if layer.subsetString() and not municipalities.is_municipality_filter(layer.subsetString()):
         new.setSubsetString(layer.subsetString())
     project.addMapLayer(new, False)
     root = project.layerTreeRoot()
@@ -196,9 +221,11 @@ def editing_layers(project=None):
 
 def target_source(layer, table, mode):
     """The source a GeoFA layer should have in the given mode: in its own environment,
-    and editable only when editing is on and the layer is from the chosen environment."""
+    editable only when editing is on and the layer is from the chosen environment, and
+    with the chosen municipality filter."""
     test = in_test(layer)
-    return layer_source(table, Mode(edit=mode.edit and test == mode.test, test=test, username=mode.username))
+    return layer_source(table, Mode(edit=mode.edit and test == mode.test, test=test, username=mode.username,
+                                    kommune=mode.kommune))
 
 
 def repoint(mode, project=None):
@@ -211,6 +238,8 @@ def repoint(mode, project=None):
     project = project or QgsProject.instance()
     changed, editing, failed = 0, [], []
     for layer, table in geofa_layers(project):
+        if layer.providerType() != "WFS":  # e.g. a GeoFA layer saved to a file: its source isn't ours to change
+            continue
         source = target_source(layer, table, mode)
         if _source_key(layer.source()) == _source_key(source):
             continue

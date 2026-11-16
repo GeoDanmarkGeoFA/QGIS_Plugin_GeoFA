@@ -36,7 +36,8 @@ from . import about, codelists, credentials, htmlfields, loader
 from .catalogue import catalogue
 from .loader import Mode
 from .panel import GeoFAPanel
-from .settings_window import SettingsDialog
+from .settings_window import OptionsFactory, SettingsDialog
+from . import municipalities
 from qgis.core import QgsApplication, QgsProject, QgsSettings, Qgis
 
 VEJLEDNING_URL = about.GUIDE_URL  # the guide is maintained as Markdown on GitHub
@@ -56,8 +57,10 @@ class GeoFA:
             self.translator.load(locale_path)
             QCoreApplication.installTranslator(self.translator)
 
-        # The settings have their own small window (GeoFA › Indstillinger …), not a page in QGIS's Options
+        # The settings: a small window (GeoFA › Indstillinger …) and a page in QGIS's Options
         self.settings = Settings()
+        self.options_factory = OptionsFactory(self.settings)
+        iface.registerOptionsWidgetFactory(self.options_factory)
 
         self.catalogue = catalogue()
         self.mode = Mode.from_settings(self.settings)
@@ -241,6 +244,10 @@ class GeoFA:
                                 level=Qgis.MessageLevel.Warning, duration=15)
             self.environment_message(mode, environment_changed=mode.test != self.mode.test,
                                      edit_turned_on=mode.edit and not self.mode.edit)
+            if mode.kommune != self.mode.kommune:
+                area = (f"kun objekter i {municipalities.display_name(mode.kommune)}" if mode.kommune
+                        else "objekter i hele landet")
+                bar.pushMessage("GeoFA", f"GeoFA-lagene viser nu {area}.", level=Qgis.MessageLevel.Info, duration=8)
             if changed:
                 self.iface.mapCanvas().refresh()
         self.mode = mode
@@ -312,10 +319,13 @@ class GeoFA:
             except RuntimeError:
                 pass
             self.update_offer = None
-        layers = [(layer, self.catalogue.get(table)) for layer, table in loader.geofa_layers()]
-        if not layers:
+        if not loader.geofa_layers():
             bar.pushMessage("GeoFA", "Der er ingen GeoFA-lag i projektet.", level=Qgis.MessageLevel.Info, duration=5)
             return
+        # The plugin's current sources too, e.g. the photo-link versions for read-only layers
+        self.iface.mapCanvas().stopRendering()
+        loader.repoint(self.mode)
+        layers = [(layer, self.catalogue.get(table)) for layer, table in loader.geofa_layers()]
         updated = [(layer, dataset, loader.host_of(layer)) for layer, dataset in layers
                    if loader.update_form(layer, dataset)]
         old_tables = loader.old_domain_layers()
@@ -511,6 +521,7 @@ class GeoFA:
         except (TypeError, RuntimeError):
             pass
         codelists.stop_fetching()
+        self.iface.unregisterOptionsWidgetFactory(self.options_factory)
         self.iface.deregisterLocatorFilter(self.layer_locator_filter)
         if self.panel:
             # Closing QGIS hides the panel on the way out; that mustn't be remembered as "closed"

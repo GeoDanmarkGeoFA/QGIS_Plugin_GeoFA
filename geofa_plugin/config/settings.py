@@ -15,6 +15,8 @@ class Settings(SettingManager):
         # The password is not a setting: it lives in QGIS's password store (see credentials.py)
         self.add_setting(Bool('wfst', Scope.Global, False))
         self.add_setting(Bool('testmiljo', Scope.Global, False))
+        # komkode of the municipality filter (see municipalities.py); empty: the whole country
+        self.add_setting(String('kommune', Scope.Global, ''))
 
 
     def emit_updated(self):

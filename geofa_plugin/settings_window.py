@@ -1,29 +1,36 @@
 # -*- coding: utf-8 -*-
-"""GeoFA's settings in a small window: GeoFA › Indstillinger … and ⚙ in the panel.
+"""GeoFA's settings: login, editing, test environment and the municipality filter.
 
-The only place for the plugin's settings (as in Geodata Connect): there is no GeoFA page in
-QGIS's own Options dialog. The password is never a setting: it goes into QGIS's password
-store (credentials.py), and the field never shows a stored password again.
+The same form is shown in two places: a small window (GeoFA › Indstillinger … and ⚙ in the
+panel) and a GeoFA page in QGIS's Options (Indstillinger › Indstillinger), like Danmarks
+Miljøportal's plugin. The password is never a setting: it goes into QGIS's password store
+(credentials.py), and the field never shows a stored password again.
 """
+import os
+
 from qgis.core import Qgis
-from qgis.gui import QgsPasswordLineEdit
-from qgis.PyQt.QtWidgets import (QCheckBox, QDialog, QDialogButtonBox, QFormLayout, QLabel, QLineEdit, QVBoxLayout,
-                                 QWidget)
+from qgis.gui import QgsOptionsPageWidget, QgsOptionsWidgetFactory, QgsPasswordLineEdit
+from qgis.PyQt.QtGui import QIcon
+from qgis.PyQt.QtWidgets import (QCheckBox, QComboBox, QDialog, QDialogButtonBox, QFormLayout, QLabel, QLineEdit,
+                                 QVBoxLayout, QWidget)
 from qgis.utils import iface
 
-from . import credentials
+from . import credentials, municipalities
 from .config.qgissettingmanager.setting_dialog import SettingDialog, UpdateMode
 from .panel import Banner
 
 PASSWORD_PLACEHOLDER = "Adgangskode"
 PASSWORD_SAVED_PLACEHOLDER = "Gemt – skriv en ny for at ændre den"
+WHOLE_COUNTRY = "Hele landet"
+ICON = os.path.join(os.path.dirname(__file__), "icon.png")  # the GeoFA "G"
 
 
-class LoginForm(QWidget, SettingDialog):
-    """Username and password (QGIS's password field, with the eye), editing and the test environment.
+class SettingsForm(QWidget, SettingDialog):
+    """Username and password (QGIS's password field, with the eye), editing, the test environment
+    and the municipality filter.
 
-    The widgets are named after the settings (username, wfst, testmiljo), which binds them to
-    the plugin's settings; apply() stores them.
+    The login widgets are named after the settings (username, wfst, testmiljo), which binds them
+    to the plugin's settings; the municipality is stored by apply() itself. apply() stores it all.
     """
 
     def __init__(self, settings, parent=None):
@@ -53,7 +60,21 @@ class LoginForm(QWidget, SettingDialog):
         note.setEnabled(False)  # shown greyed, as a hint
         layout.addWidget(note)
 
-        # Fills the widgets from the settings; apply() writes them back
+        layout.addSpacing(8)
+        layout.addWidget(QLabel("<b>Område</b>"))
+        area = QFormLayout()
+        self.municipality_box = QComboBox()
+        self.municipality_box.setObjectName("kommune_box")  # not "kommune": stored by apply(), not the binding
+        self.municipality_box.addItem(WHOLE_COUNTRY, "")
+        for code, name in municipalities.choices():
+            self.municipality_box.addItem(name, code)
+        self.municipality_box.setToolTip("Vis kun objekter i én kommune. Gælder alle GeoFA-lag i projektet.")
+        chosen = self.municipality_box.findData(settings.value("kommune") or "")
+        self.municipality_box.setCurrentIndex(max(chosen, 0))
+        area.addRow("Kun objekter i", self.municipality_box)
+        layout.addLayout(area)
+
+        # Fills the login widgets from the settings; apply() writes them back
         SettingDialog.__init__(self, settings, UpdateMode.NoUpdate)
         self.reset_password_field()
         self.on_text_changed()
@@ -97,6 +118,7 @@ class LoginForm(QWidget, SettingDialog):
     def apply(self):
         old_username = self.settings.value("username")
         self.set_values_from_widgets()
+        self.settings.set_value("kommune", self.municipality_box.currentData() or "")
         self.save_login(old_username)
         self.reset_password_field()
         self.on_text_changed()
@@ -105,18 +127,21 @@ class LoginForm(QWidget, SettingDialog):
 
 
 class SettingsDialog(QDialog):
+    """The small settings window."""
+
     def __init__(self, settings, parent=None):
         super().__init__(parent)
         self.setWindowTitle("GeoFA – indstillinger")
+        self.setWindowIcon(QIcon(ICON))
         self.setMinimumWidth(400)
         layout = QVBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 8)
-        layout.addWidget(Banner("Login, redigering og testmiljø"))
+        layout.addWidget(Banner("Login, redigering, testmiljø og område"))
         body = QVBoxLayout()
         body.setContentsMargins(10, 8, 10, 0)
         body.setSpacing(8)
         layout.addLayout(body)
-        self.form = LoginForm(settings)
+        self.form = SettingsForm(settings)
         body.addWidget(self.form)
         buttons = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
         buttons.accepted.connect(self.accept)
@@ -124,6 +149,35 @@ class SettingsDialog(QDialog):
         body.addWidget(buttons)
 
     def accept(self):
-        # Stores the login and emits the settings' update; the plugin then applies the new mode
+        # Stores the settings and emits their update; the plugin then applies the new mode
         self.form.apply()
         super().accept()
+
+
+class OptionsPage(QgsOptionsPageWidget):
+    """The GeoFA page in QGIS's Options: the same form; QGIS calls apply() on OK."""
+
+    def __init__(self, settings, parent=None):
+        super().__init__(parent)
+        self.setObjectName("geofaOptions")
+        layout = QVBoxLayout(self)
+        self.form = SettingsForm(settings)
+        layout.addWidget(self.form)
+        layout.addStretch(1)
+
+    def apply(self):
+        self.form.apply()
+
+
+class OptionsFactory(QgsOptionsWidgetFactory):
+    """Adds the GeoFA page, with the GeoFA "G", to QGIS's Options."""
+
+    def __init__(self, settings):
+        super().__init__("GeoFA", QIcon(ICON))
+        self.settings = settings
+
+    def icon(self):
+        return QIcon(ICON)
+
+    def createWidget(self, parent):
+        return OptionsPage(self.settings, parent)

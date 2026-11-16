@@ -12,7 +12,9 @@ The plugin adds the datasets of GeoFA (Geografiske Fagdata i GeoDanmark) to QGIS
 - **Styled like the webmap**: symbols and labels from GeoFA's webmap.
 - **Forms**: every field has a readable alias with the field name in brackets, e.g. *Facilitettype (facil_ty_k)*, on the tabs *Generelt*, the dataset's own fields and *Øvrige felter*. Long descriptions written in HTML are shown formatted, and edited as text.
 - **Code lists straight from GeoFA**: dropdowns are filled with GeoFA's current code lists when a layer is added and when a project is opened. If a code list can't be read, the field shows the codes, and the user is told which list failed.
+- **Photos**: datasets with photos in GeoFA (e.g. 5800–5802, 5607, 6122, 6204, 6205) show links to them on a *Fotos* tab, and 5800 and 5802 also a link to a GPX file. The links open in the browser. The tab only appears for objects with photos, so it's never in the way while editing.
 - **Only the area in view is downloaded**, so large datasets stay quick.
+- **Municipality filter**: choose a municipality under *Område* in the settings, and every GeoFA layer shows only the objects inside it. GeoFA's server does the filtering, as in Danmarks Miljøportal's plugin.
 - **Production and test environment**: layers from GeoFA's test environment get "[TEST]" in their name and can sit beside layers from production.
 - **Viewing for anyone, editing with a login**: without a GeoFA login the plugin is a viewer. With one (municipalities and other data owners), layers can be edited through WFS-T. The password is kept in QGIS's password store, never in projects or settings, and new objects get the user id and authority filled in. Removing the login in QGIS makes the plugin read-only at once.
 - **Older projects keep working**: layers from version 0.36 are pointed at the renamed datasets 5608 and 5609, and **GeoFA › Opdater formularer og kodelister** gives them the new forms.
@@ -21,7 +23,7 @@ The plugin adds the datasets of GeoFA (Geografiske Fagdata i GeoDanmark) to QGIS
 
 1. In QGIS, open **Plugins › Manage and Install Plugins**, search for **GeoFA** and click **Install**.
 2. Open **GeoFA › GeoFA-panel** and tick the datasets you want.
-3. To edit, enter your GeoFA login under **GeoFA › Indstillinger …** and tick *Redigering (WFS-T)*. To get a login, write to [support@geopartner.dk](mailto:support@geopartner.dk).
+3. To edit, enter your GeoFA login under **GeoFA › Indstillinger …** (or in QGIS's **Indstillinger › Indstillinger › GeoFA**) and tick *Redigering (WFS-T)*. To get a login, write to [support@geopartner.dk](mailto:support@geopartner.dk).
 
 More about GeoFA, and guides (in Danish): [geodanmark.dk – GeoFA](https://www.geodanmark.dk/home/vejledninger/geofa/).
 
@@ -65,8 +67,19 @@ git clone --depth 1 https://github.com/GeoDanmarkGeoFA/Database dev/spec/Databas
 python-qgis-ltr.bat tools/fetch_sources.py
 python-qgis-ltr.bat tools/fetch_sources.py --production-details
 python-qgis-ltr.bat tools/fetch_sources.py --authorities
+python-qgis-ltr.bat tools/fetch_sources.py --photo-layers
 python-qgis-ltr.bat tools/generate_layers.py
 ```
+
+`--photo-layers` records which datasets GeoFA has in a photo-link version (schema `fkg_foto_gpx_link`), per environment: read-only layers are loaded from those, and the generator gives their photo fields a link and a *Fotos* tab.
+
+The municipality outlines for the municipality filter are built from GeoFA's own boundaries, and written straight into the plugin (`geofa_plugin/layers/municipalities.json`):
+
+```
+python-qgis-ltr.bat tools/fetch_sources.py --municipalities
+```
+
+Each outline is widened by a small margin (50 m or more) and simplified by the same margin, so nothing inside the municipality is left out, and so the filter fits in a request URL (GeoFA's server turns down URLs over ~8,190 characters).
 
 Run the generator with QGIS 3.44, so the styles load in QGIS 3.34 and later and in QGIS 4. It writes `geofa_plugin/layers/` and a report of differences between the specification, the webmap and production in `dev/reports/difference_report.md`. The Danish field aliases are in [`tools/field_aliases.json`](tools/field_aliases.json).
 

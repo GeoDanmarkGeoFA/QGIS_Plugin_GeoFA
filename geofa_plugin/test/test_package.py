@@ -86,6 +86,29 @@ class StyleTests(unittest.TestCase):
                     self.assertEqual(fields[name][1].get("UseHtml"), "true", f"{table}.{name}")
         self.assertGreaterEqual(found, 9)  # 5800, 5801 and 5802 have all three
 
+    def test_photo_links_open_in_the_browser_on_their_own_tab(self):
+        photo_field = re.compile(r"^(geofafoto\d*|gpx_link)$")
+        found = set()
+        for dataset in self.datasets:
+            root = self.styles[dataset.table]
+            photos = [name for name in _fields(root) if photo_field.match(name)]
+            if not photos:
+                continue
+            found.add(dataset.table)
+            for name in photos:
+                kind, options = _fields(root)[name]
+                self.assertEqual((kind, options.get("UseLink")), ("ExternalResource", "true"), f"{dataset.table}.{name}")
+            tab = next(c for c in root.iter("attributeEditorContainer") if c.get("name", "").startswith("Fotos"))
+            self.assertEqual(sorted(f.get("name") for f in tab.iter("attributeEditorField")), sorted(photos))
+            # Shown only for objects with a photo (never while editing: the editable layers have no links)
+            self.assertIn("coalesce", tab.get("visibilityExpression") or "", dataset.table)
+            self.assertEqual(tab.get("visibilityExpressionEnabled"), "1", dataset.table)
+        self.assertTrue({"t_5800_fac_pkt", "t_5607_ladefacilitet", "t_6205_bygningsvurdering"} <= found)
+        environments = {d.table: d.photo_environments for d in self.datasets}
+        self.assertEqual(environments["t_5800_fac_pkt"], ("production", "test"))
+        self.assertEqual(environments["t_5607_ladefacilitet"], ("production",))
+        self.assertEqual(environments["t_5710_born_skole_dis"], ())
+
     def test_every_symbol_the_styles_use_is_shipped(self):
         for table, root in self.styles.items():
             for option in root.iter("Option"):

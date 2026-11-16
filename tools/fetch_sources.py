@@ -3,6 +3,8 @@
   - Confluence spec page tree: groups -> datasets, with the Database page each dataset embeds
   - Webmap (GC2) layer metadata: styles (class rules) per table
   - Production WFS capabilities: which feature types exist (anonymous, read-only)
+  - --photo-layers: the photo-link versions of layers (fkg_foto_gpx_link) per environment
+  - --municipalities: municipality outlines for the municipality filter (written into the plugin)
 
 Writes JSON files to dev/spec/. Run with OSGeo4W python (python-qgis-ltr.bat tools/fetch_sources.py).
 """
@@ -24,14 +26,14 @@ PROD_CAPS = "https://geofa.geodanmark.dk/ows/fkg/fkg?SERVICE=WFS&REQUEST=GetCapa
 NOT_DATASET_GROUPS = {"Opslagsliste"}  # code-list pages, not datasets
 
 
-def get(url):
+def get(url, timeout=90):
     req = urllib.request.Request(url, headers={"User-Agent": "geofa-layer-generator"})
-    with urllib.request.urlopen(req, timeout=90, context=ssl.create_default_context()) as r:
+    with urllib.request.urlopen(req, timeout=timeout, context=ssl.create_default_context()) as r:
         return r.read()
 
 
-def get_json(url):
-    return json.loads(get(url).decode("utf-8"))
+def get_json(url, timeout=90):
+    return json.loads(get(url, timeout).decode("utf-8"))
 
 
 def children(page_id):
@@ -84,8 +86,8 @@ def describe(table):
             if e.get("name") and e.get("type") and not e.get("substitutionGroup")]
 
 
-def sql(query):
-    data = get_json(f"{PROD_SQL}?q={urllib.parse.quote(query)}")
+def sql(query, timeout=90):
+    data = get_json(f"{PROD_SQL}?q={urllib.parse.quote(query)}", timeout)
     return [f["properties"] for f in data.get("features", [])]
 
 
@@ -151,8 +153,88 @@ def fetch_webmap():
     print(f"webmap: {len(webmap.get('data', []))} layers")
 
 
+PHOTO_HOSTS = {"production": "https://geofa.geodanmark.dk", "test": "https://geofa-test.geodanmark.dk"}
+PHOTO_FIELD = re.compile(r"^(geofafoto\d*|gpx_link)$")
+
+
+def fetch_photo_layers():
+    """GeoFA's photo-link versions of some layers (schema fkg_foto_gpx_link), per environment, and their photo fields.
+
+    In these versions the photo fields (geofafoto, geofafoto1, ...) and gpx_link hold links to
+    GeoFA's photo store; in the normal layers they are empty or missing."""
+    out = {"environments": {}, "fields": {}}
+    for environment, host in PHOTO_HOSTS.items():
+        caps = get(f"{host}/ows/fkg/fkg_foto_gpx_link?SERVICE=WFS&REQUEST=GetCapabilities&VERSION=1.1.0").decode("utf-8")
+        out["environments"][environment] = sorted(set(re.findall(r"<Name>fkg:fkg_foto_gpx_link\.(t_\w+)</Name>", caps)))
+    for table in out["environments"]["production"]:
+        describe = get(f"{PHOTO_HOSTS['production']}/ows/fkg/fkg_foto_gpx_link?SERVICE=WFS&VERSION=1.1.0"
+                       f"&REQUEST=DescribeFeatureType&TYPENAME=fkg:fkg_foto_gpx_link.{table}").decode("utf-8")
+        names = re.findall(r'<(?:xsd:)?element name="([^"]+)"', describe)
+        out["fields"][table] = [name for name in names if PHOTO_FIELD.match(name)]
+    (SPEC_DIR / "photo_layers.json").write_text(json.dumps(out, indent=1), encoding="utf-8")
+    print(f"photo layers: {out['environments']}")
+
+
+MUNICIPALITY_MARGINS = (50, 100, 200, 400, 800, 1600)  # metres, tried in turn
+# GeoFA's server turns down request lines over ~8,190 characters; QGIS adds the map view box and its own
+# parameters to the filter, so the encoded filter itself is kept to this
+MUNICIPALITY_FILTER_CHARS = 5500
+
+
+def fetch_municipalities():
+    """Municipality outlines for the plugin's municipality filter -> geofa_plugin/layers/municipalities.json.
+
+    From GeoFA's own boundaries (dagi.kommune). Each outline is widened by a margin and then
+    simplified by the same margin, so nothing inside the municipality is cut off, and nearby
+    islets join the outline; the smallest margin whose filter, as sent in a request URL, stays
+    under MUNICIPALITY_FILTER_CHARS is used. The plugin sends the outline in each WFS request's
+    filter (geofa_plugin/municipalities.py builds it; the same code measures it here)."""
+    repo = Path(__file__).resolve().parents[1]
+    sys.path.insert(0, str(repo))
+    from qgis.core import Qgis, QgsGeometry  # noqa: E402
+    from geofa_plugin.municipalities import filter_xml  # noqa: E402
+
+    def polygons_of(geometry):
+        """Polygons as rings of whole-metre [x, y] points; rings too small to be rings are dropped."""
+        geometry = geometry.makeValid()
+        geometry.convertGeometryCollectionToSubclass(Qgis.GeometryType.Polygon)
+        parts = geometry.asMultiPolygon() if geometry.isMultipart() else [geometry.asPolygon()]
+        polygons = []
+        for part in parts:
+            rings = [[[round(p.x()), round(p.y())] for p in ring] for ring in part]
+            rings = [ring for ring in rings if len(ring) >= 4]
+            if rings:
+                polygons.append(rings)
+        return polygons
+
+    # One light query: each municipality's parts joined and lightly simplified. The widening and
+    # simplifying per margin is done here; on GeoFA's SQL API it took too long (HTTP 500)
+    rows = sql("SELECT komkode, max(komnavn) AS navn, ST_AsText(ST_SimplifyPreserveTopology(ST_Union(the_geom), 5)) "
+               "AS wkt FROM dagi.kommune GROUP BY komkode ORDER BY komkode", timeout=900)
+    out, margins = {}, {}
+    for row in rows:
+        boundary = QgsGeometry.fromWkt(row["wkt"])
+        for margin in MUNICIPALITY_MARGINS:
+            polygons = polygons_of(boundary.buffer(margin, 2).simplify(margin))
+            length = len(urllib.parse.quote(filter_xml(polygons), safe=""))
+            if length <= MUNICIPALITY_FILTER_CHARS or margin == MUNICIPALITY_MARGINS[-1]:
+                out[row["komkode"]] = {"navn": row["navn"], "margin": margin, "polygons": polygons}
+                margins[margin] = margins.get(margin, 0) + 1
+                break
+    target = repo / "geofa_plugin" / "layers" / "municipalities.json"
+    target.write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    print(f"municipalities: {len(out)} outlines, margins {dict(sorted(margins.items()))} -> {target} "
+          f"({target.stat().st_size // 1024} KB)")
+
+
 def main():
     SPEC_DIR.mkdir(parents=True, exist_ok=True)
+    if "--photo-layers" in sys.argv:
+        fetch_photo_layers()
+        return
+    if "--municipalities" in sys.argv:
+        fetch_municipalities()
+        return
     if "--production-details" in sys.argv:
         fetch_production_details()
         return

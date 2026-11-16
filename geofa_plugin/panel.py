@@ -16,7 +16,7 @@ from qgis.PyQt.QtGui import QDesktopServices
 from qgis.PyQt.QtWidgets import (QFrame, QHBoxLayout, QLabel, QMenu, QMessageBox, QSizePolicy, QStyledItemDelegate,
                                  QToolButton, QTreeWidget, QTreeWidgetItem, QVBoxLayout, QWidget)
 
-from . import loader
+from . import loader, municipalities
 
 ROLE_TABLE = Qt.ItemDataRole.UserRole + 1
 ROLE_SEARCH = Qt.ItemDataRole.UserRole + 2
@@ -119,23 +119,29 @@ class GeoFAPanel(QgsDockWidget):
         self.search.setPlaceholderText("Søg lag eller temakode …")
         self.search.textChanged.connect(self.filter)
         row.addWidget(self.search)
-        # Read-only or editing, shown as the button's state rather than a banner
+        # Read-only or editing, shown as the button's state rather than a banner. Framed buttons,
+        # as in the Geodata Connect panel
         self.edit_button = QToolButton()
         self.edit_button.setCheckable(True)
-        self.edit_button.setAutoRaise(True)
         self.edit_button.setIcon(QgsApplication.getThemeIcon("/mActionToggleEditing.svg"))
-        # Editing on: a soft GeoFA-green background (readable in light and dark QGIS themes)
-        self.edit_button.setStyleSheet("QToolButton:checked { background: rgba(147, 194, 87, 90); "
-                                       f"border: 1px solid {GEOFA_GREEN}; border-radius: 3px; }}")
         self.edit_button.toggled.connect(self.edit_toggled)
         row.addWidget(self.edit_button)
         settings_button = QToolButton()
-        settings_button.setAutoRaise(True)
         settings_button.setIcon(QgsApplication.getThemeIcon("/mActionOptions.svg"))
-        settings_button.setToolTip("Indstillinger for GeoFA (login og testmiljø)")
+        settings_button.setToolTip("Indstillinger for GeoFA (login, testmiljø og område)")
         settings_button.clicked.connect(lambda: self.settings_requested.emit())
         row.addWidget(settings_button)
         layout.addLayout(row)
+
+        # The municipality filter, when one is chosen; a click opens the settings
+        self.area_filter = QToolButton()
+        self.area_filter.setAutoRaise(True)
+        self.area_filter.setIcon(QgsApplication.getThemeIcon("/mActionFilter2.svg"))
+        self.area_filter.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
+        self.area_filter.setToolTip("GeoFA-lagene viser kun objekter i denne kommune. Klik for at ændre det.")
+        self.area_filter.clicked.connect(lambda: self.settings_requested.emit())
+        self.area_filter.hide()
+        layout.addWidget(self.area_filter)
 
         self.tree = QTreeWidget()
         self.tree.setHeaderHidden(True)
@@ -280,6 +286,9 @@ class GeoFAPanel(QgsDockWidget):
                                         "Klik for kun at vise lagene.")
         else:
             self.edit_button.setToolTip("Lagene kan kun vises.\nKlik for at redigere med dit GeoFA-login (WFS-T).")
+        kommune = getattr(mode, "kommune", "")
+        self.area_filter.setText(f"Kun objekter i {municipalities.display_name(kommune)}" if kommune else "")
+        self.area_filter.setVisible(bool(kommune))
         self.sync()
 
     def cleanup(self):

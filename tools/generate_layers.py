@@ -35,7 +35,8 @@ from qgis.core import (  # noqa: E402
     QgsLineSymbol, QgsMarkerSymbol, QgsPalLayerSettings, QgsRendererCategory, QgsSimpleFillSymbolLayer,
     QgsSimpleLineSymbolLayer, QgsSimpleMarkerSymbolLayer, QgsSingleSymbolRenderer, QgsSvgMarkerSymbolLayer,
     QgsTextBufferSettings, QgsTextFormat, QgsVectorLayer, QgsVectorLayerSimpleLabeling, QgsCentroidFillSymbolLayer,
-    QgsSettings, QgsFontMarkerSymbolLayer, QgsPointPatternFillSymbolLayer, QgsDefaultValue,
+    QgsSettings, QgsFontMarkerSymbolLayer, QgsPointPatternFillSymbolLayer, QgsDefaultValue, QgsExpression,
+    QgsOptionalExpression,
 )
 from qgis.PyQt.QtCore import QMetaType, Qt  # noqa: E402
 from qgis.PyQt.QtGui import QColor, QFont  # noqa: E402
@@ -43,6 +44,10 @@ from qgis.PyQt.QtGui import QColor, QFont  # noqa: E402
 PIXELS = Qgis.RenderUnit.Pixels
 NULL_VALUE = "{2839923C-8B7D-419E-B84B-CA2FE9B80EC7}"  # how QGIS's ValueMap stores "no value"
 HTML_FIELDS = ("lang_beskr", "uk_l_beskr", "d_l_beskr")  # as in geofa_plugin/htmlfields.py
+PHOTO_FIELD = re.compile(r"^(geofafoto\d*|gpx_link)$")  # links to GeoFA's photos and GPX files
+# QGIS's attachment widget as a link only: the file name, opened in the browser on a click
+PHOTO_LINK = {"DocumentViewer": 0, "DocumentViewerHeight": 0, "DocumentViewerWidth": 0, "FileWidget": True,
+              "FileWidgetButton": False, "FullUrl": False, "RelativeStorage": 0, "StorageMode": 0, "UseLink": True}
 DERIVED_GENERAL = {"cvr_navn", "kommunekode", "oprindelse", "status", "offentlig"}
 GEOMETRY = {"MULTIPOINT": "MultiPoint", "POINT": "MultiPoint", "MULTILINESTRING": "MultiLineString",
             "LINESTRING": "MultiLineString", "MULTIPOLYGON": "MultiPolygon", "POLYGON": "MultiPolygon"}
@@ -599,7 +604,8 @@ def apply_fields_and_form(layer, dataset, fields, text_of, used):
     root = config.invisibleRootContainer()
     root.clear()
     theme_tab_name = re.sub(r"\s*\(\d{4}\)\s*$", "", dataset["title"])
-    tabs = {"Generelt": [], theme_tab_name: [], "Øvrige felter": []}
+    photo_tab_name = "Fotos og GPX" if any(f["name"] == "gpx_link" for f in fields) else "Fotos"
+    tabs = {"Generelt": [], theme_tab_name: [], photo_tab_name: [], "Øvrige felter": []}
     names = {f["name"] for f in fields}
     for f in fields:
         idx = layer.fields().indexOf(f["name"])
@@ -623,6 +629,9 @@ def apply_fields_and_form(layer, dataset, fields, text_of, used):
             options = ([] if f["required"] else [{"<ingen værdi>": NULL_VALUE}]) + [{alias: value} for value, alias in f["codes"]]
             layer.setEditorWidgetSetup(idx, QgsEditorWidgetSetup("ValueMap", {"map": options}))
             used.setdefault("lists_without_source", set()).add(f"{dataset['table'][2:6]}:{f['name']}")
+        elif f["kind"] == "photo":
+            # Links to GeoFA's photos (and GPX files): a link that opens in the browser
+            layer.setEditorWidgetSetup(idx, QgsEditorWidgetSetup("ExternalResource", PHOTO_LINK))
         elif f["name"] in HTML_FIELDS:
             # Long descriptions in HTML: formatted in the form; the plugin shows the HTML text
             # while the layer is being edited (geofa_plugin/htmlfields.py)
@@ -642,9 +651,19 @@ def apply_fields_and_form(layer, dataset, fields, text_of, used):
         default = DEFAULTS.get(f["name"])
         if default:
             layer.setDefaultValueDefinition(idx, QgsDefaultValue(*default))
-        tab = "Generelt" if f["kind"] == "general" else theme_tab_name if f["kind"] == "theme" or f["name"] == "note" else "Øvrige felter"
+        if f["kind"] == "photo":
+            tab = photo_tab_name
+        elif f["kind"] == "general":
+            tab = "Generelt"
+        elif f["kind"] == "theme" or f["name"] == "note":
+            tab = theme_tab_name
+        else:
+            tab = "Øvrige felter"
         tabs[tab].append((f["name"], idx))
-    for tab_name in sorted(tabs, key=lambda t: 0 if t == "Generelt" else 1 if t == theme_tab_name else 2):
+    order = {"Generelt": 0, theme_tab_name: 1, photo_tab_name: 2}
+    for tab_name in sorted(tabs, key=lambda t: order.get(t, 3)):
+        if not tabs[tab_name] and tab_name == photo_tab_name:
+            continue
         container = QgsAttributeEditorContainer(tab_name, root)
         if hasattr(container, "setType"):
             container.setType(Qgis.AttributeEditorContainerType.Tab)
@@ -652,12 +671,35 @@ def apply_fields_and_form(layer, dataset, fields, text_of, used):
             container.setIsGroupBox(False)
         for name, idx in tabs[tab_name]:
             container.addChildElement(QgsAttributeEditorField(name, idx, container))
+        if tab_name == photo_tab_name:
+            # Only when the object has a photo or GPX link: so never while editing, as the
+            # editable (normal) layers have no photo links, and not for objects without photos
+            shown = " OR ".join(f"coalesce(\"{name}\", '') <> ''" for name, _ in tabs[tab_name])
+            container.setVisibilityExpression(QgsOptionalExpression(QgsExpression(shown), True))
         root.addChildElement(container)
     layer.setEditFormConfig(config)
-    return {k: len(v) for k, v in tabs.items()}
+    return {k: len(v) for k, v in tabs.items() if v}
 
 
 # ---------------------------------------------------------------- main
+
+def photo_layers():
+    """{"environments": {environment: [table, ...]}, "fields": {table: [photo field, ...]}} (fetch_sources.py --photo-layers)."""
+    path = spec.SPEC / "photo_layers.json"
+    return spec.read_json(path) if path.exists() else {"environments": {}, "fields": {}}
+
+
+def add_photo_fields(table, fields):
+    """Mark the photo fields (geofafoto*, gpx_link), and add those only GeoFA's photo-link version has."""
+    names = {f["name"] for f in fields}
+    for name in photo_layers()["fields"].get(table, []):
+        if name not in names:
+            fields.append({"name": name, "qtype": QMetaType.Type.QString, "kind": "photo", "required": False,
+                           "codes": None, "source": None, "desc": ""})
+    for f in fields:
+        if PHOTO_FIELD.match(f["name"]):
+            f["kind"], f["source"], f["codes"] = "photo", None, None
+
 
 def generate(dataset, webmap, symbols_dir, styles_dir, used):
     geometry = GEOMETRY.get(str((webmap or {}).get("type") or "").upper(), "MultiPolygon")
@@ -665,6 +707,7 @@ def generate(dataset, webmap, symbols_dir, styles_dir, used):
     if meta:
         for f in fields:
             f["properties"] = (meta["fields"].get(f["name"]) or {}).get("properties") or {}
+    add_photo_fields(dataset["table"], fields)
     layer = QgsVectorLayer(f"{geometry}?crs=EPSG:25832", dataset["title"], "memory")
     tabs = apply_fields_and_form(layer, dataset, fields, text_fields(fields, webmap), used)
     renderer, style_note = renderer_for(webmap, geometry, fields, symbols_dir, used)
@@ -741,6 +784,8 @@ def main():
             "purpose": (props.get("formaal") or "").strip(),
             "form_version": form_fingerprint(spec.OUT / "styles" / f"{d['table']}.qml"),
             "code_lists": result.get("code_lists") or {},
+            "photo_environments": [environment for environment, tables in photo_layers()["environments"].items()
+                                   if d["table"] in tables],
         })
     catalogue = {"source": {"spec_commit": spec_commit(), "webmap": "geofa-kort.geodanmark.dk (tag:udgivet)"},
                  "groups": groups}

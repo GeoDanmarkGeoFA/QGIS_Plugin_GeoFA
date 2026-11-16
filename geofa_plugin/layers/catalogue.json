@@ -53,7 +53,8 @@
        "aktiv=1",
        true
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5710_born_skole_dis",
@@ -115,7 +116,8 @@
        "aktiv=1",
        true
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5715_botilbud",
@@ -177,7 +179,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5705_forp_are",
@@ -232,7 +235,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5700_grundej",
@@ -294,7 +298,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5707_grunds",
@@ -356,7 +361,8 @@
        "",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5706_havn_are",
@@ -404,7 +410,8 @@
        "aktiv=1",
        true
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5717_hoeringspart",
@@ -466,7 +473,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5701_lok_omr",
@@ -514,7 +522,8 @@
        "aktiv=1",
        true
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5712_plej_aeldr_dis",
@@ -562,7 +571,8 @@
        "aktiv=1",
        true
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5713_prog_stat_dis",
@@ -610,7 +620,8 @@
        "aktiv=1",
        true
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5716_servicetilbud",
@@ -672,7 +683,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5702_skorst_fej",
@@ -713,7 +725,8 @@
        "aktiv=1",
        true
       ]
-     }
+     },
+     "photo_environments": []
     }
    ]
   },
@@ -766,7 +779,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5402_genbr_con",
@@ -814,7 +828,8 @@
        "aktiv=1",
        true
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5401_genbr_st",
@@ -869,7 +884,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     }
    ]
   },
@@ -885,7 +901,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=223379825",
      "purpose": "Formålet med temaet er at foretage eftersyn og registrere de tilhørende observationer for at kortlægge både kapaciteten og den aktuelle stand af betondækningsgrave.",
-     "form_version": "2cda6afe0e61",
+     "form_version": "18c008a27d36",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -1454,7 +1470,11 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": [
+      "production",
+      "test"
+     ]
     }
    ]
   },
@@ -1521,7 +1541,8 @@
        "aktiv=1",
        true
       ]
-     }
+     },
+     "photo_environments": []
     }
    ]
   },
@@ -1581,7 +1602,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     }
    ]
   },
@@ -1627,7 +1649,8 @@
        "aktiv=1",
        true
       ]
-     }
+     },
+     "photo_environments": []
     }
    ]
   },
@@ -1701,7 +1724,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5107_art_invas_p",
@@ -1770,7 +1794,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5106_nat_pl",
@@ -1832,7 +1857,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     }
    ]
   },
@@ -1892,7 +1918,8 @@
        "aktiv=1",
        true
       ]
-     }
+     },
+     "photo_environments": []
     }
    ]
   },
@@ -2001,7 +2028,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5013_afvandingskanal",
@@ -2098,7 +2126,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5014_bassin",
@@ -2195,7 +2224,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5015_begraenser",
@@ -2292,7 +2322,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5016_broend",
@@ -2389,7 +2420,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5017_broendbygvaerk",
@@ -2486,7 +2518,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5022_byrum_og_landskabselementer_f",
@@ -2583,7 +2616,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5021_byrum_og_landskabselementer_l",
@@ -2680,7 +2714,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5011_draenbroend",
@@ -2742,7 +2777,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5003_draenledn",
@@ -2811,7 +2847,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5004_draenomr",
@@ -2859,7 +2896,8 @@
        "aktiv=1",
        true
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5019_etagebroend",
@@ -2956,7 +2994,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5018_fordelerbygvaerk",
@@ -3053,7 +3092,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5020_groent_tag",
@@ -3094,7 +3134,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5023_nedsivningsanlaeg",
@@ -3191,7 +3232,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5024_permeabel_belaegning",
@@ -3288,7 +3330,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5035_projekt",
@@ -3336,7 +3379,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5025_pumpestation",
@@ -3433,7 +3477,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5026_regnbed",
@@ -3530,7 +3575,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5027_reguleringsbygvaerk",
@@ -3627,7 +3673,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5028_rist",
@@ -3724,7 +3771,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5029_samlekonstruktion",
@@ -3821,7 +3869,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5030_sandfang",
@@ -3918,7 +3967,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5031_spunsvaeg",
@@ -4015,7 +4065,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5032_tank",
@@ -4112,7 +4163,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5033_udskiller",
@@ -4209,7 +4261,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5034_udskillerbygvaerk",
@@ -4306,7 +4359,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5036_vandopland",
@@ -4347,7 +4401,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     }
    ]
   },
@@ -4363,7 +4418,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353491",
      "purpose": "Oplyse sagsbehandler og privat/offentlig entreprenør via selvbetjeningsløsninger om, hvordan arealer plejes",
-     "form_version": "e46fafa6a61f",
+     "form_version": "115fb5f5c139",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -4421,7 +4476,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_6801_parl_li",
@@ -4432,7 +4488,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353489",
      "purpose": "Oplyse sagsbehandler og privat/offentlig entreprenører via selvbetjeningsløsninger,  om plejen af linjeelementer",
-     "form_version": "d235d9f31ae0",
+     "form_version": "33d7fabf51c8",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -4490,7 +4546,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_6802_parl_pkt",
@@ -4501,7 +4558,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353483",
      "purpose": "Oplyse sagsbehandler og private/offentlige entreprenører via selvbetjeningsløsninger, hvordan objekter/punkter plejes",
-     "form_version": "9e4ea7fc363e",
+     "form_version": "ec22ebe064ac",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -4587,7 +4644,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_6803_parl_omr",
@@ -4598,7 +4656,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353480",
      "purpose": "At kunne registrer hvem der står for og/eller betaler for den grønne pleje indenfor et område, så det ikke er nødvendigt at registrere dette på hvert element/objekt.",
-     "form_version": "23683b501f74",
+     "form_version": "38caa0d477f0",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -4649,7 +4707,8 @@
        "",
        false
       ]
-     }
+     },
+     "photo_environments": []
     }
    ]
   },
@@ -4665,7 +4724,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=273744643",
      "purpose": "Bygningsvurderingen skal sikre, at bevaringsværdige bygninger kan blive beskyttet i den kommunale planlægning ligesom det kan have betydning for ejendommens værdi.",
-     "form_version": "84e0481f60e9",
+     "form_version": "471cea9b314b",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -4709,7 +4768,11 @@
        "aktiv=1",
        true
       ]
-     }
+     },
+     "photo_environments": [
+      "production",
+      "test"
+     ]
     },
     {
      "table": "t_6204_bygningsvurderingsgruppe",
@@ -4720,7 +4783,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=273744641",
      "purpose": "Bygningsvurderingsgruppen bliver ikke i sig selv vurderet eller karaktersat, men har alene til formål at sammenknytte en relevant samling af vurderede bygninger. En vurderet bygning kan høre til flere bygningsvurderingsgrupper.",
-     "form_version": "ab54fda75571",
+     "form_version": "295463e231ea",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -4750,7 +4813,11 @@
        "aktiv=1",
        true
       ]
-     }
+     },
+     "photo_environments": [
+      "production",
+      "test"
+     ]
     },
     {
      "table": "t_6201_kult_geo",
@@ -4798,7 +4865,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_6202_landk_omr",
@@ -4895,7 +4963,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_6203_landk_vur",
@@ -4964,7 +5033,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_6200_nat_geo",
@@ -5040,7 +5110,8 @@
        "aktiv=1",
        true
       ]
-     }
+     },
+     "photo_environments": []
     }
    ]
   },
@@ -5056,7 +5127,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353527",
      "purpose": "Oplyse sagsbehandler og borger via selvbetjeningsløsninger, hvilken sports- og fritidsfaciliteter, der ligger i lokalområdet. Evt. også \nnærmeste svømmehal m.v.",
-     "form_version": "082b352f0475",
+     "form_version": "73630944536b",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -5177,7 +5248,11 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": [
+      "production",
+      "test"
+     ]
     },
     {
      "table": "t_5802_fac_li",
@@ -5188,7 +5263,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353531",
      "purpose": "Oplyse sagsbehandler og borger via selvbetjeningsløsninger, hvilken sports- og fritidsfaciliteter, der ligger i lokalområdet. Evt. også \nnærmeste riderute m.v.",
-     "form_version": "dca141e33a31",
+     "form_version": "c5601e8b08d7",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -5337,7 +5412,11 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": [
+      "production",
+      "test"
+     ]
     },
     {
      "table": "t_5800_fac_pkt",
@@ -5348,7 +5427,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=199983821",
      "purpose": "Oplyse sagsbehandler og borger via selvbetjeningsløsninger, hvilken sports- og fritidsfaciliteter, der ligger i lokalområdet. Evt. også \nnærmeste svømmehal m.v.",
-     "form_version": "fd1003ec3817",
+     "form_version": "7ffa89c811be",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -5469,7 +5548,11 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": [
+      "production",
+      "test"
+     ]
     }
    ]
   },
@@ -5522,7 +5605,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5609_cykelkrydspunktsstraekninger",
@@ -5570,7 +5654,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5610_cykelplanlaegning",
@@ -5667,7 +5752,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5601_hasti_daemp",
@@ -5678,7 +5764,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353470",
      "purpose": "Give overblik over hvor der er hastighedsdæmpende foranstaltninger.",
-     "form_version": "befae2176ef7",
+     "form_version": "6c2911a6bf6e",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -5729,7 +5815,8 @@
        "aktiv=1",
        true
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5603_hasti_omraade",
@@ -5784,7 +5871,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5604_koer_begr",
@@ -5839,7 +5927,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5607_ladefacilitet",
@@ -5850,7 +5939,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=199983826",
      "purpose": "Anvendes til planlægning og registrering af ladeinfrastruktur.",
-     "form_version": "43088b78a7ef",
+     "form_version": "ff8ab03a766a",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -5908,7 +5997,10 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": [
+      "production"
+     ]
     },
     {
      "table": "t_5613_p_plads",
@@ -5956,7 +6048,8 @@
        "aktiv=1",
        true
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5602_p_zoner",
@@ -6011,7 +6104,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5614_stationering_cykelplanlaegning",
@@ -6052,7 +6146,8 @@
        "aktiv=1",
        true
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5605_vejbyggel",
@@ -6100,7 +6195,8 @@
        "aktiv=1",
        true
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5606_vejinv",
@@ -6111,7 +6207,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353429",
      "purpose": "Skabe et geografisk overblik over hvad der står hvor langs de kommunale veje. Bl.a. til at udbyde vedligeholdelsesarbejdet.",
-     "form_version": "dc789e470f19",
+     "form_version": "10343e4cbb96",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -6155,7 +6251,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5611_vinterute",
@@ -6210,7 +6307,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5612_vinterserviceomraade",
@@ -6258,7 +6356,8 @@
        "aktiv=1",
        true
       ]
-     }
+     },
+     "photo_environments": []
     },
     {
      "table": "t_5600_vintervedl",
@@ -6313,7 +6412,8 @@
        "aktiv=1",
        false
       ]
-     }
+     },
+     "photo_environments": []
     }
    ]
   }

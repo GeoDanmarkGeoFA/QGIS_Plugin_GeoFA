@@ -15,7 +15,7 @@ import os
 import traceback
 from pathlib import Path
 
-from qgis.core import Qgis, QgsEditorWidgetSetup, QgsProject, QgsSettings
+from qgis.core import Qgis, QgsDataSourceUri, QgsEditorWidgetSetup, QgsFeatureRequest, QgsProject, QgsSettings
 from qgis.PyQt.QtCore import Qt, QTimer
 from qgis.PyQt.QtWidgets import QApplication
 from qgis.utils import iface, plugins
@@ -79,6 +79,7 @@ def ticked():
 def part_add():
     QgsSettings().remove("GeoFA/code_list_problems")  # so a broken list is reported in this run
     plugin().settings.set_value("testmiljo", False)  # start in production, whatever a stopped run left
+    plugin().settings.set_value("kommune", "")
     plugin().settings.emit_updated()
     check("plugin loaded", plugin() is not None)
     menu = [action.text() for action in plugin().menu.actions()]
@@ -96,6 +97,11 @@ def part_add():
     check("aliases with the field name", alias == "Facilitettype (facil_ty_k)", alias)
     check("webmap styling (categorised)", facility_layer().renderer().type() == "categorizedSymbol",
           facility_layer().renderer().type())
+    source = QgsDataSourceUri(facility_layer().source())
+    check("read from the photo-link version", "fkg_foto_gpx_link" in source.param("typename"), source.param("typename"))
+    sample = list(facility_layer().getFeatures(QgsFeatureRequest().setLimit(300)))
+    photos = sum(1 for feature in sample if str(feature["geofafoto"] or "").startswith("https://"))
+    check("photo links in the objects", photos > 0, f"{photos} of {len(sample)}")
 
 
 def part_update_forms():
@@ -161,6 +167,18 @@ def part_back_to_production():
     names = [l.name() for l in project_layers()]
     check("unticking removes the layer", not any("5609" in name for name in names), names)
     check("…and only that layer", any("5800" in name for name in names), names)
+    step("municipality filter: Aarhus")
+    everywhere = facility_layer().featureCount()
+    plugin().settings.set_value("kommune", "0751")
+    plugin().settings.emit_updated()
+    filtered = facility_layer().featureCount()
+    check("municipality filter reaches the layers already added",
+          "Intersects" in QgsDataSourceUri(facility_layer().source()).param("filter"))
+    check("only objects in Aarhus Kommune", 0 < filtered < everywhere, f"{filtered} of {everywhere}")
+    check("panel shows the filter", not plugin().panel.area_filter.isHidden(), plugin().panel.area_filter.text())
+    plugin().settings.set_value("kommune", "")
+    plugin().settings.emit_updated()
+    check("filter off again", facility_layer().featureCount() == everywhere, facility_layer().featureCount())
 
 
 def finish():

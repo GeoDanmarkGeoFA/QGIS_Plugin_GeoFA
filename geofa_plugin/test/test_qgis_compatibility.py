@@ -17,7 +17,8 @@ TEMP_ROOT = tempfile.mkdtemp(prefix="geofa_qgis_test_")
 os.environ["QGIS_CUSTOM_CONFIG_PATH"] = os.path.join(TEMP_ROOT, "profile")
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from qgis.core import QgsApplication, QgsAuthMethodConfig, QgsEditorWidgetSetup, QgsSettings, QgsVectorLayer
+from qgis.core import (QgsApplication, QgsAuthMethodConfig, QgsDataSourceUri, QgsEditorWidgetSetup, QgsSettings,
+                       QgsVectorLayer)
 from qgis.gui import QgsMessageBar, QgsPasswordLineEdit
 from qgis.PyQt.QtCore import QCoreApplication, QSettings, QUrl
 from qgis.PyQt.QtCore import QObject, Qt, pyqtSignal
@@ -37,8 +38,8 @@ import geofa_plugin.geofa as geofa_module
 from geofa_plugin.geofa import GeoFA
 from geofa_plugin import credentials
 from geofa_plugin.config import Settings
-from geofa_plugin.settings_window import PASSWORD_SAVED_PLACEHOLDER, LoginForm
-from geofa_plugin import about, codelists, htmlfields, loader
+from geofa_plugin.settings_window import PASSWORD_SAVED_PLACEHOLDER, OptionsFactory, SettingsForm
+from geofa_plugin import about, codelists, htmlfields, loader, municipalities
 from geofa_plugin.catalogue import Catalogue, catalogue
 from geofa_plugin.panel import ROLE_GROUP, ROLE_TABLE, GeoFAPanel
 from geofa_plugin.settings_window import SettingsDialog
@@ -130,8 +131,14 @@ class CompatibilityTests(unittest.TestCase):
         with patch.object(geofa_module, "QDesktopServices", fake_services):
             plugin.manual_menu.trigger()
         self.assertEqual(opened, [geofa_module.VEJLEDNING_URL])
-        form = LoginForm(plugin.settings)
+        form = SettingsForm(plugin.settings)
         self.assertIsInstance(form.password_edit, QgsPasswordLineEdit)  # QGIS's own field, with the eye
+        # The GeoFA page in QGIS's Options, with the same form
+        self.assertEqual(len(iface.options_factories), 1)
+        page = iface.options_factories[0].createWidget(None)
+        self.assertEqual(page.objectName(), "geofaOptions")
+        self.assertFalse(iface.options_factories[0].icon().isNull())  # the GeoFA "G"
+        self.assertEqual(page.form.municipality_box.count(), 1 + 99)  # "Hele landet" and the municipalities
         calls = []
         plugin.add_tables = lambda tables: calls.append(tables)
         plugin.layer_locator_filter.triggerResult(types.SimpleNamespace(userData=0))
@@ -226,6 +233,18 @@ class CredentialTests(unittest.TestCase):
         dialog.form.username_edit.setText("kom996")
         dialog.reject()
         self.assertEqual(settings.value("username"), "kom997")
+        # The municipality filter
+        dialog = SettingsDialog(settings)
+        box = dialog.form.municipality_box
+        box.setCurrentIndex(box.findData("0751"))
+        dialog.accept()
+        try:
+            self.assertEqual(settings.value("kommune"), "0751")
+            self.assertEqual(loader.Mode.from_settings(settings).kommune, "0751")
+            reopened = SettingsDialog(settings)
+            self.assertEqual(reopened.form.municipality_box.currentData(), "0751")
+        finally:
+            settings.set_value("kommune", "")
 
     def test_without_a_login_the_plugin_is_a_viewer(self):
         iface = FakeIface()
@@ -278,7 +297,7 @@ class CredentialTests(unittest.TestCase):
 
     def test_login_form_keeps_password_out_of_settings(self):
         settings = Settings()
-        page = LoginForm(settings)
+        page = SettingsForm(settings)
         page.username_edit.setText("kom999")
         page.password_edit.setText("hemmelig")
         page.check_box_wfst.setChecked(True)
@@ -287,7 +306,7 @@ class CredentialTests(unittest.TestCase):
         self.assertEqual(QSettings().value(credentials.LEGACY_PASSWORD_KEY, ""), "")
         self.assertTrue(settings.value("wfst"))
         # The saved password is never shown again, but WFS-T stays available
-        reopened = LoginForm(settings)
+        reopened = SettingsForm(settings)
         self.assertEqual(reopened.password_edit.text(), "")
         self.assertEqual(reopened.password_edit.placeholderText(), PASSWORD_SAVED_PLACEHOLDER)
         self.assertTrue(reopened.check_box_wfst.isEnabled())
@@ -499,15 +518,65 @@ class CatalogueTests(unittest.TestCase):
         self.assertEqual(cat.get("t_5609_cykelknudepunktsstraekninger").table, "t_5609_cykelkrydspunktsstraekninger")
 
     def test_sources_hold_no_password(self):
-        read = loader.layer_source("t_5800_fac_pkt", READ)
+        read = loader.layer_source("t_5710_born_skole_dis", READ)
         self.assertIn("url='https://geofa.geodanmark.dk/ows/fkg/fkg'", read)
-        self.assertIn("typename='fkg:fkg.t_5800_fac_pkt'", read)
+        self.assertIn("typename='fkg:fkg.t_5710_born_skole_dis'", read)
         self.assertNotIn("authcfg", read)
         edit = loader.layer_source("t_5800_fac_pkt", EDIT_TEST)
         self.assertIn("url='https://geofa-test.geodanmark.dk/wfs/kom999@fkg/fkg/25832'", edit)
         self.assertIn("typename='fkg:t_5800_fac_pkt'", edit)
         self.assertIn("authcfg=geofa01", edit)
         self.assertNotIn("password", edit)
+
+    def test_read_only_layers_with_photos_come_from_the_photo_link_version(self):
+        def parts(table, mode):
+            uri = QgsDataSourceUri(loader.layer_source(table, mode))
+            return uri.param("url"), uri.param("typename")
+
+        self.assertEqual(parts("t_5800_fac_pkt", READ), ("https://geofa.geodanmark.dk/ows/fkg/fkg_foto_gpx_link",
+                                                          "fkg:fkg_foto_gpx_link.t_5800_fac_pkt"))
+        # Editing uses the normal, editable table
+        self.assertEqual(parts("t_5800_fac_pkt", EDIT)[1], "fkg:t_5800_fac_pkt")
+        # Only where GeoFA has a photo-link version: 5607 has none in the test environment
+        self.assertEqual(parts("t_5607_ladefacilitet", READ)[1], "fkg:fkg_foto_gpx_link.t_5607_ladefacilitet")
+        self.assertEqual(parts("t_5607_ladefacilitet", TEST_READ)[1], "fkg:fkg.t_5607_ladefacilitet")
+        layer = FakeLayer(loader.layer_source("t_5800_fac_pkt", READ))
+        self.assertEqual(loader.table_of(layer), "t_5800_fac_pkt")
+
+    def test_municipality_filter_is_sent_with_every_source_and_fits_a_request(self):
+        aarhus = loader.Mode(edit=False, test=False, username="kom999", kommune="0751")
+        source = QgsDataSourceUri(loader.layer_source("t_5710_born_skole_dis", aarhus))
+        self.assertIn("<ogc:Intersects><ogc:PropertyName>geometri</ogc:PropertyName>", source.param("filter"))
+        # Whole metres: "6.2227e+06" would lose precision, and its "+" becomes a space in the request
+        self.assertNotIn("e+", source.param("filter"))
+        # QGIS would combine the filter with the map view box at more than twice its length
+        self.assertFalse(source.hasParam("restrictToRequestBBOX"))
+        self.assertEqual(QgsDataSourceUri(loader.layer_source("t_5710_born_skole_dis", READ)).param("filter"), "")
+        self.assertEqual(municipalities.display_name("0751"), "Aarhus Kommune")
+        self.assertEqual(municipalities.display_name("0411"), "Christiansø")
+        choices = municipalities.choices()
+        self.assertEqual(len(choices), 99)
+        self.assertEqual([name for _, name in choices], sorted(name for _, name in choices))
+        self.assertIsNone(municipalities.intersects_filter("9999"))
+        # Swapping a layer keeps the user's own filter, but not this one (it comes with the new source)
+        self.assertTrue(municipalities.is_municipality_filter(municipalities.intersects_filter("0101")))
+        self.assertFalse(municipalities.is_municipality_filter('"statuskode" = 3'))
+        self.assertFalse(municipalities.is_municipality_filter(""))
+        # GeoFA's server turns down request lines over ~8,190 characters, and QGIS adds to the filter
+        longest = max(len(urllib.parse.quote(municipalities.intersects_filter(code), safe=""))
+                      for code, _ in choices)
+        self.assertLessEqual(longest, 5500)
+
+    def test_changing_the_municipality_filters_the_layers_already_added(self):
+        layer = FakeLayer(loader.layer_source("t_5710_born_skole_dis", READ), table="t_5710_born_skole_dis")
+        project = types.SimpleNamespace(mapLayers=lambda: {"layer": layer})
+        aarhus = loader.Mode(edit=False, test=False, username="kom999", kommune="0751")
+        with patch.object(loader, "replace_layer", _replace_in_place):
+            self.assertEqual(loader.repoint(aarhus, project)[0], 1)
+            self.assertIn("Intersects", QgsDataSourceUri(layer.src).param("filter"))
+            self.assertEqual(loader.repoint(aarhus, project)[0], 0)  # already filtered
+            self.assertEqual(loader.repoint(READ, project)[0], 1)
+        self.assertEqual(QgsDataSourceUri(layer.src).param("filter"), "")
 
     def test_layers_stay_in_their_environment_and_only_the_chosen_one_is_editable(self):
         prod = FakeLayer(loader.layer_source("t_5710_born_skole_dis", READ), table="t_5710_born_skole_dis")
@@ -530,7 +599,7 @@ class CatalogueTests(unittest.TestCase):
         # Switching to test, read-only: production layers stay on production
         repoint(TEST_READ)
         self.assertEqual(prod.src, loader.layer_source("t_5710_born_skole_dis", READ))
-        self.assertIn("url='https://geofa.geodanmark.dk/ows/fkg/fkg'", old.src)
+        self.assertIn("url='https://geofa.geodanmark.dk/", old.src)  # production (its photo-link version)
         self.assertEqual(test.src, loader.layer_source("t_5802_fac_li", TEST_READ))
         # Editing in test: only the test layers become editable (not the one being edited)
         changed, editing, failed = repoint(EDIT_TEST)
@@ -605,6 +674,11 @@ class CatalogueTests(unittest.TestCase):
         panel.set_mode(READ)
         self.assertTrue(panel.test_banner.isHidden())
         self.assertFalse(panel.edit_button.isChecked())
+        self.assertFalse(panel.edit_button.autoRaise())  # a framed button, as in Geodata Connect
+        self.assertTrue(panel.area_filter.isHidden())
+        panel.set_mode(loader.Mode(edit=False, test=False, username="kom999", kommune="0751"))
+        self.assertFalse(panel.area_filter.isHidden())
+        self.assertEqual(panel.area_filter.text(), "Kun objekter i Aarhus Kommune")
 
     def test_panel_ticks_mirror_the_project(self):
         prod = FakeLayer(loader.layer_source("t_5800_fac_pkt", READ), table="t_5800_fac_pkt")
