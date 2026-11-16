@@ -3,12 +3,10 @@ import os
 from qgis.PyQt import QtGui, uic
 from qgis.PyQt.QtWidgets import QFileDialog
 from qgis.gui import (QgsOptionsPageWidget)
-from qgis.core import QgsProject
 from qgis.PyQt.QtWidgets import QVBoxLayout, QLineEdit, QCheckBox, QPushButton
 from .qgissettingmanager import *
-from ..import_geofa import import_geofa
 from .. import credentials
-from qgis.core import QgsProject, QgsExpressionContextUtils, Qgis
+from qgis.core import Qgis
 from qgis.utils import iface
 
 OPTIONS_PAGE_NAME = "geofaOptions"  # used to open QGIS's Options dialog on this page
@@ -113,30 +111,12 @@ class ConfigOptionsPage(QgsOptionsPageWidget):
         self.save_login(old_username)
         self.reset_password_field()
         self.on_text_changed()
+        # The plugin points the project's GeoFA layers at the new mode (see GeoFA.apply_settings)
         self.settings.emit_updated()
 
-        # Update config variables
         self.username = self.settings.value('username')
         self.wfst = self.settings.value('wfst')
         self.testmiljo = self.settings.value('testmiljo')
-
-        # Set project variables
-        QgsExpressionContextUtils.setProjectVariable(QgsProject.instance(), 'geofa_bruger_id', self.username)
-
-        # Update the d_tables
-        import_geofa.d_tables(self, update=True)
-
-        # Get the menu items
-        menu_items = import_geofa.generate_menu_items()
-
-        # get the layers
-        layers = [layer.name() for layer in QgsProject.instance().mapLayers().values()]
-
-        # Update the menu items
-        for main_menu, submenus in menu_items.items():
-            for submenu in submenus:
-                if submenu in layers:
-                    import_geofa.run_action(self, submenu, "", update=True)
 
 
 class ConfigDialog(WIDGET, BASE, SettingDialog):

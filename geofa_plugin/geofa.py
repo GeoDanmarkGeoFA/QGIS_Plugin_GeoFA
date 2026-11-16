@@ -21,9 +21,9 @@
  *                                                                         *
  ***************************************************************************/
 """
-from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication, QTimer
-from qgis.PyQt.QtGui import QIcon
-from qgis.PyQt.QtWidgets import QMenu, QMessageBox
+from qgis.PyQt.QtCore import QCoreApplication, QSettings, Qt, QTimer, QTranslator, QUrl
+from qgis.PyQt.QtGui import QDesktopServices, QIcon
+from qgis.PyQt.QtWidgets import QMenu, QMessageBox, QProgressDialog, QPushButton
 try:
     from qgis.PyQt.QtGui import QAction
 except ImportError:
@@ -32,211 +32,298 @@ import os
 import os.path
 from .config import Settings, OptionsFactory
 from .config.settings_dialog import OPTIONS_PAGE_NAME
-from qgis.PyQt.QtGui import QDesktopServices
-from qgis.PyQt.QtCore import QUrl
 from .layerlocatorfilter import LayerLocatorFilter
-from .import_geofa import import_geofa
-from . import credentials
-from qgis.core import QgsProject, QgsExpressionContextUtils, Qgis
+from . import about, codelists, credentials, loader
+from .catalogue import catalogue
+from .loader import Mode
+from .panel import GeoFAPanel
+from qgis.core import QgsProject, QgsSettings, Qgis
 
-OM_GEOFA_URL = (
-        "https://www.geodanmark.dk/home/vejledninger/geofa/"
-)
-VEJLEDNING_URL = (
-        "https://github.com/GeoDanmarkGeoFA/QGIS_Plugin_GeoFA/blob/main/geofa_plugin/GeoFA_plugin_vejledning.md"
-)
+VEJLEDNING_URL = about.GUIDE_URL  # the guide is maintained as Markdown on GitHub
+PANEL_VISIBLE_KEY = "GeoFA/panel_visible"
+
 
 class GeoFA:
     """QGIS Plugin Implementation."""
 
     def __init__(self, iface):
-        """Constructor.
-
-        :param iface: An interface instance that will be passed to this class
-            which provides the hook by which you can manipulate the QGIS
-            application at run time.
-        :type iface: QgsInterface
-        """
-        # Save reference to the QGIS interface
         self.iface = iface
-        # initialize plugin directory
         self.plugin_dir = os.path.dirname(__file__)
-        # initialize locale
-        locale = QSettings().value('locale/userLocale')[0:2]
-        locale_path = os.path.join(
-            self.plugin_dir,
-            'i18n',
-            'GeoFA_{}.qm'.format(locale))
-
+        locale = (QSettings().value('locale/userLocale') or '')[0:2]
+        locale_path = os.path.join(self.plugin_dir, 'i18n', 'GeoFA_{}.qm'.format(locale))
         if os.path.exists(locale_path):
             self.translator = QTranslator()
             self.translator.load(locale_path)
             QCoreApplication.installTranslator(self.translator)
 
-        # new config method
         self.settings = Settings()
         self.options_factory = OptionsFactory(self.settings)
         self.options_factory.setTitle('GeoFA')
         iface.registerOptionsWidgetFactory(self.options_factory)
 
-        # Declare instance attributes
-        self.actions = []
+        self.catalogue = catalogue()
+        self.mode = Mode.from_settings(self.settings)
         self.login_sources = {}  # GeoFA layers in the open project that need the stored login
-        self.menu = self.tr(u'&GeoFA')
+        self.panel = None
+        self.code_lists = codelists.CodeLists()
+        self.code_lists.problems.connect(self.show_code_list_problems)
+        self.update_offer = None  # the message bar item offering to update older forms
 
         self.layer_locator_filter = LayerLocatorFilter()
         self.iface.registerLocatorFilter(self.layer_locator_filter)
 
-        # Check if plugin was started the first time in current QGIS session
-        # Must be set in initGui() to survive plugin reloads
-        self.first_start = None
-
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
-        """Get the translation for a string using Qt translation API.
-
-        We implement this ourselves since we do not inherit QObject.
-
-        :param message: String for translation.
-        :type message: str, QString
-
-        :returns: Translated version of message.
-        :rtype: QString
-        """
-        # noinspection PyTypeChecker,PyArgumentList,PyCallByClass
         return QCoreApplication.translate('GeoFA', message)
 
-    def add_action(
-            self,
-            icon_path,
-            text,
-            callback,
-            enabled_flag=True,
-            add_to_menu=True,
-            add_to_toolbar=True,
-            status_tip=None,
-            whats_this=None,
-            parent=None):
-        """Add a toolbar icon to the toolbar.
-
-        :param icon_path: Path to the icon for this action. Can be a resource
-            path (e.g. ':/plugins/foo/bar.png') or a normal file system path.
-        :type icon_path: str
-
-        :param text: Text that should be shown in menu items for this action.
-        :type text: str
-
-        :param callback: Function to be called when the action is triggered.
-        :type callback: function
-
-        :param enabled_flag: A flag indicating if the action should be enabled
-            by default. Defaults to True.
-        :type enabled_flag: bool
-
-        :param add_to_menu: Flag indicating whether the action should also
-            be added to the menu. Defaults to True.
-        :type add_to_menu: bool
-
-        :param add_to_toolbar: Flag indicating whether the action should also
-            be added to the toolbar. Defaults to True.
-        :type add_to_toolbar: bool
-
-        :param status_tip: Optional text to show in a popup when mouse pointer
-            hovers over the action.
-        :type status_tip: str
-
-        :param parent: Parent widget for the new action. Defaults None.
-        :type parent: QWidget
-
-        :param whats_this: Optional text to show in the status bar when the
-            mouse pointer hovers over the action.
-
-        :returns: The action that was created. Note that the action is also
-            added to self.actions list.
-        :rtype: QAction
-        """
-
-        icon = QIcon(icon_path)
-        action = QAction(icon, text, parent)
-        action.triggered.connect(callback)
-        action.setEnabled(enabled_flag)
-
-        if status_tip is not None:
-            action.setStatusTip(status_tip)
-
-        if whats_this is not None:
-            action.setWhatsThis(whats_this)
-
-        if add_to_toolbar:
-            # Adds plugin icon to Plugins toolbar
-            self.iface.addToolBarIcon(action)
-
-        if add_to_menu:
-            self.iface.addPluginToMenu(
-                self.menu,
-                action)
-
-        self.actions.append(action)
-
-        return action
-
     def initGui(self):
-        """Create the menu entries and toolbar icons inside the QGIS GUI."""
+        """The GeoFA menu (one submenu per spec group) and the GeoFA panel. No toolbar icon."""
+        loader.ensure_symbol_path()
+        loader.set_user_variable(self.mode.username)
 
         self.menu = QMenu("&GeoFA", self.iface.mainWindow().menuBar())
-        self.update_environment_label()
-        for signal, slot in self.signal_connections():
-            signal.connect(slot)
-        actions = self.iface.mainWindow().menuBar().actions()
+        self.menu.setToolTipsVisible(True)
         self.iface.mainWindow().menuBar().insertMenu(self.iface.firstRightStandardMenu().menuAction(), self.menu)
 
-        menu_items = import_geofa.generate_menu_items()
         searchable_layers = []
-        for main_menu, submenus in menu_items.items():
-            menu = self.menu.addMenu(main_menu)
-            for submenu in submenus:
-                q_action = menu.addAction(submenu)
-                q_action.triggered.connect(lambda checked=False, submenu=submenu: self.run_action(submenu, self.plugin_dir))
-                searchable_layers.append(
-                    {
-                        "title": submenu,
-                        "category": main_menu,
-                        "action": q_action,
-                    })
-
-        self.menu.addSeparator()
+        for group, datasets in self.catalogue.groups:
+            submenu = self.menu.addMenu(group)
+            submenu.setToolTipsVisible(True)
+            for dataset in datasets:
+                action = submenu.addAction(dataset.title)
+                if dataset.pending:
+                    action.setToolTip("Specifikationen for dette lag kommer snart.")
+                action.triggered.connect(lambda checked=False, table=dataset.table: self.add_tables([table]))
+                searchable_layers.append({"title": dataset.title, "category": group, "code": dataset.code,
+                                          "action": action})
         self.layer_locator_filter.set_searchable_layers(searchable_layers)
+        self.menu.addSeparator()
 
-        # Add about
-        icon_path_info = os.path.join(os.path.dirname(__file__), "icon_about.png")
-        self.about_menu = QAction(QIcon(icon_path_info), self.tr("Om pluginet") + "...", self.iface.mainWindow(),)
-        self.about_menu.setObjectName(self.tr("Om pluginet"))
+        self.panel = GeoFAPanel(self.catalogue, self.iface.mainWindow())
+        self.iface.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, self.panel)
+        self.panel.setVisible(QgsSettings().value(PANEL_VISIBLE_KEY, False, type=bool))
+        self.panel.visibilityChanged.connect(self.remember_panel)
+        self.panel.add_requested.connect(self.add_tables)
+        self.panel.edit_toggled.connect(self.set_edit)
+        self.panel.settings_requested.connect(self.open_settings)
+        self.panel_action = self.panel.toggleViewAction()
+        self.panel_action.setText("GeoFA-panel")
+        self.menu.addAction(self.panel_action)
+
+        self.edit_action = QAction("Redigering (WFS-T)", self.iface.mainWindow())
+        self.edit_action.setCheckable(True)
+        self.edit_action.toggled.connect(self.set_edit)
+        self.menu.addAction(self.edit_action)
+        self.settings_action = QAction("Indstillinger …", self.iface.mainWindow())
+        self.settings_action.triggered.connect(self.open_settings)
+        self.menu.addAction(self.settings_action)
+        self.update_forms_action = QAction("Opdater formularer og kodelister", self.iface.mainWindow())
+        self.update_forms_action.setToolTip("Giv projektets GeoFA-lag pluginets formularer, og hent kodelisterne "
+                                            "fra GeoFA igen. Lagenes symboler og etiketter bliver, som de er.")
+        self.update_forms_action.triggered.connect(self.update_forms)
+        self.menu.addAction(self.update_forms_action)
+        self.menu.addSeparator()
+
+        self.manual_menu = QAction(QIcon(os.path.join(self.plugin_dir, "manual_icon.png")), "Vejledning",
+                                   self.iface.mainWindow())
+        self.manual_menu.triggered.connect(self.open_manual)
+        self.menu.addAction(self.manual_menu)
+        self.about_menu = QAction(QIcon(os.path.join(self.plugin_dir, "icon_about.png")), "Om pluginet …",
+                                  self.iface.mainWindow())
         self.about_menu.triggered.connect(self.about_dialog)
         self.menu.addAction(self.about_menu)
 
-        # Add manual link
-        icon_path_manual = os.path.join(os.path.dirname(__file__), "manual_icon.png")
-        self.manual_menu = QAction(QIcon(icon_path_manual), self.tr("Vejledning"), self.iface.mainWindow(),)
-        self.manual_menu.setObjectName(self.tr("Vejledning"))
-        self.manual_menu.triggered.connect(self.open_manual)
-        self.menu.addAction(self.manual_menu)
+        for signal, slot in self.signal_connections():
+            signal.connect(slot)
+        self.update_environment_label()
 
     def update_environment_label(self):
-        # Production is the normal case, so only the test environment is marked
+        """Show the mode: TEST in the menu and panel only for the test environment; editing as a check mark/icon."""
         title = self.tr("&GeoFA")
-        if self.settings.value("testmiljo"):
+        if self.mode.test:
             title += " — TESTMILJØ"
         self.menu.setTitle(title)
+        self.edit_action.blockSignals(True)
+        self.edit_action.setChecked(self.mode.edit)
+        self.edit_action.blockSignals(False)
+        if self.panel:
+            self.panel.set_mode(self.mode)
 
-    def run_action(self, submenu, plugin_path):
-        self.readconfig()
-        import_geofa.run_action(self, submenu, plugin_path)
+    def remember_panel(self, visible):
+        QgsSettings().setValue(PANEL_VISIBLE_KEY, visible)
+
+    def add_tables(self, tables):
+        """Add GeoFA datasets (by table) to the project in the current mode."""
+        datasets = [d for d in (self.catalogue.get(t) for t in tables) if d]
+        progress = None
+        if len(datasets) > 1:
+            progress = QProgressDialog("Henter GeoFA-lag …", "Stop", 0, len(datasets), self.iface.mainWindow())
+            progress.setWindowTitle("GeoFA")
+            progress.setWindowModality(Qt.WindowModality.WindowModal)
+            progress.setMinimumDuration(0)
+        added = []
+        for i, dataset in enumerate(datasets):
+            if progress:
+                if progress.wasCanceled():
+                    break
+                progress.setLabelText(f"Henter {dataset.title} …")
+                progress.setValue(i)
+                QCoreApplication.processEvents()
+            layer = loader.add_dataset(dataset, self.mode, self.iface.messageBar())
+            if layer is not None:
+                added.append((layer, dataset, loader.host_of(layer)))
+        if progress:
+            progress.close()
+        # The dropdowns are filled from GeoFA's code lists when GeoFA answers
+        self.code_lists.fill(added)
+        self.iface.mapCanvas().refresh()
+
+    def set_edit(self, edit):
+        """The read/edit switch in the menu and the panel."""
+        if edit == self.mode.edit:
+            return
+        if edit and not credentials.ensure_login(self.mode.username):
+            self.update_environment_label()
+            self.iface.messageBar().pushMessage(
+                "GeoFA", "Redigering kræver et GeoFA-login. Indtast dit brugernavn og din kode, og sæt hak i "
+                         "»WFS-T (muligt at editere)«.", level=Qgis.MessageLevel.Warning, duration=15)
+            self.open_settings()
+            return
+        editing = loader.editing_layers()
+        if editing:
+            self.update_environment_label()
+            names = ", ".join(f"»{layer.name()}«" for layer in editing)
+            self.iface.messageBar().pushMessage(
+                "GeoFA", f"Gem eller fortryd redigeringen i {names}, før du skifter.",
+                level=Qgis.MessageLevel.Warning, duration=15)
+            return
+        self.settings.set_value("wfst", edit)
+        self.settings.emit_updated()
+
+    def apply_settings(self):
+        """After the settings change: make the project's GeoFA layers read-only or editable.
+
+        Switching between production and test doesn't move the layers already in the
+        project; it decides where new layers come from, and which layers can be edited.
+        """
+        mode = Mode.from_settings(self.settings)
+        loader.set_user_variable(mode.username)
+        if mode != self.mode:
+            # Don't swap layers while the map is still drawing them
+            self.iface.mapCanvas().stopRendering()
+            changed, editing, failed = loader.repoint(mode)
+            bar = self.iface.messageBar()
+            if editing:
+                names = ", ".join(f"»{name}«" for name in editing)
+                bar.pushMessage("GeoFA", f"{names} er i redigering og blev ikke skiftet. Gem eller fortryd, "
+                                         "og skift igen.", level=Qgis.MessageLevel.Warning, duration=15)
+            if failed:
+                names = ", ".join(f"»{name}«" for name in failed)
+                bar.pushMessage("GeoFA", f"{names} kunne ikke hentes og blev ikke skiftet.",
+                                level=Qgis.MessageLevel.Warning, duration=15)
+            self.environment_message(mode, environment_changed=mode.test != self.mode.test,
+                                     edit_turned_on=mode.edit and not self.mode.edit)
+            if changed:
+                self.iface.mapCanvas().refresh()
+        self.mode = mode
+        self.update_environment_label()
+
+    def environment_message(self, mode, environment_changed, edit_turned_on):
+        """Say what happens to layers from the other environment, when there are any."""
+        others = loader.layers_outside(mode)
+        if not others or not (environment_changed or edit_turned_on):
+            return
+        if mode.test:
+            which, chosen = f"{len(others)} lag fra produktion", "testmiljøet"
+        else:
+            which, chosen = f"{len(others)} lag fra testmiljøet", "produktion"
+        if environment_changed:
+            text = ("Nye GeoFA-lag hentes nu fra testmiljøet og får »[TEST]« i navnet. " if mode.test
+                    else "Nye GeoFA-lag hentes nu fra produktion. ")
+            text += f"{which} bliver i projektet" + (" og kan kun vises." if mode.edit else ".")
+        else:
+            text = f"{which} kan kun vises, mens {chosen} er valgt."
+        self.iface.messageBar().pushMessage("GeoFA", text, level=Qgis.MessageLevel.Info, duration=10)
+
+    def project_opened(self, *args):
+        loader.ensure_symbol_path()
+        loader.set_user_variable(self.mode.username)
+        # Projects from older versions: renamed tables, and test layers without " [TEST]"
+        if loader.fix_renamed_tables() + loader.mark_test_layers():
+            QgsProject.instance().setDirty(True)
+        # Current code lists from GeoFA, rather than the ones saved with the project
+        self.code_lists.fill(loader.code_list_layers())
+        outdated = loader.outdated_layers()
+        if outdated:
+            self.offer_form_update(len(outdated))
+
+    def offer_form_update(self, count):
+        """A message with an Opdater button, for layers whose form is older than the plugin's."""
+        bar = self.iface.messageBar()
+        if self.update_offer is not None:
+            try:
+                bar.popWidget(self.update_offer)
+            except RuntimeError:
+                pass
+        text = (f"{count} GeoFA-lag har ældre formularer og kodelister end pluginet." if count > 1
+                else "1 GeoFA-lag har en ældre formular og kodelister end pluginet.")
+        self.update_offer = bar.createMessage("GeoFA", text)
+        button = QPushButton("Opdater")
+        button.clicked.connect(self.update_forms)
+        self.update_offer.layout().addWidget(button)
+        bar.pushWidget(self.update_offer, Qgis.MessageLevel.Info, 0)
+
+    def update_forms(self):
+        """Give the project's GeoFA layers the plugin's forms and GeoFA's current code lists."""
+        bar = self.iface.messageBar()
+        if self.update_offer is not None:
+            try:
+                bar.popWidget(self.update_offer)
+            except RuntimeError:
+                pass
+            self.update_offer = None
+        layers = [(layer, self.catalogue.get(table)) for layer, table in loader.geofa_layers()]
+        if not layers:
+            bar.pushMessage("GeoFA", "Der er ingen GeoFA-lag i projektet.", level=Qgis.MessageLevel.Info, duration=5)
+            return
+        updated = [(layer, dataset, loader.host_of(layer)) for layer, dataset in layers
+                   if loader.update_form(layer, dataset)]
+        old_tables = loader.old_domain_layers()
+        if old_tables:
+            QgsProject.instance().removeMapLayers([layer.id() for layer in old_tables])
+        self.code_lists.forget()
+        self.code_lists.fill(updated)
+        QgsProject.instance().setDirty(True)
+        text = f"{len(updated)} GeoFA-lag har fået pluginets formularer; kodelisterne hentes fra GeoFA."
+        if old_tables:
+            text += f" {len(old_tables)} gamle domænetabeller fra den tidligere version er fjernet fra projektet."
+        bar.pushMessage("GeoFA", text, level=Qgis.MessageLevel.Success, duration=10)
+
+    def show_code_list_problems(self, problems):
+        """Tell the user which of GeoFA's code lists couldn't be read; those fields show the codes."""
+        def where(problem):
+            return "testmiljøet" if problem["host"] == loader.TEST_HOST else "produktion"
+
+        box = QMessageBox(self.iface.mainWindow())
+        box.setIcon(QMessageBox.Icon.Warning)
+        box.setWindowTitle("GeoFA – kodelister")
+        box.setText("Nogle af GeoFA's kodelister kunne ikke hentes, så felterne viser koderne i stedet "
+                    "for teksterne:\n\n" + "\n".join(f"• {p['table']} ({where(p)})" for p in problems))
+        box.setInformativeText("Du kan stadig redigere felterne ved at skrive koden. GeoFA afviser en kode, der "
+                               "ikke findes i kodelisten, når du gemmer.\n\n"
+                               "Det er et problem med kilden hos GeoFA. Når den virker igen, henter pluginet "
+                               "listerne næste gang du åbner projektet eller tilføjer laget, eller med "
+                               "GeoFA › Opdater formularer og kodelister.")
+        box.setDetailedText("\n\n".join(
+            f"{p['table']} ({where(p)}): {p['reason']}\n" + "\n".join(f"  {field}" for field in p["fields"])
+            for p in problems))
+        box.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
+        box.show()
 
     def about_dialog(self):
-        QDesktopServices.openUrl(QUrl(OM_GEOFA_URL))
+        about.show_about(self.iface.mainWindow(), len(self.catalogue.datasets()))
 
     def open_manual(self):
-        # The manual is maintained as Markdown on GitHub
         QDesktopServices.openUrl(QUrl(VEJLEDNING_URL))
 
     def secure_project_layers(self, *args):
@@ -354,31 +441,41 @@ class GeoFA:
                 level=Qgis.MessageLevel.Info, duration=0)
 
     def readconfig(self):
-        settings = Settings()  # new config
-        self.username = settings.value('username')
-        self.wfst = settings.value('wfst')
-        self.testmiljo = settings.value('testmiljo')
-
-        # Set project variables
-        QgsExpressionContextUtils.setProjectVariable(QgsProject.instance(), 'geofa_bruger_id', self.username)
+        self.username = self.settings.value('username')
+        self.wfst = self.settings.value('wfst')
+        self.testmiljo = self.settings.value('testmiljo')
 
     def signal_connections(self):
         return [
-            (self.settings.settings_updated, self.update_environment_label),
+            (self.settings.settings_updated, self.apply_settings),
             (self.settings.settings_updated, self.reload_login_layers),
+            (QgsProject.instance().readProject, self.project_opened),
             (QgsProject.instance().readProject, self.secure_project_layers),
             (QgsProject.instance().readProject, self.check_project_login),
         ]
 
     def unload(self):
-        # Undo everything registered in __init__/initGui, so a plugin reload or update
-        # does not leave a second options page, a second locator filter, or a settings
-        # signal pointing at this (deleted) menu.
+        # Undo everything registered in __init__/initGui, so a plugin reload or update does
+        # not leave a second options page, panel or locator filter, or a settings signal
+        # pointing at this (deleted) menu.
         for signal, slot in self.signal_connections():
             try:
                 signal.disconnect(slot)
             except (TypeError, RuntimeError):
                 pass
+        try:
+            self.code_lists.problems.disconnect(self.show_code_list_problems)
+        except (TypeError, RuntimeError):
+            pass
+        codelists.stop_fetching()
         self.iface.unregisterOptionsWidgetFactory(self.options_factory)
         self.iface.deregisterLocatorFilter(self.layer_locator_filter)
+        if self.panel:
+            # Closing QGIS hides the panel on the way out; that mustn't be remembered as "closed"
+            try:
+                self.panel.visibilityChanged.disconnect(self.remember_panel)
+            except (TypeError, RuntimeError):
+                pass
+            self.iface.removeDockWidget(self.panel)
+            self.panel.deleteLater()
         self.menu.deleteLater()

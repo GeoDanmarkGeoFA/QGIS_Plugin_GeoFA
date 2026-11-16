@@ -64,7 +64,8 @@ class LayerLocatorFilterData:
             layer["title"] += " (" + layer["category"] + ", GeoFA)"
 
     def create_search_string(self, layer):
-        search_string = layer["category"] + " " + layer["title"]
+        # Searchable by group, title and theme code (e.g. "5800")
+        search_string = layer["category"] + " " + layer["title"] + " " + layer.get("code", "")
         search_string = search_string.replace("/", " ")
         search_string = search_string.replace("-", " ")
         search_string = search_string.replace("navn", " ")
