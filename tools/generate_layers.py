@@ -716,6 +716,8 @@ def generate(dataset, webmap, symbols_dir, styles_dir, used):
     if labeling:
         layer.setLabeling(labeling)
         layer.setLabelsEnabled(True)
+    # No map tips: without a template QGIS shows its guess at a name field (often gpx_link or temanavn)
+    layer.setMapTipsEnabled(False)
     path = styles_dir / f"{dataset['table']}.qml"
     message, ok = layer.saveNamedStyle(str(path))
     if not ok:

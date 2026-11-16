@@ -109,6 +109,12 @@ class StyleTests(unittest.TestCase):
         self.assertEqual(environments["t_5607_ladefacilitet"], ("production",))
         self.assertEqual(environments["t_5710_born_skole_dis"], ())
 
+    def test_map_tips_are_off(self):
+        # Without a template QGIS would show its guess at a name field, such as gpx_link
+        for table, root in self.styles.items():
+            tips = root.findall("mapTip")
+            self.assertEqual([(tip.get("enabled"), tip.text) for tip in tips], [("0", None)], table)
+
     def test_every_symbol_the_styles_use_is_shipped(self):
         for table, root in self.styles.items():
             for option in root.iter("Option"):

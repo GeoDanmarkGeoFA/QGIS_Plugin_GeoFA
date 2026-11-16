@@ -14,14 +14,15 @@ from xml.etree import ElementTree
 
 from .codelists import Source
 
-# The parts of a QML that make up the fields and the form (QGIS's Fields and Forms style categories)
+# The parts of a QML that make up the fields, the form and the map tip (QGIS's Fields, Forms and
+# MapTips style categories)
 FORM_ELEMENTS = ("fieldConfiguration", "aliases", "defaults", "constraints", "constraintExpressions",
                  "expressionfields", "attributeEditorForm", "editable", "labelOnTop", "reuseLastValue",
-                 "editorlayout", "editform", "editforminit", "featformsuppress")
+                 "editorlayout", "editform", "editforminit", "featformsuppress", "mapTip")
 
 
 def form_fingerprint(style_path):
-    """A short fingerprint of a style's fields and form (aliases, widgets, defaults, tabs).
+    """A short fingerprint of a style's fields and form (aliases, widgets, defaults, tabs, map tip).
 
     The generator stores it in the catalogue (Dataset.form_version) and the plugin on every
     layer it adds, so it can tell when a project's layers have an older form than the plugin's.

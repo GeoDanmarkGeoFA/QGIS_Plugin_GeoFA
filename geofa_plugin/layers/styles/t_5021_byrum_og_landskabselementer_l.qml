@@ -1192,6 +1192,6 @@
   <dataDefinedFieldProperties/>
   <widgets/>
   <previewExpression></previewExpression>
-  <mapTip enabled="1"></mapTip>
+  <mapTip enabled="0"></mapTip>
   <layerGeometryType>1</layerGeometryType>
 </qgis>

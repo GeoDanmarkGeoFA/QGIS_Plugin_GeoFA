@@ -16,7 +16,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353541",
      "purpose": "Vise hvor grænserne går mellem distrikterne og kunne benytte dem til analysegrundlag til at servicere automatiske stedbestemte forespørgsler. På denne måde kan der foretages opslag og borgere/forvaltninger kan få information om borgers tilhørsforhold på grundlag af f.eks. en adresse.",
-     "form_version": "e98c14cdb188",
+     "form_version": "b8bdb7debb61",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -65,7 +65,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353539",
      "purpose": "Vise hvor grænserne går i børne- og skoledistrikterne og kunne benytte dem til analysegrundlag.",
-     "form_version": "39cb3deaa5a8",
+     "form_version": "d82f16ff4fc5",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -128,7 +128,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353585",
      "purpose": "Oplyse sagsbehandler og borger via selvbetjeningsløsninger, hvilken institutioner der ligger i lokalområdet. Evt. også nærmeste Plejecenter m.v.",
-     "form_version": "9b3b9c49fe86",
+     "form_version": "81ef129a260f",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -191,7 +191,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353582",
      "purpose": "Skabe overblik over hvad de kommunale ejendomme er udlejet til og hvor længe.",
-     "form_version": "ef4009d48c1e",
+     "form_version": "b66e1db0c6b0",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -247,7 +247,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353580",
      "purpose": "Registreringen gøres for at lettere/automatisk at kunne kontakte grundejerforeningen ved bl.a. nabo-/partshøring. Og for at kunne danne sig et billede af grundejerforeningens geografiske område",
-     "form_version": "379218da30f7",
+     "form_version": "98422ee2660b",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -310,7 +310,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353578",
      "purpose": "Oplyse borger via selvbetjeningsløsninger, hvor der ligger byggegrunde og evt. andre kommuneejendommer der er sat til salg i lokalområdet.",
-     "form_version": "90aed14c71e1",
+     "form_version": "51e067f88079",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -373,7 +373,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353576",
      "purpose": "Oplyse sagsbehandler og borger via selvbetjeningsløsninger, om hvem der administrerer et givent havneareal. Til brug for høringer i forbindelse med planforslag mv.",
-     "form_version": "e9262d18cd49",
+     "form_version": "b23c31f95028",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -422,7 +422,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353574",
      "purpose": "Registreringen understøtter kommunens udsendelse af høringer og opgaver ift. overholdelse af Århus-konventionen, som giver foreninger og organisationer ret til at blive hørt inden for et givet geografisk område, hvor foreningen har en miljømæssig interesse\nRegistreringen gøres for lettere/automatisk at kunne kontakte foreningen ved bl.a. inddragelse og høring.",
-     "form_version": "3936beb1cd0b",
+     "form_version": "9d99f4ba2e16",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -485,7 +485,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353572",
      "purpose": "Oplyse sagsbehandler og borger via selvbetjeningsløsninger, hvilket lokalråd/-udvalg de dækker deres by/bydel m.v.",
-     "form_version": "044410778247",
+     "form_version": "f778594484fc",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -534,7 +534,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353537",
      "purpose": "Vise hvor grænserne går i plejedistrikterne og kunne benytte dem til analysegrundlag.",
-     "form_version": "83f2d3306c0a",
+     "form_version": "54e575c74941",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -583,7 +583,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353535",
      "purpose": "Vise hvor grænserne går i prognosedistrikterne og kunne benytte dem til analysegrundlag.",
-     "form_version": "62d146d3eae7",
+     "form_version": "0aa5151bebcd",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -632,7 +632,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353570",
      "purpose": "Oplyse sagsbehandler og borger via selvbetjeningsløsninger, hvilken institutioner der ligger i lokalområdet. Evt. også nærmeste borgerservice m.v.",
-     "form_version": "17c99efcc7f5",
+     "form_version": "14425a2bc90e",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -695,7 +695,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353568",
      "purpose": "Oplyse sagsbehandler og borger via selvbetjeningsløsninger, hvilken skorstensfejer som dækker deres bolig/adresse.",
-     "form_version": "143c3dc9f1a0",
+     "form_version": "796519659dd7",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -742,7 +742,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213355194",
      "purpose": "",
-     "form_version": "55fab965f747",
+     "form_version": "833d4b9df93d",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -791,7 +791,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213355188",
      "purpose": "Oplys borger via selvbenoglegsløsninger om nærmeste container.",
-     "form_version": "3a4420e1e5ed",
+     "form_version": "b6a8ac7bcfeb",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -840,7 +840,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213355191",
      "purpose": "Oplys borger via selvbetjeningslønogler om nærmeste genbrugsplads.",
-     "form_version": "f4899ecf0a52",
+     "form_version": "32b0b99c0d15",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -901,7 +901,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=223379825",
      "purpose": "Formålet med temaet er at foretage eftersyn og registrere de tilhørende observationer for at kortlægge både kapaciteten og den aktuelle stand af betondækningsgrave.",
-     "form_version": "18c008a27d36",
+     "form_version": "bafd15a109db",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -1490,7 +1490,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213355166",
      "purpose": "Vise de tekniske anlæg der hører under en spildevandsplan.",
-     "form_version": "59bad261b3cc",
+     "form_version": "06a2c246b36f",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -1558,7 +1558,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213355243",
      "purpose": "Oplyse sagsbehandler og borger via selvbetjeningsløsninger, hvor der er et nedgravet jordvarmeanlæg når der skal søges om f.eks. \nvandindvindingstilladelse. Forvaltningsopgaver i forhold til opretholdelse afstandskrav – også på tværs af kommuner.",
-     "form_version": "cbb39bab5f1a",
+     "form_version": "97300df8e2bf",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -1619,7 +1619,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353522",
      "purpose": "noglerere hvor der er anmeldt ret til genopdyrkning.",
-     "form_version": "f0d729e214b6",
+     "form_version": "407115c1af9c",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -1666,7 +1666,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353508",
      "purpose": "http://www.skovognatur.dk/DyrOgPlanter/Formaal",
-     "form_version": "cef458947fd7",
+     "form_version": "c91d2a3a8e3f",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -1736,7 +1736,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353503",
      "purpose": "http://www.skovognatur.dk/DyrOgPlant",
-     "form_version": "041b4f87197a",
+     "form_version": "74617eff4c36",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -1806,7 +1806,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353499",
      "purpose": "Driftdatabase m.h.t. NBL §-3 beskyttede arealer eller lokaliteter, som kommunnogle under vedligeholdende pleje.",
-     "form_version": "ffe77a1cefc3",
+     "form_version": "311064acef6f",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -1874,7 +1874,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=216596483",
      "purpose": "Kontrol af, at der ikke bliver kørt slam ud på samme areal for ofte. Overblik over seneste tilladte udkørsel",
-     "form_version": "8e69f656d43c",
+     "form_version": "f6f69e87333b",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -1935,7 +1935,7 @@
      "spec": "pending",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861293",
      "purpose": "",
-     "form_version": "4b0233c35240",
+     "form_version": "dae69da78563",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -2040,7 +2040,7 @@
      "spec": "pending",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861295",
      "purpose": "",
-     "form_version": "53b4be0fa4d8",
+     "form_version": "3a25b340a777",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -2138,7 +2138,7 @@
      "spec": "pending",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861297",
      "purpose": "",
-     "form_version": "73bd1a6e4c6d",
+     "form_version": "f56db5e72841",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -2236,7 +2236,7 @@
      "spec": "pending",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861299",
      "purpose": "",
-     "form_version": "8a127054a576",
+     "form_version": "10e679727f50",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -2334,7 +2334,7 @@
      "spec": "pending",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861301",
      "purpose": "",
-     "form_version": "a18d686340ad",
+     "form_version": "375489932fa8",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -2432,7 +2432,7 @@
      "spec": "pending",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861303",
      "purpose": "",
-     "form_version": "a0728f971daf",
+     "form_version": "d23c5312e10a",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -2530,7 +2530,7 @@
      "spec": "pending",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861313",
      "purpose": "",
-     "form_version": "64d34c35a32d",
+     "form_version": "69b9dc86d5b6",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -2628,7 +2628,7 @@
      "spec": "pending",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861311",
      "purpose": "",
-     "form_version": "65bba969acbe",
+     "form_version": "6f44f21d4528",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -2726,7 +2726,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353495",
      "purpose": "Datasættet er til brug i sagsbehandlingen vedr. vandløbslov m.m",
-     "form_version": "208039e7d988",
+     "form_version": "40aee748e182",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -2789,7 +2789,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=193921277",
      "purpose": "Datasættet er til brug i sagsbehandlingen vedr. vandløbslov m.m",
-     "form_version": "61751e7ec2b7",
+     "form_version": "a4b68ddded30",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -2859,7 +2859,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353493",
      "purpose": "Datasættet er til brug i sagsbehandlingen vedr. vandløbslov m.m",
-     "form_version": "13ffc3f687d3",
+     "form_version": "9303a2211d62",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -2908,7 +2908,7 @@
      "spec": "pending",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861307",
      "purpose": "",
-     "form_version": "9b730797419b",
+     "form_version": "21599d74dcec",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -3006,7 +3006,7 @@
      "spec": "pending",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861305",
      "purpose": "",
-     "form_version": "390a2b565968",
+     "form_version": "2f773b3a4628",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -3104,7 +3104,7 @@
      "spec": "pending",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861309",
      "purpose": "",
-     "form_version": "88876b0d35d9",
+     "form_version": "4bf01391eccf",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -3146,7 +3146,7 @@
      "spec": "pending",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861316",
      "purpose": "",
-     "form_version": "dc64972b1c0a",
+     "form_version": "5a679e1c8696",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -3244,7 +3244,7 @@
      "spec": "pending",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861318",
      "purpose": "",
-     "form_version": "e6c38c2eb521",
+     "form_version": "058cf1294357",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -3342,7 +3342,7 @@
      "spec": "pending",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861340",
      "purpose": "",
-     "form_version": "81f2ec641229",
+     "form_version": "6d08ac0019ed",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -3391,7 +3391,7 @@
      "spec": "pending",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861320",
      "purpose": "",
-     "form_version": "8f9245406f7b",
+     "form_version": "905f6bbce47e",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -3489,7 +3489,7 @@
      "spec": "pending",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861322",
      "purpose": "",
-     "form_version": "725be21b91e3",
+     "form_version": "4a80b667d4de",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -3587,7 +3587,7 @@
      "spec": "pending",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861324",
      "purpose": "",
-     "form_version": "799e58bc4adf",
+     "form_version": "9c95ddf506e9",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -3685,7 +3685,7 @@
      "spec": "pending",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861326",
      "purpose": "",
-     "form_version": "4b36daec8570",
+     "form_version": "24ca713d0b82",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -3783,7 +3783,7 @@
      "spec": "pending",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861328",
      "purpose": "",
-     "form_version": "3b7ae6d99964",
+     "form_version": "950eebd4bec7",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -3881,7 +3881,7 @@
      "spec": "pending",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861330",
      "purpose": "",
-     "form_version": "50e15ea6971a",
+     "form_version": "9109c30d2d64",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -3979,7 +3979,7 @@
      "spec": "pending",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861332",
      "purpose": "",
-     "form_version": "3b91da9394b1",
+     "form_version": "c46f5797119d",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -4077,7 +4077,7 @@
      "spec": "pending",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861334",
      "purpose": "",
-     "form_version": "532209dd26ef",
+     "form_version": "9401c4dc5f4c",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -4175,7 +4175,7 @@
      "spec": "pending",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861336",
      "purpose": "",
-     "form_version": "f9a909e79529",
+     "form_version": "15f04b1709f4",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -4273,7 +4273,7 @@
      "spec": "pending",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861338",
      "purpose": "",
-     "form_version": "f652866b36e6",
+     "form_version": "21064dfa2b72",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -4371,7 +4371,7 @@
      "spec": "pending",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=297861342",
      "purpose": "",
-     "form_version": "37bc0650e92f",
+     "form_version": "431f82d367a2",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -4418,7 +4418,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353491",
      "purpose": "Oplyse sagsbehandler og privat/offentlig entreprenør via selvbetjeningsløsninger om, hvordan arealer plejes",
-     "form_version": "115fb5f5c139",
+     "form_version": "cd8ecaff70f1",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -4488,7 +4488,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353489",
      "purpose": "Oplyse sagsbehandler og privat/offentlig entreprenører via selvbetjeningsløsninger,  om plejen af linjeelementer",
-     "form_version": "33d7fabf51c8",
+     "form_version": "e15259da3956",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -4558,7 +4558,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353483",
      "purpose": "Oplyse sagsbehandler og private/offentlige entreprenører via selvbetjeningsløsninger, hvordan objekter/punkter plejes",
-     "form_version": "ec22ebe064ac",
+     "form_version": "6e218d62c195",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -4656,7 +4656,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353480",
      "purpose": "At kunne registrer hvem der står for og/eller betaler for den grønne pleje indenfor et område, så det ikke er nødvendigt at registrere dette på hvert element/objekt.",
-     "form_version": "38caa0d477f0",
+     "form_version": "60e90f1acf9f",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -4724,7 +4724,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=273744643",
      "purpose": "Bygningsvurderingen skal sikre, at bevaringsværdige bygninger kan blive beskyttet i den kommunale planlægning ligesom det kan have betydning for ejendommens værdi.",
-     "form_version": "471cea9b314b",
+     "form_version": "d0b063d47f8c",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -4783,7 +4783,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=273744641",
      "purpose": "Bygningsvurderingsgruppen bliver ikke i sig selv vurderet eller karaktersat, men har alene til formål at sammenknytte en relevant samling af vurderede bygninger. En vurderet bygning kan høre til flere bygningsvurderingsgrupper.",
-     "form_version": "295463e231ea",
+     "form_version": "aed767e5ebdd",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -4828,7 +4828,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213355235",
      "purpose": "Den kulturgeografiske analyse er en del af landskabsanalysen, som benyttes til planlægning og administration i det åbne land. (danner \ngrundlag for særlige landskabsområder, udpeget i kommuneplanen).",
-     "form_version": "2d8a6ce1b642",
+     "form_version": "ec2f9a954eaa",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -4877,7 +4877,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213355231",
      "purpose": "Landskabskarakteranalysen benyttes til planlægning og administration i det åbne land. (danner grundlag for særlige landskabsområder, \nudpeget i kommuneplanen).",
-     "form_version": "4a57506cb7d7",
+     "form_version": "8e389bfc3a47",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -4975,7 +4975,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213355229",
      "purpose": "Landskabskarakteranalysen benyttes til planlægning og administration i det åbne land. (danner grundlag for særlige landskabsområder, \nudpeget i kommuneplanen).",
-     "form_version": "253d69055b32",
+     "form_version": "fc3ef8c12077",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -5045,7 +5045,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213355224",
      "purpose": "Den naturgeografiske analyse er en del af landskabsanalysen, som benyttes til planlægning og administration i det åbne land. (danner \ngrundlag for særlige landskabsområder, udpeget i kommuneplanen).",
-     "form_version": "0fadc71794bd",
+     "form_version": "c9405d65be36",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -5127,7 +5127,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353527",
      "purpose": "Oplyse sagsbehandler og borger via selvbetjeningsløsninger, hvilken sports- og fritidsfaciliteter, der ligger i lokalområdet. Evt. også \nnærmeste svømmehal m.v.",
-     "form_version": "73630944536b",
+     "form_version": "1bfa57663707",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -5263,7 +5263,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353531",
      "purpose": "Oplyse sagsbehandler og borger via selvbetjeningsløsninger, hvilken sports- og fritidsfaciliteter, der ligger i lokalområdet. Evt. også \nnærmeste riderute m.v.",
-     "form_version": "c5601e8b08d7",
+     "form_version": "9224d9783c63",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -5427,7 +5427,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=199983821",
      "purpose": "Oplyse sagsbehandler og borger via selvbetjeningsløsninger, hvilken sports- og fritidsfaciliteter, der ligger i lokalområdet. Evt. også \nnærmeste svømmehal m.v.",
-     "form_version": "7ffa89c811be",
+     "form_version": "a0ee2c29529a",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -5568,7 +5568,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353564",
      "purpose": "Anvendes til visning og kvalificering af det rekreative cykelnet.",
-     "form_version": "64730f30e0d3",
+     "form_version": "361bfae5d60e",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -5617,7 +5617,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353562",
      "purpose": "Anvendes til visning og kvalificering af det rekreative cykelnet",
-     "form_version": "af57bdf9f4da",
+     "form_version": "5f7ef54f60c9",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -5666,7 +5666,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353472",
      "purpose": "Formålet med kortet er at kunne arbejde på tværs af administrative grænser med planlægningen af cykelruter.",
-     "form_version": "86d7c480d2f2",
+     "form_version": "186680c4f6d7",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -5764,7 +5764,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353470",
      "purpose": "Give overblik over hvor der er hastighedsdæmpende foranstaltninger.",
-     "form_version": "6c2911a6bf6e",
+     "form_version": "31a41c51455b",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -5827,7 +5827,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353468",
      "purpose": "Oplyse sagsbehandler og borger via selvbetjeningsløsninger, hvordan hastigheden er begrænset i zonen.",
-     "form_version": "3c68279d0aed",
+     "form_version": "92365831d435",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -5883,7 +5883,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353462",
      "purpose": "Oplyse sagsbehandler og borger via selvbetjeningsløsninger, hvordan vejen er begrænset i tilladt kørsel.",
-     "form_version": "de4edaf3b473",
+     "form_version": "019513bf61e2",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -5939,7 +5939,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=199983826",
      "purpose": "Anvendes til planlægning og registrering af ladeinfrastruktur.",
-     "form_version": "ff8ab03a766a",
+     "form_version": "995c70e5c886",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -6011,7 +6011,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353454",
      "purpose": "Oplyse sagsbehandler og borger via selvbetjeningsløsninger, om de konkrete parkeringsmuligheder (ift. det køretøj man anvender)",
-     "form_version": "013946cabb1d",
+     "form_version": "fd14c2de3f88",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -6060,7 +6060,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353451",
      "purpose": "Oplyse sagsbehandler og borger via selvbetjeningsløsninger, hvordan parkeringsforholdene er begrænset i zonen.",
-     "form_version": "bddee070cd85",
+     "form_version": "33f8203626a6",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -6116,7 +6116,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353446",
      "purpose": "At kunne påføre stationering til planlagte ruter i temaet kort til cykelplanlægning (5610)",
-     "form_version": "2f0628c3cb2c",
+     "form_version": "ca9b491c6a6d",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -6158,7 +6158,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353441",
      "purpose": "Oplyse sagsbehandler og borger via selvbetjeningsløsninger, hvor der noglebyggelinjer og evt. givet dispensationer.",
-     "form_version": "f3987558bfec",
+     "form_version": "c060ca3503bc",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -6207,7 +6207,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353429",
      "purpose": "Skabe et geografisk overblik over hvad der står hvor langs de kommunale veje. Bl.a. til at udbyde vedligeholdelsesarbejdet.",
-     "form_version": "10343e4cbb96",
+     "form_version": "cf13a3bc2206",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -6263,7 +6263,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353414",
      "purpose": "Give mulighed for at kommunen kan gemme en ruteopdeling, fx til genbrug i forbindelse med et udbud af vintervedligehold. Hvis der \nikke benyttes et ”vintersystem” til dannelse af ruter, tildeling af ruter, m.m. kan rutenettet her måske være en hjælp i \nsagsbehandling. GeoFA indeholder ikke en ”ruteplanlægger” – og kan derfor ikke umiddelbart bruges til at danne ruter.",
-     "form_version": "7619ee2eb835",
+     "form_version": "a136fcdf7b89",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -6319,7 +6319,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=193921281",
      "purpose": "At skabe et geografisk overblik over vintervedligeholdelse i kommunen – her specielt i forhold til ”bløde trafikanter”. Understøtte \nkommunenes tilrettelæggelse af vintervedlighold.",
-     "form_version": "1210d4a16039",
+     "form_version": "61aec27475a3",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",
@@ -6368,7 +6368,7 @@
      "spec": "published",
      "spec_page": "https://confluence.kds.dk/pages/viewpage.action?pageId=213353402",
      "purpose": "Oplyse sagsbehandler og borger via selvbetjeningsløsninger, hvornår veje og stier ryddes for sne, gruses og/eller saltes.\nKan også anvendes til estimering af omkostninger til vintervedligehold samt grundlag for ruteplanlægning",
-     "form_version": "5555f9f4c368",
+     "form_version": "5547f93dd32d",
      "code_lists": {
       "cvr_kode": [
        "fkg.d_basis_ansvarlig_myndighed",

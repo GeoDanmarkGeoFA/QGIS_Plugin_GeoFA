@@ -929,11 +929,13 @@ class CodeListTests(unittest.TestCase):
         layer = _facility_layer()
         renderer = layer.renderer().clone()
         layer.setCustomProperty(loader.TABLE_PROPERTY, dataset.table)
+        layer.setMapTipsEnabled(True)  # as in projects from before map tips were switched off
         project = types.SimpleNamespace(mapLayers=lambda: {"layer": layer})
         self.assertEqual(loader.outdated_layers(project), [(layer, dataset)])
         self.assertTrue(loader.update_form(layer, dataset))
         self.assertEqual(layer.renderer().type(), renderer.type())
         self.assertEqual(layer.fields().field("facil_ty_k").alias(), "Facilitettype (facil_ty_k)")
+        self.assertFalse(layer.mapTipsEnabled())
         self.assertEqual(loader.outdated_layers(project), [])
         self.assertEqual(loader.code_list_layers(project), [(layer, dataset, loader.PRODUCTION_HOST)])
 

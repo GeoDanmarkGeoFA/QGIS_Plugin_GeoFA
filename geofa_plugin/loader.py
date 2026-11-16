@@ -19,7 +19,8 @@ PRODUCTION_HOST = "https://geofa.geodanmark.dk"
 TEST_HOST = "https://geofa-test.geodanmark.dk"
 TABLE_PROPERTY = "geofa/table"  # set on every layer the plugin adds
 FORM_PROPERTY = "geofa/form"  # the form version the layer got (see Dataset.form_version)
-FORM_CATEGORIES = QgsMapLayer.StyleCategory.Fields | QgsMapLayer.StyleCategory.Forms
+FORM_CATEGORIES = (QgsMapLayer.StyleCategory.Fields | QgsMapLayer.StyleCategory.Forms
+                   | QgsMapLayer.StyleCategory.MapTips)
 OLD_DOMAIN_SOURCE = "/api/v2/sql/fkg"  # how 0.36 loaded the fkg.d_* tables into projects
 PHOTO_SCHEMA = "fkg_foto_gpx_link"  # GeoFA's photo-link versions of some tables
 USER_VARIABLE = "geofa_bruger_id"  # the forms fill bruger_id (and cvr_kode) from it
@@ -270,7 +271,8 @@ def mark_test_layers(project=None):
 
 
 def update_form(layer, dataset):
-    """Give a layer the plugin's current fields and form: aliases, widgets, defaults, tabs.
+    """Give a layer the plugin's current fields and form: aliases, widgets, defaults, tabs, and
+    map tips switched off.
 
     Its symbology, labels and filter stay as they are. The dropdowns are then filled from
     GeoFA (codelists.py). Returns whether the style could be read.
