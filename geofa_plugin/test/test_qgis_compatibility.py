@@ -20,9 +20,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from qgis.core import (QgsApplication, QgsAuthMethodConfig, QgsDataSourceUri, QgsEditorWidgetSetup, QgsSettings,
                        QgsVectorLayer)
 from qgis.gui import QgsMessageBar, QgsPasswordLineEdit
-from qgis.PyQt.QtCore import QCoreApplication, QSettings, QUrl
+from qgis.PyQt.QtCore import QCoreApplication, QFile, QSettings, QUrl
 from qgis.PyQt.QtCore import QObject, Qt, pyqtSignal
-from qgis.PyQt.QtGui import QGuiApplication
+from qgis.PyQt.QtGui import QGuiApplication, QIcon
 from qgis.PyQt.QtWidgets import QApplication, QLabel, QMainWindow, QMenu, QMessageBox, QPushButton
 from qgis.PyQt.QtXml import QDomDocument
 
@@ -35,13 +35,14 @@ QSettings.setPath(QSettings.Format.IniFormat, QSettings.Scope.UserScope, os.path
 QSettings().setValue("locale/userLocale", "da_DK")
 
 import geofa_plugin.geofa as geofa_module
+import geofa_plugin.settings_window as settings_window_module
 from geofa_plugin.geofa import GeoFA
 from geofa_plugin import credentials
 from geofa_plugin.config import Settings
 from geofa_plugin.settings_window import PASSWORD_SAVED_PLACEHOLDER, OptionsFactory, SettingsForm
 from geofa_plugin import about, codelists, htmlfields, loader, municipalities
 from geofa_plugin.catalogue import Catalogue, catalogue
-from geofa_plugin.panel import ROLE_GROUP, ROLE_TABLE, GeoFAPanel
+from geofa_plugin.panel import LOGIN_ICON, ROLE_GROUP, ROLE_TABLE, GeoFAPanel
 from geofa_plugin.settings_window import SettingsDialog
 
 
@@ -253,6 +254,9 @@ class CredentialTests(unittest.TestCase):
         plugin.settings.set_value("wfst", True)  # left over: without a login it can't apply
         plugin.settings.emit_updated()
         try:
+            # The panel's menu item has the GeoFA "G", as the Options page
+            g = QIcon(settings_window_module.ICON).pixmap(16, 16).toImage()
+            self.assertEqual(plugin.panel_action.icon().pixmap(16, 16).toImage(), g)
             self.assertFalse(plugin.mode.edit)
             self.assertFalse(plugin.edit_action.isVisible())
             self.assertTrue(plugin.panel.edit_button.isHidden())
@@ -290,6 +294,41 @@ class CredentialTests(unittest.TestCase):
             self.assertTrue(plugin.mode.edit)
             self.assertTrue(plugin.edit_action.isVisible())
         finally:
+            plugin.settings.set_value("wfst", False)
+            credentials.remove_login()
+            plugin.settings.emit_updated()
+            plugin.unload()
+
+    def test_settings_applied_while_layers_are_swapped_wait_for_them(self):
+        # Closing QGIS's Options after removing the login: the GeoFA page applies the settings, and
+        # while the layers load (Qt's event loop) the main window gets focus and the login check follows
+        credentials.save_login("kom999", "hemmelig")
+        iface = FakeIface()
+        plugin = GeoFA(iface)
+        plugin.initGui()
+        plugin.settings.set_value("wfst", True)
+        plugin.settings.emit_updated()
+        depth, swaps = [0], []
+
+        def repoint(mode, project=None):
+            depth[0] += 1
+            swaps.append((mode.edit, depth[0]))
+            if len(swaps) == 1:
+                QgsApplication.authManager().removeAuthenticationConfig(credentials.AUTHCFG_ID)
+                QGuiApplication.instance().focusWindowChanged.emit(None)
+            depth[0] -= 1
+            return 0, [], []
+
+        try:
+            with patch.object(loader, "repoint", repoint):
+                plugin.settings.set_value("kommune", "0751")
+                plugin.settings.emit_updated()
+            # The second swap (read-only, as the login is gone) came after the first, not inside it
+            self.assertEqual(swaps, [(True, 1), (False, 1)])
+            self.assertFalse(plugin.mode.edit)
+            self.assertEqual(plugin.mode.kommune, "0751")
+        finally:
+            plugin.settings.set_value("kommune", "")
             plugin.settings.set_value("wfst", False)
             credentials.remove_login()
             plugin.settings.emit_updated()
@@ -578,6 +617,45 @@ class CatalogueTests(unittest.TestCase):
             self.assertEqual(loader.repoint(READ, project)[0], 1)
         self.assertEqual(QgsDataSourceUri(layer.src).param("filter"), "")
 
+    def test_a_swap_leaves_alone_layers_swapped_while_another_loaded(self):
+        # Loading a WFS layer runs Qt's event loop, where the plugin may swap the layers itself
+        layers = {name: FakeLayer(loader.layer_source(table, EDIT), name=name, table=table)
+                  for name, table in (("a", "t_5710_born_skole_dis"), ("b", "t_5800_fac_pkt"))}
+        project = types.SimpleNamespace(mapLayers=lambda: layers)
+        nested = []
+
+        def replace(project, layer, source, name):
+            if not nested:  # "a" loads; meanwhile the same swap runs again and swaps both
+                nested.append("started")
+                nested.append(loader.repoint(READ, project))
+                return None  # as replace_layer does when the old layer left the project meanwhile
+            new = FakeLayer(source, name=name, table=layer.customProperty(loader.TABLE_PROPERTY))
+            layers[name] = new  # the new layer takes the old one's place
+            return new
+
+        with patch.object(loader, "replace_layer", replace):
+            self.assertEqual(loader.repoint(READ, project), (0, [], []))  # nothing failed, nothing swapped twice
+        self.assertEqual(nested[1], (2, [], []))
+        for name, table in (("a", "t_5710_born_skole_dis"), ("b", "t_5800_fac_pkt")):
+            self.assertEqual(layers[name].src, loader.layer_source(table, READ))
+
+    def test_a_layer_gone_while_its_replacement_loaded_is_not_touched(self):
+        old = FakeLayer(loader.layer_source("t_5710_born_skole_dis", EDIT), table="t_5710_born_skole_dis")
+        layers = {"old": old}
+        project = types.SimpleNamespace(mapLayers=lambda: layers)
+
+        class Loading:
+            def __init__(self, source, name, provider):
+                layers.pop("old")  # swapped or removed in Qt's event loop while this one loaded
+
+            def isValid(self):
+                return True
+
+        with patch.object(loader, "QgsVectorLayer", Loading):
+            # The fake old layer has no style to copy: touching it would raise
+            self.assertIsNone(loader.replace_layer(project, old, loader.layer_source("t_5710_born_skole_dis", READ),
+                                                   old.name()))
+
     def test_layers_stay_in_their_environment_and_only_the_chosen_one_is_editable(self):
         prod = FakeLayer(loader.layer_source("t_5710_born_skole_dis", READ), table="t_5710_born_skole_dis")
         # A layer from an older plugin version, recognised by its source
@@ -671,9 +749,14 @@ class CatalogueTests(unittest.TestCase):
         panel.set_mode(EDIT_TEST)
         self.assertFalse(panel.test_banner.isHidden())
         self.assertTrue(panel.edit_button.isChecked())
+        # The login button: the login shows the non-public objects too, not only editing
+        self.assertIn("Logget ind som kom999 i testmiljøet", panel.edit_button.toolTip())
+        self.assertIn("ikke er offentlige", panel.edit_button.toolTip())
+        self.assertTrue(QFile.exists(":/images/themes/default" + LOGIN_ICON))  # QGIS's own icon
         panel.set_mode(READ)
         self.assertTrue(panel.test_banner.isHidden())
         self.assertFalse(panel.edit_button.isChecked())
+        self.assertIn("kun de objekter, der er offentlige", panel.edit_button.toolTip())
         self.assertFalse(panel.edit_button.autoRaise())  # a framed button, as in Geodata Connect
         self.assertTrue(panel.area_filter.isHidden())
         panel.set_mode(loader.Mode(edit=False, test=False, username="kom999", kommune="0751"))

@@ -22,7 +22,7 @@
  ***************************************************************************/
 """
 from qgis.PyQt.QtCore import QCoreApplication, QSettings, Qt, QTimer, QTranslator, QUrl
-from qgis.PyQt.QtGui import QDesktopServices, QGuiApplication
+from qgis.PyQt.QtGui import QDesktopServices, QGuiApplication, QIcon
 from qgis.PyQt.QtWidgets import QMenu, QMessageBox, QProgressDialog, QPushButton
 try:
     from qgis.PyQt.QtGui import QAction
@@ -35,7 +35,8 @@ from .layerlocatorfilter import LayerLocatorFilter
 from . import about, codelists, credentials, htmlfields, loader
 from .catalogue import catalogue
 from .loader import Mode
-from .panel import GeoFAPanel
+from .panel import LOGIN_ICON, GeoFAPanel, login_tooltip
+from .settings_window import ICON as GEOFA_ICON
 from .settings_window import OptionsFactory, SettingsDialog
 from . import municipalities
 from qgis.core import QgsApplication, QgsProject, QgsSettings, Qgis
@@ -65,6 +66,7 @@ class GeoFA:
         self.catalogue = catalogue()
         self.mode = Mode.from_settings(self.settings)
         self.had_login = credentials.has_login()  # followed by login_changed()
+        self.applying = self.apply_again = False  # apply_settings() runs one at a time
         self.login_sources = {}  # GeoFA layers in the open project that need the stored login
         self.panel = None
         self.code_lists = codelists.CodeLists()
@@ -111,7 +113,7 @@ class GeoFA:
         self.panel.settings_requested.connect(self.open_settings)
         self.panel_action = self.panel.toggleViewAction()
         self.panel_action.setText("GeoFA-panel")
-        self.panel_action.setIcon(QgsApplication.getThemeIcon("/mIconWfs.svg"))
+        self.panel_action.setIcon(QIcon(GEOFA_ICON))  # the GeoFA "G", as on the Options page
         self.menu.addAction(self.panel_action)
 
         # QGIS's own icons, as in QGIS's menus
@@ -121,7 +123,8 @@ class GeoFA:
             self.menu.addAction(item)
             return item
 
-        self.edit_action = QAction(QgsApplication.getThemeIcon("/mActionToggleEditing.svg"), "Redigering (WFS-T)",
+        # The login: non-public objects too, and editing (settings key "wfst")
+        self.edit_action = QAction(QgsApplication.getThemeIcon(LOGIN_ICON), "Brug mit GeoFA-login",
                                    self.iface.mainWindow())
         self.edit_action.setCheckable(True)
         self.edit_action.toggled.connect(self.set_edit)
@@ -150,6 +153,7 @@ class GeoFA:
         self.edit_action.blockSignals(True)
         self.edit_action.setChecked(self.mode.edit)
         self.edit_action.blockSignals(False)
+        self.edit_action.setToolTip(login_tooltip(self.mode))
         self.edit_action.setVisible(can_edit)
         if self.panel:
             self.panel.set_mode(self.mode, can_edit)
@@ -206,8 +210,8 @@ class GeoFA:
         if edit and not credentials.ensure_login(self.mode.username):
             self.update_environment_label()
             self.iface.messageBar().pushMessage(
-                "GeoFA", "Redigering kræver et GeoFA-login. Indtast dit brugernavn og din adgangskode, og sæt hak i "
-                         "»Redigering (WFS-T)«.", level=Qgis.MessageLevel.Warning, duration=15)
+                "GeoFA", "Der er ikke gemt et GeoFA-login. Indtast dit brugernavn og din adgangskode, og sæt hak i "
+                         "»Brug mit login«.", level=Qgis.MessageLevel.Warning, duration=15)
             self.open_settings()
             return
         editing = loader.editing_layers()
@@ -226,7 +230,25 @@ class GeoFA:
 
         Switching between production and test doesn't move the layers already in the
         project; it decides where new layers come from, and which layers can be edited.
+
+        One at a time: loading a WFS layer runs Qt's event loop, where the plugin can be asked
+        again (e.g. the Options dialog applies the settings as it closes, and the login check
+        follows when the main window gets focus back). That request waits until the layers in
+        hand are swapped, and then sees the settings as they are by then.
         """
+        if self.applying:
+            self.apply_again = True
+            return
+        self.applying = True
+        try:
+            self.apply_again = True
+            while self.apply_again:
+                self.apply_again = False
+                self._apply_settings()
+        finally:
+            self.applying = False
+
+    def _apply_settings(self):
         mode = Mode.from_settings(self.settings)
         loader.set_user_variable(mode.username)
         if mode != self.mode:
@@ -261,7 +283,8 @@ class GeoFA:
             return
         if not self.had_login:
             self.iface.messageBar().pushMessage(
-                "GeoFA", "GeoFA-loginet er fjernet fra QGIS. Lagene kan nu kun vises.",
+                "GeoFA", "GeoFA-loginet er fjernet fra QGIS. Lagene viser nu kun offentlige objekter og kan "
+                         "ikke redigeres.",
                 level=Qgis.MessageLevel.Info, duration=10)
         self.apply_settings()
 
@@ -437,7 +460,7 @@ class GeoFA:
         box.setText(f"Projektet har {count} GeoFA-lag, der kræver et GeoFA-login, "
                     "men der er ikke gemt et login i QGIS.")
         box.setInformativeText("Indtast dit eget brugernavn og din adgangskode, og sæt hak i "
-                               "»Redigering (WFS-T)«. Så indlæses lagene.")
+                               "»Brug mit login«. Så indlæses lagene.")
         enter = box.addButton("Indtast login", QMessageBox.ButtonRole.AcceptRole)
         box.addButton("Ikke nu", QMessageBox.ButtonRole.RejectRole)
         box.exec()

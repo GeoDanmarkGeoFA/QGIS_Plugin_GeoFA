@@ -47,9 +47,12 @@ class SettingsForm(QWidget, SettingDialog):
         form.addRow("Brugernavn", self.username_edit)
         form.addRow("Adgangskode", self.password_edit)
         layout.addLayout(form)
-        self.check_box_wfst = QCheckBox("Redigering (WFS-T)")
+        self.check_box_wfst = QCheckBox("Brug mit login")
         self.check_box_wfst.setObjectName("wfst")
-        self.check_box_wfst.setToolTip("Kræver et GeoFA-login. Uden login kan lagene kun vises.")
+        self.check_box_wfst.setToolTip(
+            "<p>Med dit login viser lagene også de objekter, der ikke er offentlige (fx beskyttelsesrum), "
+            "og de kan redigeres (WFS-T).<br>Uden login viser lagene kun offentlige objekter og kan ikke "
+            "redigeres.</p>")
         layout.addWidget(self.check_box_wfst)
         self.check_box_test = QCheckBox("Testmiljø")
         self.check_box_test.setObjectName("testmiljo")

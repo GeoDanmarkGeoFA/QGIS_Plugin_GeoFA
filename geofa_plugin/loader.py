@@ -164,7 +164,7 @@ def add_dataset(dataset, mode, message_bar, project=None):
     if mode.edit and not credentials.ensure_login(mode.username):
         message_bar.pushMessage(
             "GeoFA", "Der er ikke gemt et GeoFA-login. Indtast brugernavn og kode under "
-                     "GeoFA › Indstillinger … for at kunne redigere.",
+                     "GeoFA › Indstillinger … for at bruge dit login.",
             level=Qgis.MessageLevel.Warning, duration=15)
         return None
     ensure_symbol_path()
@@ -188,10 +188,11 @@ def replace_layer(project, layer, source, name):
 
     Changing the source in place (setDataSource) crashes QGIS while a WFS layer is still
     downloading, so the layer is replaced the way a user would: add the new one, remove the old.
-    Returns the new layer, or None when the new source can't be read (the old layer stays).
+    Returns the new layer, or None when the new source can't be read (the old layer stays) or
+    the old layer left the project while the new one loaded.
     """
     new = QgsVectorLayer(source, name, "WFS")
-    if not new.isValid():
+    if not new.isValid() or not _in_project(project, layer):
         return None
     style = QDomDocument()
     layer.exportNamedStyle(style)
@@ -213,6 +214,14 @@ def replace_layer(project, layer, source, name):
         new_node.setExpanded(node.isExpanded())
     project.removeMapLayer(layer.id())
     return new
+
+
+def _in_project(project, layer):
+    """Whether the layer is still in the project. Loading a WFS layer runs Qt's event loop, where
+    the plugin itself may swap layers (when the login is removed in QGIS's Options, say), so a
+    layer in hand can be gone and must not be touched. Compared by identity: a gone layer's
+    Python object is left, but its C++ object is deleted."""
+    return any(layer is other for other in project.mapLayers().values())
 
 
 def editing_layers(project=None):
@@ -239,6 +248,8 @@ def repoint(mode, project=None):
     project = project or QgsProject.instance()
     changed, editing, failed = 0, [], []
     for layer, table in geofa_layers(project):
+        if not _in_project(project, layer):  # swapped or removed while an earlier layer loaded
+            continue
         if layer.providerType() != "WFS":  # e.g. a GeoFA layer saved to a file: its source isn't ours to change
             continue
         source = target_source(layer, table, mode)
@@ -247,11 +258,12 @@ def repoint(mode, project=None):
         if layer.isEditable():
             editing.append(layer.name())
             continue
+        name = layer.name()
         layer.setCustomProperty(TABLE_PROPERTY, table)
-        if replace_layer(project, layer, source, layer.name()):
+        if replace_layer(project, layer, source, name):
             changed += 1
-        else:
-            failed.append(layer.name())
+        elif _in_project(project, layer):  # not when it was swapped meanwhile
+            failed.append(name)
     return changed, editing, failed
 
 

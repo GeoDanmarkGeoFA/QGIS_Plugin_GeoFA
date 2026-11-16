@@ -24,8 +24,9 @@ def about_text(dataset_count):
     return (
         f"<h3>GeoFA-plugin {plugin_version()}</h3>"
         f"<p>Pluginet henter GeoFA's {dataset_count} datasæt ind i QGIS med samme grupper, navne, felter og "
-        "kodelister som GeoFA-specifikationen, og med symboler som i GeoFA's webkort. Alle kan se lagene; "
-        "med et GeoFA-login kan man også redigere sine egne data.</p>"
+        "kodelister som GeoFA-specifikationen, og med symboler som i GeoFA's webkort. Alle kan se lagenes "
+        "offentlige objekter; med et GeoFA-login ser man også dem, der ikke er offentlige, og kan redigere "
+        "sine egne data.</p>"
         "<p>Pluginet er udviklet af Geopartner for GeoDanmark.</p>"
         "<p>"
         f"<a href='{GUIDE_URL}'>Vejledning</a><br>"

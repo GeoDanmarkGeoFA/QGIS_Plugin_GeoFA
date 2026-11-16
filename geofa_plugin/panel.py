@@ -86,6 +86,29 @@ def dataset_tooltip(dataset):
     return "<p>" + "<br><br>".join(lines) + "</p>"
 
 
+LOGIN_ICON = "/user.svg"  # QGIS's own person icon
+
+
+def login_tooltip(mode):
+    """The login button's tooltip (panel and menu). The login does more than allow editing: GeoFA
+    shows anonymous users only the objects marked public (off_kode 1), so with the login the
+    layers also show the ones kept from the public, e.g. protection rooms."""
+    if mode.edit:
+        where = " i testmiljøet" if mode.test else ""
+        lines = [f"<b>Logget ind som {html.escape(mode.username)}{where}</b>",
+                 "Lagene viser også de objekter, der ikke er offentlige (fx beskyttelsesrum), "
+                 "og de kan redigeres (WFS-T)."]
+        if mode.test:
+            lines.append("Kun lag med »[TEST]« bruger dit login.")
+        lines += ["Fotos og GPX-links vises kun uden login.", "Klik for at vise lagene uden login."]
+    else:
+        lines = ["<b>Uden login</b>",
+                 "Lagene viser kun de objekter, der er offentlige, og kan ikke redigeres.",
+                 "Klik for at bruge dit GeoFA-login. Så ser du også de objekter, der ikke er offentlige "
+                 "(fx beskyttelsesrum), og kan redigere dem."]
+    return "<p>" + "<br>".join(lines) + "</p>"
+
+
 class GeoFAPanel(QgsDockWidget):
     add_requested = pyqtSignal(list)  # tables
     remove_requested = pyqtSignal(list)  # tables
@@ -119,11 +142,11 @@ class GeoFAPanel(QgsDockWidget):
         self.search.setPlaceholderText("Søg lag eller temakode …")
         self.search.textChanged.connect(self.filter)
         row.addWidget(self.search)
-        # Read-only or editing, shown as the button's state rather than a banner. Framed buttons,
-        # as in the Geodata Connect panel
+        # With or without the login, shown as the button's state rather than a banner. Framed
+        # buttons, as in the Geodata Connect panel
         self.edit_button = QToolButton()
         self.edit_button.setCheckable(True)
-        self.edit_button.setIcon(QgsApplication.getThemeIcon("/mActionToggleEditing.svg"))
+        self.edit_button.setIcon(QgsApplication.getThemeIcon(LOGIN_ICON))
         self.edit_button.toggled.connect(self.edit_toggled)
         row.addWidget(self.edit_button)
         settings_button = QToolButton()
@@ -279,13 +302,7 @@ class GeoFAPanel(QgsDockWidget):
         self.edit_button.blockSignals(True)
         self.edit_button.setChecked(mode.edit)
         self.edit_button.blockSignals(False)
-        if mode.edit:
-            where = " i testmiljøet" if mode.test else ""
-            only = "\nKun lag med »[TEST]« kan redigeres." if mode.test else ""
-            self.edit_button.setToolTip(f"Redigering (WFS-T){where} som {mode.username}.{only}\n"
-                                        "Klik for kun at vise lagene.")
-        else:
-            self.edit_button.setToolTip("Lagene kan kun vises.\nKlik for at redigere med dit GeoFA-login (WFS-T).")
+        self.edit_button.setToolTip(login_tooltip(mode))
         kommune = getattr(mode, "kommune", "")
         self.area_filter.setText(f"Kun objekter i {municipalities.display_name(kommune)}" if kommune else "")
         self.area_filter.setVisible(bool(kommune))

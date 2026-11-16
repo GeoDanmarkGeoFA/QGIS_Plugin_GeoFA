@@ -16,14 +16,14 @@ The plugin adds the datasets of GeoFA (Geografiske Fagdata i GeoDanmark) to QGIS
 - **Only the area in view is downloaded**, so large datasets stay quick.
 - **Municipality filter**: choose a municipality under *Område* in the settings, and every GeoFA layer shows only the objects inside it. GeoFA's server does the filtering, as in Danmarks Miljøportal's plugin.
 - **Production and test environment**: layers from GeoFA's test environment get "[TEST]" in their name and can sit beside layers from production.
-- **Viewing for anyone, editing with a login**: without a GeoFA login the plugin is a viewer. With one (municipalities and other data owners), layers can be edited through WFS-T. The password is kept in QGIS's password store, never in projects or settings, and new objects get the user id and authority filled in. Removing the login in QGIS makes the plugin read-only at once.
+- **Viewing for anyone, more with a login**: without a GeoFA login the plugin is a viewer, and GeoFA sends only the objects marked public (`off_kode` 1). With a login (municipalities and other data owners) and *Brug mit login* ticked (the person button in the panel), layers also show the objects kept from the public that the login may see (`off_kode` 3 for all authorities, 2 for the responsible one; e.g. protection rooms) and can be edited through WFS-T. Photo links come only without the login: the plugin reads GeoFA's photo-link versions anonymously. The password is kept in QGIS's password store, never in projects or settings, and new objects get the user id and authority filled in. Removing the login in QGIS makes the plugin read-only at once.
 - **Older projects keep working**: layers from version 0.36 are pointed at the renamed datasets 5608 and 5609, and **GeoFA › Opdater formularer og kodelister** gives them the new forms.
 
 ## Using it
 
 1. In QGIS, open **Plugins › Manage and Install Plugins**, search for **GeoFA** and click **Install**.
 2. Open **GeoFA › GeoFA-panel** and tick the datasets you want.
-3. To edit, enter your GeoFA login under **GeoFA › Indstillinger …** (or in QGIS's **Indstillinger › Indstillinger › GeoFA**) and tick *Redigering (WFS-T)*. To get a login, write to [support@geopartner.dk](mailto:support@geopartner.dk).
+3. To see non-public objects and edit, enter your GeoFA login under **GeoFA › Indstillinger …** (or in QGIS's **Indstillinger › Indstillinger › GeoFA**) and tick *Brug mit login*. To get a login, write to [support@geopartner.dk](mailto:support@geopartner.dk).
 
 More about GeoFA, and guides (in Danish): [geodanmark.dk – GeoFA](https://www.geodanmark.dk/home/vejledninger/geofa/).
 
