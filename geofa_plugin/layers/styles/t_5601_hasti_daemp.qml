@@ -565,8 +565,8 @@
     <alias field="link" name="Link (link)" index="33"/>
   </aliases>
   <defaults>
-    <default applyOnUpdate="0" expression="" field="temakode"/>
-    <default applyOnUpdate="0" expression="" field="temanavn"/>
+    <default applyOnUpdate="0" expression="5601" field="temakode"/>
+    <default applyOnUpdate="0" expression="'t_5601_hasti_daemp_t'" field="temanavn"/>
     <default applyOnUpdate="0" expression="" field="objekt_id"/>
     <default applyOnUpdate="0" expression="" field="versions_id"/>
     <default applyOnUpdate="0" expression="" field="systid_fra"/>
@@ -768,30 +768,50 @@
         </labelStyle>
       </attributeEditorField>
     </attributeEditorContainer>
-    <attributeEditorContainer verticalStretch="0" showLabel="1" horizontalStretch="0" type="Tab" groupBox="0" collapsed="0" visibilityExpressionEnabled="1" collapsedExpressionEnabled="0" collapsedExpression="" name="Fotos" visibilityExpression="coalesce(&quot;geofafoto&quot;, '') &lt;> '' OR coalesce(&quot;geofafoto1&quot;, '') &lt;> '' OR coalesce(&quot;geofafoto2&quot;, '') &lt;> '' OR coalesce(&quot;geofafoto3&quot;, '') &lt;> ''" columnCount="1">
-      <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-        <labelFont bold="0" underline="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" style="" strikethrough="0"/>
+    <attributeEditorContainer columnCount="1" verticalStretch="0" horizontalStretch="0" type="Tab" collapsedExpressionEnabled="0" visibilityExpression="coalesce(attribute(@feature, 'geofafoto'), '') &lt;> '' OR coalesce(attribute(@feature, 'geofafoto1'), '') &lt;> '' OR coalesce(attribute(@feature, 'geofafoto2'), '') &lt;> '' OR coalesce(attribute(@feature, 'geofafoto3'), '') &lt;> ''" groupBox="0" name="Fotos" collapsedExpression="" visibilityExpressionEnabled="1" showLabel="1" collapsed="0">
+      <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+        <labelFont bold="0" underline="0" italic="0" style="" description="Helvetica,12,-1,5,50,0,0,0,0,0" strikethrough="0"/>
       </labelStyle>
-      <attributeEditorField verticalStretch="0" showLabel="1" horizontalStretch="0" name="geofafoto" index="29">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" style="" strikethrough="0"/>
+      <attributeEditorContainer columnCount="1" verticalStretch="0" horizontalStretch="0" type="Row" collapsedExpressionEnabled="0" visibilityExpression="coalesce(attribute(@feature, 'geofafoto'), '') &lt;> ''" groupBox="0" name="geofafoto" collapsedExpression="" visibilityExpressionEnabled="1" showLabel="0" collapsed="0">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont bold="0" underline="0" italic="0" style="" description="Helvetica,12,-1,5,50,0,0,0,0,0" strikethrough="0"/>
         </labelStyle>
-      </attributeEditorField>
-      <attributeEditorField verticalStretch="0" showLabel="1" horizontalStretch="0" name="geofafoto1" index="30">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" style="" strikethrough="0"/>
+        <attributeEditorField index="29" verticalStretch="0" horizontalStretch="0" name="geofafoto" showLabel="1">
+          <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+            <labelFont bold="0" underline="0" italic="0" style="" description="Helvetica,12,-1,5,50,0,0,0,0,0" strikethrough="0"/>
+          </labelStyle>
+        </attributeEditorField>
+      </attributeEditorContainer>
+      <attributeEditorContainer columnCount="1" verticalStretch="0" horizontalStretch="0" type="Row" collapsedExpressionEnabled="0" visibilityExpression="coalesce(attribute(@feature, 'geofafoto1'), '') &lt;> ''" groupBox="0" name="geofafoto1" collapsedExpression="" visibilityExpressionEnabled="1" showLabel="0" collapsed="0">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont bold="0" underline="0" italic="0" style="" description="Helvetica,12,-1,5,50,0,0,0,0,0" strikethrough="0"/>
         </labelStyle>
-      </attributeEditorField>
-      <attributeEditorField verticalStretch="0" showLabel="1" horizontalStretch="0" name="geofafoto2" index="31">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" style="" strikethrough="0"/>
+        <attributeEditorField index="30" verticalStretch="0" horizontalStretch="0" name="geofafoto1" showLabel="1">
+          <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+            <labelFont bold="0" underline="0" italic="0" style="" description="Helvetica,12,-1,5,50,0,0,0,0,0" strikethrough="0"/>
+          </labelStyle>
+        </attributeEditorField>
+      </attributeEditorContainer>
+      <attributeEditorContainer columnCount="1" verticalStretch="0" horizontalStretch="0" type="Row" collapsedExpressionEnabled="0" visibilityExpression="coalesce(attribute(@feature, 'geofafoto2'), '') &lt;> ''" groupBox="0" name="geofafoto2" collapsedExpression="" visibilityExpressionEnabled="1" showLabel="0" collapsed="0">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont bold="0" underline="0" italic="0" style="" description="Helvetica,12,-1,5,50,0,0,0,0,0" strikethrough="0"/>
         </labelStyle>
-      </attributeEditorField>
-      <attributeEditorField verticalStretch="0" showLabel="1" horizontalStretch="0" name="geofafoto3" index="32">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" style="" strikethrough="0"/>
+        <attributeEditorField index="31" verticalStretch="0" horizontalStretch="0" name="geofafoto2" showLabel="1">
+          <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+            <labelFont bold="0" underline="0" italic="0" style="" description="Helvetica,12,-1,5,50,0,0,0,0,0" strikethrough="0"/>
+          </labelStyle>
+        </attributeEditorField>
+      </attributeEditorContainer>
+      <attributeEditorContainer columnCount="1" verticalStretch="0" horizontalStretch="0" type="Row" collapsedExpressionEnabled="0" visibilityExpression="coalesce(attribute(@feature, 'geofafoto3'), '') &lt;> ''" groupBox="0" name="geofafoto3" collapsedExpression="" visibilityExpressionEnabled="1" showLabel="0" collapsed="0">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont bold="0" underline="0" italic="0" style="" description="Helvetica,12,-1,5,50,0,0,0,0,0" strikethrough="0"/>
         </labelStyle>
-      </attributeEditorField>
+        <attributeEditorField index="32" verticalStretch="0" horizontalStretch="0" name="geofafoto3" showLabel="1">
+          <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+            <labelFont bold="0" underline="0" italic="0" style="" description="Helvetica,12,-1,5,50,0,0,0,0,0" strikethrough="0"/>
+          </labelStyle>
+        </attributeEditorField>
+      </attributeEditorContainer>
     </attributeEditorContainer>
     <attributeEditorContainer verticalStretch="0" showLabel="1" horizontalStretch="0" type="Tab" groupBox="0" collapsed="0" visibilityExpressionEnabled="0" collapsedExpressionEnabled="0" collapsedExpression="" name="Øvrige felter" visibilityExpression="" columnCount="1">
       <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
@@ -920,7 +940,12 @@
     <field editable="0" name="temanavn"/>
     <field editable="0" name="versions_id"/>
   </editable>
-  <labelOnTop/>
+  <labelOnTop>
+    <field labelOnTop="1" name="geofafoto"/>
+    <field labelOnTop="1" name="geofafoto1"/>
+    <field labelOnTop="1" name="geofafoto2"/>
+    <field labelOnTop="1" name="geofafoto3"/>
+  </labelOnTop>
   <reuseLastValue/>
   <dataDefinedFieldProperties/>
   <widgets/>

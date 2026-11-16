@@ -716,8 +716,8 @@
     <alias name="Link (link)" field="link" index="54"/>
   </aliases>
   <defaults>
-    <default applyOnUpdate="0" field="temakode" expression=""/>
-    <default applyOnUpdate="0" field="temanavn" expression=""/>
+    <default applyOnUpdate="0" field="temakode" expression="5013"/>
+    <default applyOnUpdate="0" field="temanavn" expression="'t_5013_afvandingskanal_t'"/>
     <default applyOnUpdate="0" field="objekt_id" expression=""/>
     <default applyOnUpdate="0" field="versions_id" expression=""/>
     <default applyOnUpdate="0" field="systid_fra" expression=""/>

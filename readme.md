@@ -92,9 +92,12 @@ Useful checks:
 
 1. Run the offline tests and the end-to-end check.
 2. Update `version` and `changelog` in `geofa_plugin/metadata.txt`.
-3. The ZIP for plugins.qgis.org holds a folder `geofa/` with the contents of `geofa_plugin/`, without `test/`, `Vejledning/` and `.env`.
-4. Check the whole history for secrets (give the path to git, as OSGeo4W doesn't find it):
+3. If the panel, menu, settings or forms changed, take the guide's screenshots again (QGIS shows on screen for about 40 seconds; the images go to `geofa_plugin/Vejledning/`), and update [the guide](geofa_plugin/GeoFA_plugin_vejledning.md):
+   `powershell -ExecutionPolicy Bypass -File tools\guide_screenshots.ps1`
+4. Build the ZIP for plugins.qgis.org: `python-qgis.bat tools/build_zip.py` writes `dev/dist/GeoFA-<version>.zip`, a folder `geofa/` with the contents of `geofa_plugin/` without `test/`, `Vejledning/`, `.env` and other files that aren't part of the plugin. It checks the files for secrets first.
+5. Check the whole history for secrets (give the path to git, as OSGeo4W doesn't find it):
    `python-qgis.bat tools/secret_scan.py . "C:\Program Files\Git\cmd\git.exe"`
+6. Upload the ZIP at [plugins.qgis.org](https://plugins.qgis.org/) and tag the release commit (`v<version>`).
 
 ## Bugs and suggestions
 

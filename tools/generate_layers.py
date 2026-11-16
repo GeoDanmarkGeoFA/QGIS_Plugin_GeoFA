@@ -587,6 +587,22 @@ if authority_default():
     DEFAULTS["cvr_kode"] = (authority_default(), False)
 
 
+def has_link(field):
+    """Whether a photo field holds a link. The field is read by name: some editable tables (e.g. 5607's)
+    don't have the photo fields at all, and a rule naming a missing field can't be evaluated, so QGIS
+    would show what it hides, empty."""
+    return f"coalesce(attribute(@feature, '{field}'), '') <> ''"
+
+
+def theme_defaults(table):
+    """temakode and temanavn for a new object, as GeoFA's view fills them in once it's saved:
+    the number in the table name and the dataset's own table (e.g. 5800 and 't_5800_fac_pkt_t').
+    Checked against every dataset with public objects in production. A new object would otherwise
+    show 0 and NULL until saved. Not on update: they never change for an object."""
+    code = re.match(r"t_(\d+)_", table).group(1)
+    return {"temakode": (code, False), "temanavn": (f"'{table}_t'", False)}
+
+
 def number_range(codes):
     """(min, max) when a "code list" is just the numbers min..max labelled as themselves."""
     if not codes or any(value != alias or not value.lstrip("-").isdigit() for value, alias in codes):
@@ -626,7 +642,7 @@ def apply_fields_and_form(layer, dataset, fields, text_of, used):
             layer.setEditorWidgetSetup(idx, QgsEditorWidgetSetup("Range", {
                 "Min": numbers[0], "Max": numbers[1], "Step": 1, "Style": "SpinBox", "AllowNull": True}))
         elif f["codes"]:
-            options = ([] if f["required"] else [{"<ingen værdi>": NULL_VALUE}]) + [{alias: value} for value, alias in f["codes"]]
+            options = [{"<ingen værdi>": NULL_VALUE}] + [{alias: value} for value, alias in f["codes"]]
             layer.setEditorWidgetSetup(idx, QgsEditorWidgetSetup("ValueMap", {"map": options}))
             used.setdefault("lists_without_source", set()).add(f"{dataset['table'][2:6]}:{f['name']}")
         elif f["kind"] == "photo":
@@ -648,7 +664,7 @@ def apply_fields_and_form(layer, dataset, fields, text_of, used):
             layer.setFieldConstraint(idx, QgsFieldConstraints.Constraint.ConstraintNotNull,
                                      QgsFieldConstraints.ConstraintStrength.ConstraintStrengthSoft)
         config.setReadOnly(idx, not editable)
-        default = DEFAULTS.get(f["name"])
+        default = DEFAULTS.get(f["name"]) or theme_defaults(dataset["table"]).get(f["name"])
         if default:
             layer.setDefaultValueDefinition(idx, QgsDefaultValue(*default))
         if f["kind"] == "photo":
@@ -670,11 +686,23 @@ def apply_fields_and_form(layer, dataset, fields, text_of, used):
         else:
             container.setIsGroupBox(False)
         for name, idx in tabs[tab_name]:
-            container.addChildElement(QgsAttributeEditorField(name, idx, container))
+            if tab_name == photo_tab_name:
+                # Each photo or GPX link only when there is one: QGIS can hide a container but not a
+                # field, so each is in a frameless row of its own. Its label goes above the link,
+                # as rows don't share a label column
+                row = QgsAttributeEditorContainer(name, container)
+                row.setType(Qgis.AttributeEditorContainerType.Row)
+                row.setShowLabel(False)
+                row.setVisibilityExpression(QgsOptionalExpression(QgsExpression(has_link(name)), True))
+                row.addChildElement(QgsAttributeEditorField(name, idx, row))
+                container.addChildElement(row)
+                config.setLabelOnTop(idx, True)
+            else:
+                container.addChildElement(QgsAttributeEditorField(name, idx, container))
         if tab_name == photo_tab_name:
             # Only when the object has a photo or GPX link: so never while editing, as the
             # editable (normal) layers have no photo links, and not for objects without photos
-            shown = " OR ".join(f"coalesce(\"{name}\", '') <> ''" for name, _ in tabs[tab_name])
+            shown = " OR ".join(has_link(name) for name, _ in tabs[tab_name])
             container.setVisibilityExpression(QgsOptionalExpression(QgsExpression(shown), True))
         root.addChildElement(container)
     layer.setEditFormConfig(config)

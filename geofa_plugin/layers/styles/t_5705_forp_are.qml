@@ -492,8 +492,8 @@
     <alias name="CVR-nummer (cvr_opslag)" field="cvr_opslag" index="29"/>
   </aliases>
   <defaults>
-    <default applyOnUpdate="0" field="temakode" expression=""/>
-    <default applyOnUpdate="0" field="temanavn" expression=""/>
+    <default applyOnUpdate="0" field="temakode" expression="5705"/>
+    <default applyOnUpdate="0" field="temanavn" expression="'t_5705_forp_are_t'"/>
     <default applyOnUpdate="0" field="objekt_id" expression=""/>
     <default applyOnUpdate="0" field="versions_id" expression=""/>
     <default applyOnUpdate="0" field="systid_fra" expression=""/>

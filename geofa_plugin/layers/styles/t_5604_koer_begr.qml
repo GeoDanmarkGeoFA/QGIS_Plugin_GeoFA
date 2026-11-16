@@ -514,8 +514,8 @@
     <alias name="Link (link)" field="link" index="31"/>
   </aliases>
   <defaults>
-    <default applyOnUpdate="0" field="temakode" expression=""/>
-    <default applyOnUpdate="0" field="temanavn" expression=""/>
+    <default applyOnUpdate="0" field="temakode" expression="5604"/>
+    <default applyOnUpdate="0" field="temanavn" expression="'t_5604_koer_begr_t'"/>
     <default applyOnUpdate="0" field="objekt_id" expression=""/>
     <default applyOnUpdate="0" field="versions_id" expression=""/>
     <default applyOnUpdate="0" field="systid_fra" expression=""/>

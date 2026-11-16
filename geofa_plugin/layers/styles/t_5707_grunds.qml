@@ -602,8 +602,8 @@
     <alias name="Fotolink 3 (foto_link3)" field="foto_link3" index="43"/>
   </aliases>
   <defaults>
-    <default applyOnUpdate="0" field="temakode" expression=""/>
-    <default applyOnUpdate="0" field="temanavn" expression=""/>
+    <default applyOnUpdate="0" field="temakode" expression="5707"/>
+    <default applyOnUpdate="0" field="temanavn" expression="'t_5707_grunds_t'"/>
     <default applyOnUpdate="0" field="objekt_id" expression=""/>
     <default applyOnUpdate="0" field="versions_id" expression=""/>
     <default applyOnUpdate="0" field="systid_fra" expression=""/>

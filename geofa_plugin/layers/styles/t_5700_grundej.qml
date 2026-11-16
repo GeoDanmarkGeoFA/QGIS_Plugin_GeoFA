@@ -640,8 +640,8 @@
     <alias name="Sagsnummer (sagsnr)" field="sagsnr" index="33"/>
   </aliases>
   <defaults>
-    <default applyOnUpdate="0" field="temakode" expression=""/>
-    <default applyOnUpdate="0" field="temanavn" expression=""/>
+    <default applyOnUpdate="0" field="temakode" expression="5700"/>
+    <default applyOnUpdate="0" field="temanavn" expression="'t_5700_grundej_t'"/>
     <default applyOnUpdate="0" field="objekt_id" expression=""/>
     <default applyOnUpdate="0" field="versions_id" expression=""/>
     <default applyOnUpdate="0" field="systid_fra" expression=""/>

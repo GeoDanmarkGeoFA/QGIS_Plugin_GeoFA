@@ -23,6 +23,15 @@ PASSWORD_PLACEHOLDER = "Adgangskode"
 PASSWORD_SAVED_PLACEHOLDER = "Gemt – skriv en ny for at ændre den"
 WHOLE_COUNTRY = "Hele landet"
 ICON = os.path.join(os.path.dirname(__file__), "icon.png")  # the GeoFA "G"
+GEOPARTNER_URL = "https://geopartner.dk"
+
+
+def developer_credit():
+    """Who made the plugin, with a link that opens in the browser (as in 0.36's settings)."""
+    label = QLabel(f"GeoFA-pluginet er udviklet af <a href='{GEOPARTNER_URL}'>Geopartner</a>.")
+    label.setObjectName("developer_credit")
+    label.setOpenExternalLinks(True)
+    return label
 
 
 class SettingsForm(QWidget, SettingDialog):
@@ -146,6 +155,7 @@ class SettingsDialog(QDialog):
         layout.addLayout(body)
         self.form = SettingsForm(settings)
         body.addWidget(self.form)
+        body.addWidget(developer_credit())
         buttons = QDialogButtonBox(QDialogButtonBox.StandardButton.Ok | QDialogButtonBox.StandardButton.Cancel)
         buttons.accepted.connect(self.accept)
         buttons.rejected.connect(self.reject)
@@ -167,6 +177,7 @@ class OptionsPage(QgsOptionsPageWidget):
         self.form = SettingsForm(settings)
         layout.addWidget(self.form)
         layout.addStretch(1)
+        layout.addWidget(developer_credit())  # at the bottom of the page
 
     def apply(self):
         self.form.apply()

@@ -73,9 +73,14 @@ def parse(data):
     return sorted(values, key=lambda pair: _code_order(pair[0]))
 
 
-def dropdown(values, required):
-    """The dropdown for a code list: the texts shown, the codes stored."""
-    options = ([] if required else [{NO_VALUE: NULL_VALUE}]) + [{text: code} for code, text in values]
+def dropdown(values):
+    """The dropdown for a code list: the texts shown, the codes stored, after "<ingen værdi>".
+
+    Every list starts with "<ingen værdi>", so an empty field reads the same everywhere (not
+    QGIS's "(NULL)"). A field GeoFA requires is marked by its not-null constraint in the style
+    until a value is chosen (a soft one: QGIS warns but doesn't block), and GeoFA's database
+    doesn't accept it empty."""
+    options = [{NO_VALUE: NULL_VALUE}] + [{text: code} for code, text in values]
     return QgsEditorWidgetSetup("ValueMap", {"map": options})
 
 
@@ -93,7 +98,7 @@ def apply(layer, entries, lists):
     """
     changed = []
     fields = layer.fields()
-    for field, source, required in entries:
+    for field, source, _ in entries:
         index = fields.indexOf(field)
         if index < 0 or source not in lists:
             continue
@@ -101,7 +106,7 @@ def apply(layer, entries, lists):
         if current.type() not in OWN_WIDGETS:
             continue
         values = lists[source]
-        setup = dropdown(values, required) if values is not None else codes_only()
+        setup = dropdown(values) if values is not None else codes_only()
         if setup.type() == current.type() and setup.config() == current.config():
             continue
         layer.setEditorWidgetSetup(index, setup)

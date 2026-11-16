@@ -620,8 +620,8 @@
     <alias name="Beløb [kr] (beloeb)" field="beloeb" index="42"/>
   </aliases>
   <defaults>
-    <default applyOnUpdate="0" field="temakode" expression=""/>
-    <default applyOnUpdate="0" field="temanavn" expression=""/>
+    <default applyOnUpdate="0" field="temakode" expression="5610"/>
+    <default applyOnUpdate="0" field="temanavn" expression="'t_5610_cykelplanlaegning_t'"/>
     <default applyOnUpdate="0" field="objekt_id" expression=""/>
     <default applyOnUpdate="0" field="versions_id" expression=""/>
     <default applyOnUpdate="0" field="systid_fra" expression=""/>

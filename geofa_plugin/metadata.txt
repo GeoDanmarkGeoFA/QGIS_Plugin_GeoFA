@@ -6,40 +6,51 @@
 name=GeoFA
 qgisMinimumVersion=3.34
 qgisMaximumVersion=4.99
+supportsQt6=True
 description=Gratis og let adgang til GeoFA (Geografiske Fagdata i GeoDanmark) i QGIS. <br>
 
 	Free and easy access to GeoFA (Geographical Professional Data in GeoDanmark) in QGIS.
-version=0.36
+version=1.0.0
 author=GeoFA
 email=support@geopartner.dk
 
 about=See english version below.
 
-	Geografiske Fagdata i GeoDanmark (GeoFA) er en frivillig samling af fællesoffentlige data, som vurderes at have værdi på tværs af kommunegrænser – både for myndigheder og andre eksterne anvendere. Det er frivilligt for myndigheder at benytte databasen til opbevaring og udstilling af data – dermed kan nogle data være ufuldstændige. Data er gratis for tredjepart at hente og anvende data lokalt.
-	
-	Dette plugin gør det let at indlæse alle GeoFA’s data i QGIS. Når pluginet er installeret vises menuen GeoFA, hvorfra du kan tilføje GeoFA-data såsom friluftsdata, skoledistrikter og ladefaciliteter til kortet. 
-	
-	Bemærk når der udfyldes en kolonne med en kodeværdi (f.eks. oprindkode), behøver man ikke at udfylde den tilhørende kodetekst (f.eks. oprindelse) – det bliver automatisk udfyldt når der gemmes.
-	
-	Har man et brugernavn og en kode, kan man editere i ens eget data i lagene, hvilket gøres under indstillinger > GeoFA > Brugernavn og kode. Her kan man vælge enten ”WFS-T (muligt at editere)” for at oprette og redigere i GeoFA-databasen eller ”Testmiljø” for at oprette og redigere i testmiljøet. 
-	
-	Hvis man mangler sit login eller skal oprettes som ny bruger, bedes man sende en mail til support@geopartner.dk, hvor man i emnefeltet skal skrive ”GeoFA brugeroplysninger”.
-	
-	Dette plugin er udviklet af <a href="https://geopartner.dk/" target="_blank">Geopartner</a> og <a href="https://www.geodanmark.dk/home/vejledninger/geofa/" targer="_blank">GeoDanmark</a>.
-	
+	Geografiske Fagdata i GeoDanmark (GeoFA) er en frivillig samling af fællesoffentlige data, som vurderes at have værdi på tværs af kommunegrænser – både for myndigheder og andre eksterne anvendere. Det er frivilligt for myndigheder at benytte databasen til opbevaring og udstilling af data – dermed kan nogle data være ufuldstændige. Data er gratis for tredjepart at hente og anvende lokalt.
+
+	Pluginet giver adgang til alle GeoFA's 80 datasæt i QGIS med samme grupper, navne, felter og kodelister som GeoFA-specifikationen og med symboler som i GeoFA's webkort. Lagene tilføjes fra GeoFA-panelet, hvor man sætter hak ved de lag, man vil have, fra menuen GeoFA eller fra QGIS' søgefelt.
+
+	Uden login viser lagene de objekter, der er offentlige. Med et GeoFA-login (kommuner og andre myndigheder) ser man også de objekter, der ikke er offentlige, og kan redigere sine egne data (WFS-T). Adgangskoden gemmes i QGIS' adgangskodelager, ikke i projekter eller indstillinger.
+
+	Felter med kodelister vises som rullelister, og værdierne hentes direkte fra GeoFA. Når man vælger en kodeværdi (fx oprindkode), udfylder GeoFA selv den tilhørende tekst (fx oprindelse), når der gemmes.
+
+	Man kan vælge kun at se objekter i én kommune. Fotos og GPX-spor åbnes som links i browseren. Testmiljøet kan vælges i indstillingerne; lag derfra får »[TEST]« i navnet.
+
+	Hvis man mangler sit login eller skal oprettes som ny bruger, bedes man sende en mail til support@geopartner.dk med emnet ”GeoFA brugeroplysninger”.
+
+	Vejledning: <a href="https://github.com/GeoDanmarkGeoFA/QGIS_Plugin_GeoFA/blob/main/geofa_plugin/GeoFA_plugin_vejledning.md" target="_blank">GeoFA-pluginet i QGIS</a>
+
+	Dette plugin er udviklet af <a href="https://geopartner.dk/" target="_blank">Geopartner</a> og <a href="https://www.geodanmark.dk/home/vejledninger/geofa/" target="_blank">GeoDanmark</a>.
+
 	_________________________________________________________________________________________________________________________________________________________________
-	
+
 	English Version:
-	
+
 	Geographical Professional Data in GeoDanmark (GeoFA) is a voluntary collection of joint public data, which is considered to have value across municipal boundaries - both for authorities and other external users. It is voluntary for authorities to use the database for storage and display of data - thus some data may be incomplete. Data is free for third parties to download and use locally.
-	
-	This plugin makes it easy to load all of GeoFA's data into QGIS. Once the plugin is installed, the GeoFA menu is displayed, from which you can add GeoFA data such as outdoor data, school districts, and charging facilities to the map.
-	
-	Note that when filling out a column with a code value (e.g., origin code), one does not need to fill out the corresponding code text (e.g., origin) - it will be automatically filled in when saved.
-	
-	If one has a username and a code, one can edit one's own data in the layers, which is done under settings > GeoFA > username and code. Here one can choose either 'WFS-T (possible to edit)' to create and edit in the GeoFA database or 'Test environment' to create and edit in the test environment.
-	
-	This plugin is developed by <a href="https://geopartner.dk/" target="_blank">Geopartner</a> and <a href="https://www.geodanmark.dk/home/vejledninger/geofa/" targer="_blank">GeoDanmark</a>.
+
+	The plugin gives access to all 80 GeoFA datasets in QGIS, with the same groups, names, fields and code lists as the GeoFA specification and with symbols as in GeoFA's web map. Layers are added from the GeoFA panel, by ticking the layers you want, from the GeoFA menu or from QGIS's search bar.
+
+	Without a login the layers show the objects that are public. With a GeoFA login (municipalities and other authorities) you also see the objects that are not public, and can edit your own data (WFS-T). The password is kept in QGIS's password store, not in projects or settings.
+
+	Fields with code lists are shown as drop-down lists, with the values read directly from GeoFA. When you choose a code value (e.g. oprindkode), GeoFA fills in the matching text (e.g. oprindelse) itself when the object is saved.
+
+	You can choose to see only the objects in one municipality. Photos and GPX tracks open as links in the browser. The test environment can be chosen in the settings; layers from it get "[TEST]" in their name.
+
+	If you are missing your login or need to be created as a new user, please send an email to support@geopartner.dk with the subject "GeoFA brugeroplysninger".
+
+	Guide (in Danish): <a href="https://github.com/GeoDanmarkGeoFA/QGIS_Plugin_GeoFA/blob/main/geofa_plugin/GeoFA_plugin_vejledning.md" target="_blank">GeoFA-pluginet i QGIS</a>
+
+	This plugin is developed by <a href="https://geopartner.dk/" target="_blank">Geopartner</a> and <a href="https://www.geodanmark.dk/home/vejledninger/geofa/" target="_blank">GeoDanmark</a>.
 
 tracker=https://github.com/GeoDanmarkGeoFA/QGIS_Plugin_GeoFA/issues
 repository=https://github.com/GeoDanmarkGeoFA/QGIS_Plugin_GeoFA
@@ -48,8 +59,14 @@ repository=https://github.com/GeoDanmarkGeoFA/QGIS_Plugin_GeoFA
 # Recommended items:
 
 hasProcessingProvider=no
-# Uncomment the following line and add your changelog:
-changelog=2024-09-11: version 0.36, fix error in attribute forms, temakode
+changelog=2026-11-16: version 1.0.0, ny version til QGIS 3.34 og nyere, også QGIS 4
+    - Alle 80 datasæt fra GeoFA-specifikationen, med specifikationens grupper, navne og felter og symboler som i GeoFA's webkort
+    - GeoFA-panel med søgning, hvor lag tilføjes og fjernes med hak
+    - Kodelisterne hentes direkte fra GeoFA; domænetabellerne lægges ikke længere ind i projektet
+    - Med login ses også de objekter, der ikke er offentlige, og lagene kan redigeres; adgangskoden gemmes i QGIS' adgangskodelager
+    - Kun objekter i én kommune, fotos og GPX-spor som links, og lag fra testmiljøet markeres med [TEST]
+    - "Opdater formularer og kodelister" giver lag i ældre projekter de nye formularer
+    2024-09-11: version 0.36, fix error in attribute forms, temakode
     2024-09-11: version 0.35, fix error in attribute forms
     2024-09-09: version 0.30, update symbols and attribute forms
     2024-03-26: version 0.25, update symbols and attribute forms

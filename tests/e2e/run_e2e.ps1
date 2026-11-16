@@ -11,9 +11,11 @@
 .EXAMPLE
     powershell -ExecutionPolicy Bypass -File tests\e2e\run_e2e.ps1
     powershell -ExecutionPolicy Bypass -File tests\e2e\run_e2e.ps1 -Versions ltr
+    powershell -ExecutionPolicy Bypass -File tests\e2e\run_e2e.ps1 -Zip dev\dist\GeoFA-1.0.0.zip
 #>
 param(
     [ValidateSet("ltr", "latest")] [string[]] $Versions = @("ltr", "latest"),
+    [string] $Zip = "",  # install the plugin from this release ZIP instead of from geofa_plugin/
     [string] $OSGeo4W = $(if (Test-Path "$env:LOCALAPPDATA\Programs\OSGeo4W") { "$env:LOCALAPPDATA\Programs\OSGeo4W" } else { "C:\OSGeo4W" }),
     [int] $TimeoutSeconds = 180
 )
@@ -27,7 +29,12 @@ $launchers = @{ ltr = @("qgis-ltr.bat", "qgis-ltr-bin"); latest = @("qgis.bat", 
 # A fresh profile with only this plugin, switched on (the same files as the release ZIP)
 if (Test-Path $profileDir) { Remove-Item -Recurse -Force $profileDir }
 New-Item -ItemType Directory -Force (Join-Path $profileDir "QGIS"), $out | Out-Null
-robocopy (Join-Path $repo "geofa_plugin") (Join-Path $profileDir "python\plugins\geofa") /E /XD test Vejledning __pycache__ /XF .env /NFL /NDL /NJH /NJS /NP | Out-Null
+if ($Zip) {
+    Expand-Archive -Path (Resolve-Path $Zip) -DestinationPath (Join-Path $profileDir "python\plugins") -Force
+    Write-Host "Plugin installed from $Zip"
+} else {
+    robocopy (Join-Path $repo "geofa_plugin") (Join-Path $profileDir "python\plugins\geofa") /E /XD test Vejledning __pycache__ /XF .env /NFL /NDL /NJH /NJS /NP | Out-Null
+}
 foreach ($ini in "QGIS3.ini", "QGIS4.ini") {
     [IO.File]::WriteAllText((Join-Path $profileDir "QGIS\$ini"), "[PythonPlugins]`r`ngeofa=true`r`n")
 }

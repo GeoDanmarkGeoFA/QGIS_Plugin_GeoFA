@@ -140,6 +140,11 @@ class CompatibilityTests(unittest.TestCase):
         self.assertEqual(page.objectName(), "geofaOptions")
         self.assertFalse(iface.options_factories[0].icon().isNull())  # the GeoFA "G"
         self.assertEqual(page.form.municipality_box.count(), 1 + 99)  # "Hele landet" and the municipalities
+        # Both places name Geopartner, with a link that opens in the browser
+        for window in (page, SettingsDialog(plugin.settings)):
+            credit = window.findChild(QLabel, "developer_credit")
+            self.assertIn("href='https://geopartner.dk'", credit.text())
+            self.assertTrue(credit.openExternalLinks())
         calls = []
         plugin.add_tables = lambda tables: calls.append(tables)
         plugin.layer_locator_filter.triggerResult(types.SimpleNamespace(userData=0))
@@ -945,8 +950,10 @@ class CodeListTests(unittest.TestCase):
         lists.problems.connect(reports.append)
         layer = _facility_layer()
         lists.fill([(layer, self.dataset, loader.PRODUCTION_HOST)])
+        # A required field too starts with "<ingen værdi>"; its not-null constraint marks it while empty
         self.assertEqual(self.widget(layer, "facil_ty_k"),
-                         ("ValueMap", {"map": [{"Toilet": "1012"}, {"Svømmehal": "2012"}]}))
+                         ("ValueMap", {"map": [{codelists.NO_VALUE: codelists.NULL_VALUE}, {"Toilet": "1012"},
+                                               {"Svømmehal": "2012"}]}))
         self.assertEqual(self.widget(layer, "kvalitetstjekket_k")[0], "TextEdit")
         self.assertEqual(len(reports), 1)
         self.assertEqual(reports[0][0]["table"], KVALITET.table)
@@ -960,7 +967,7 @@ class CodeListTests(unittest.TestCase):
         later.problems.connect(reports.append)
         later.fill([(_facility_layer(), self.dataset, loader.PRODUCTION_HOST)])
         self.assertEqual(len(reports), 1)
-        # Once it works again, the dropdown is back (with "no value", as the field isn't required)
+        # Once it works again, the dropdown is back
         geofa.answers[KVALITET.table] = _answer([("1", "Ja"), ("2", "Nej")])
         later.forget()
         later.fill([(layer, self.dataset, loader.PRODUCTION_HOST)])
@@ -1075,7 +1082,8 @@ class CodeListTests(unittest.TestCase):
                 self.assertEqual(geofa.asked, [])  # until its form is updated, a 0.36 layer keeps its own lists
                 offered[0].findChild(QPushButton).click()
             self.assertEqual(layer.customProperty(loader.FORM_PROPERTY), dataset.form_version)
-            self.assertEqual(self.widget(layer, "facil_ty_k"), ("ValueMap", {"map": [{"Toilet": "1012"}]}))
+            self.assertEqual(self.widget(layer, "facil_ty_k"),
+                             ("ValueMap", {"map": [{codelists.NO_VALUE: codelists.NULL_VALUE}, {"Toilet": "1012"}]}))
             self.assertEqual(self.widget(layer, "kvalitetstjekket_k")[0], "TextEdit")
             self.assertEqual(len(reports), 1)
             self.assertNotIn("old", layers)

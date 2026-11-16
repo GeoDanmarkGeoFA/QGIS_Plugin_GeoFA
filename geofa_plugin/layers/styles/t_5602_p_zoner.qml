@@ -730,8 +730,8 @@
     <alias name="Postdistrikt (postnr_by)" field="postnr_by" index="60"/>
   </aliases>
   <defaults>
-    <default applyOnUpdate="0" field="temakode" expression=""/>
-    <default applyOnUpdate="0" field="temanavn" expression=""/>
+    <default applyOnUpdate="0" field="temakode" expression="5602"/>
+    <default applyOnUpdate="0" field="temanavn" expression="'t_5602_p_zoner_t'"/>
     <default applyOnUpdate="0" field="objekt_id" expression=""/>
     <default applyOnUpdate="0" field="versions_id" expression=""/>
     <default applyOnUpdate="0" field="systid_fra" expression=""/>

@@ -471,8 +471,8 @@
     <alias name="Sagsnummer (sagsnr)" field="sagsnr" index="28"/>
   </aliases>
   <defaults>
-    <default applyOnUpdate="0" field="temakode" expression=""/>
-    <default applyOnUpdate="0" field="temanavn" expression=""/>
+    <default applyOnUpdate="0" field="temakode" expression="5605"/>
+    <default applyOnUpdate="0" field="temanavn" expression="'t_5605_vejbyggel_t'"/>
     <default applyOnUpdate="0" field="objekt_id" expression=""/>
     <default applyOnUpdate="0" field="versions_id" expression=""/>
     <default applyOnUpdate="0" field="systid_fra" expression=""/>

@@ -16,15 +16,22 @@ from xml.etree import ElementTree
 # QGIS, offline and in a throwaway profile, as for the other tests
 from geofa_plugin.test.test_qgis_compatibility import FakeIface  # noqa: F401 (sets up QGIS first)
 
-from qgis.core import QgsVectorLayer
+from qgis.core import QgsExpression, QgsExpressionContext, QgsFeature, QgsField, QgsFields, QgsVectorLayer
+from qgis.PyQt.QtCore import QMetaType
 
 from geofa_plugin import htmlfields
 from geofa_plugin.catalogue import SYMBOLS_DIR, Catalogue, form_fingerprint
+# What the release ZIP leaves out, and the secret check, as tools/build_zip.py does it
+from tools.build_zip import RELEASE_EXCLUDES, SECRET
 
 PLUGIN = Path(__file__).resolve().parents[1]
-# Left out of the ZIP for plugins.qgis.org (see the readme)
-RELEASE_EXCLUDES = ("test", "Vejledning", "__pycache__", ".env", "*.pyc")
-SECRET = re.compile(r"(?i)\b(password|passwd|token|api_?key|secret)\b['\"]?\s*[=:]\s*['\"][^'\"\s]{4,}['\"]")
+
+
+def _qgs_fields(names):
+    fields = QgsFields()
+    for name in names:
+        fields.append(QgsField(name, QMetaType.Type.QString))
+    return fields
 
 
 def _fields(root):
@@ -75,6 +82,27 @@ class StyleTests(unittest.TestCase):
             baked = [field for field, (kind, _) in fields.items() if kind == "ValueMap"]
             self.assertEqual(baked, [], f"{dataset.table}: lists baked into the style")
 
+    def test_required_code_list_fields_are_marked_while_empty(self):
+        # Every dropdown starts with "<ingen værdi>"; for a field GeoFA requires, a not-null constraint
+        # marks it until a value is chosen. Soft (2): QGIS warns but doesn't block, so an older object
+        # with the field empty can still be saved; GeoFA's database doesn't accept a new empty value
+        required = 0
+        for dataset in self.datasets:
+            constraints = {c.get("field"): c for c in self.styles[dataset.table].iter("constraint")
+                           if c.get("notnull_strength") is not None}
+            for field, _, is_required in dataset.code_lists:
+                if is_required:
+                    required += 1
+                    self.assertEqual(constraints[field].get("notnull_strength"), "2", f"{dataset.table}.{field}")
+        self.assertGreater(required, 50)
+
+    def test_new_objects_get_temakode_and_temanavn_as_geofa_fills_them(self):
+        # GeoFA's view fills them on saving: the number in the table name, and the dataset's own table
+        for table, root in self.styles.items():
+            defaults = {d.get("field"): (d.get("expression"), d.get("applyOnUpdate")) for d in root.iter("default")}
+            self.assertEqual(defaults["temakode"], (re.match(r"t_(\d+)_", table).group(1), "0"), table)
+            self.assertEqual(defaults["temanavn"], (f"'{table}_t'", "0"), table)
+
     def test_html_descriptions_are_formatted(self):
         found = 0
         for table, root in self.styles.items():
@@ -100,9 +128,34 @@ class StyleTests(unittest.TestCase):
                 self.assertEqual((kind, options.get("UseLink")), ("ExternalResource", "true"), f"{dataset.table}.{name}")
             tab = next(c for c in root.iter("attributeEditorContainer") if c.get("name", "").startswith("Fotos"))
             self.assertEqual(sorted(f.get("name") for f in tab.iter("attributeEditorField")), sorted(photos))
-            # Shown only for objects with a photo (never while editing: the editable layers have no links)
-            self.assertIn("coalesce", tab.get("visibilityExpression") or "", dataset.table)
+            # Shown only for objects with a photo (never while editing: the editable layers have no links).
+            # The fields are read by name: some editable tables (e.g. 5607's) don't have them, and a rule
+            # naming a missing field can't be evaluated, so QGIS would show the tab, empty
+            rule = QgsExpression(tab.get("visibilityExpression") or "")
             self.assertEqual(tab.get("visibilityExpressionEnabled"), "1", dataset.table)
+            for fields, values, shown in ((["navn"], {}, False), (photos, {}, False),
+                                          (photos, {photos[0]: "https://geofa.geodanmark.dk/foto.jpg"}, True)):
+                feature = QgsFeature(_qgs_fields(fields))
+                for name, value in values.items():
+                    feature[name] = value
+                context = QgsExpressionContext()
+                context.setFeature(feature)
+                self.assertEqual(bool(rule.evaluate(context)), shown, f"{dataset.table}: {fields} {values}")
+                self.assertFalse(rule.hasEvalError(), f"{dataset.table}: {rule.evalErrorString()}")
+            # Each link in a row of its own, shown only when that field has a link, label above it
+            rows = tab.findall("attributeEditorContainer")
+            self.assertEqual(sorted(row.get("name") for row in rows), sorted(photos), dataset.table)
+            on_top = {f.get("name") for f in root.iter("field") if f.get("labelOnTop") == "1"}
+            for row in rows:
+                self.assertEqual((row.get("type"), row.get("showLabel")), ("Row", "0"), dataset.table)
+                own = QgsExpression(row.get("visibilityExpression"))
+                for value, shown in (("https://geofa.geodanmark.dk/foto.jpg", True), (None, False)):
+                    feature = QgsFeature(_qgs_fields(photos))
+                    feature[row.get("name")] = value
+                    context = QgsExpressionContext()
+                    context.setFeature(feature)
+                    self.assertEqual(bool(own.evaluate(context)), shown, f"{dataset.table}.{row.get('name')}")
+                self.assertIn(row.get("name"), on_top, dataset.table)
         self.assertTrue({"t_5800_fac_pkt", "t_5607_ladefacilitet", "t_6205_bygningsvurdering"} <= found)
         environments = {d.table: d.photo_environments for d in self.datasets}
         self.assertEqual(environments["t_5800_fac_pkt"], ("production", "test"))
@@ -153,11 +206,16 @@ class PackageTests(unittest.TestCase):
             self.assertTrue(general.get(key), key)
         self.assertEqual(general["qgisMinimumVersion"], "3.34")
         self.assertGreaterEqual(float(general["qgisMaximumVersion"]), 4.0)
+        self.assertEqual(general.get("supportsQt6"), "True")  # QGIS 4 lists only plugins that say so
         self.assertTrue((self.package / general["icon"]).exists())
+        # Each version has a changelog entry, newest first
+        self.assertRegex(general["version"], r"^\d+\.\d+\.\d+$")
+        self.assertIn(f"version {general['version']},", general["changelog"].splitlines()[0])
 
     def test_package_holds_no_tests_or_credentials(self):
         self.assertFalse((self.package / "test").exists())
         self.assertFalse(list(self.package.rglob(".env")))
+        self.assertFalse([p for p in self.package.rglob(".*")])  # plugins.qgis.org turns down hidden files
         for path in self.package.rglob("*"):
             if path.suffix.lower() in (".py", ".txt", ".json", ".qml", ".md", ".ui", ".xml", ".cfg"):
                 match = SECRET.search(path.read_text(encoding="utf-8", errors="replace"))
