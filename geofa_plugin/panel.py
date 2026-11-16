@@ -298,11 +298,15 @@ class GeoFAPanel(QgsDockWidget):
     # ------------------------------------------------------------------ look
 
     def _fit_buttons_to_search(self):
-        """Square buttons exactly as tall as the search field beside them, so their edges line up.
-        Each Qt style sizes a field and a tool button a pixel or two apart, which shows."""
-        side = self.search.sizeHint().height()
+        """The buttons at their natural size (as in the Geodata Connect panel), at least as tall as
+        the search field and centred on it exactly. Qt centres in whole pixels, so an odd
+        difference in height leaves a button a pixel high or low; the button grows by that pixel."""
+        field = self.search.sizeHint().height()
         for button in (self.edit_button, self.settings_button):
-            button.setFixedSize(side, side)
+            natural = button.sizeHint()
+            height = max(natural.height(), field)
+            height += (height - field) % 2
+            button.setFixedSize(max(natural.width(), height), height)
 
     def changeEvent(self, event):
         super().changeEvent(event)
