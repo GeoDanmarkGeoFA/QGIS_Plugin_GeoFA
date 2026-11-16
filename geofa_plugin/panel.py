@@ -132,8 +132,10 @@ class GeoFAPanel(QgsDockWidget):
         outer.addWidget(self.test_banner)
         body = QWidget()
         layout = QVBoxLayout(body)
-        layout.setContentsMargins(6, 6, 6, 4)
-        layout.setSpacing(6)
+        # The same air as in the Geodata Connect panel: 10 px under the banner, 8 px at the sides
+        # and between the rows and the buttons
+        layout.setContentsMargins(8, 10, 8, 6)
+        layout.setSpacing(8)
         outer.addWidget(body, 1)
 
         row = QHBoxLayout()
