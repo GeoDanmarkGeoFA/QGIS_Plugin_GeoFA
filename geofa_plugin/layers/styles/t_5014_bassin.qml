@@ -1,178 +1,178 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis autoRefreshTime="0" version="3.44.15-Solothurn" simplifyDrawingHints="1" autoRefreshMode="Disabled" simplifyDrawingTol="1" maxScale="0" hasScaleBasedVisibilityFlag="0" symbologyReferenceScale="-1" labelsEnabled="0" styleCategories="AllStyleCategories" simplifyLocal="1" simplifyAlgorithm="0" simplifyMaxScale="1" readOnly="0" minScale="100000000">
+<qgis autoRefreshTime="0" simplifyDrawingHints="1" simplifyMaxScale="1" readOnly="0" version="3.44.15-Solothurn" labelsEnabled="0" autoRefreshMode="Disabled" simplifyAlgorithm="0" maxScale="0" symbologyReferenceScale="-1" styleCategories="AllStyleCategories" simplifyLocal="1" hasScaleBasedVisibilityFlag="0" minScale="100000000" simplifyDrawingTol="1">
   <flags>
     <Identifiable>1</Identifiable>
     <Removable>1</Removable>
     <Searchable>1</Searchable>
     <Private>0</Private>
   </flags>
-  <temporal limitMode="0" startField="" startExpression="" endExpression="" enabled="0" endField="" fixedDuration="0" accumulate="0" mode="0" durationField="" durationUnit="min">
+  <temporal fixedDuration="0" limitMode="0" accumulate="0" mode="0" startField="" endField="" endExpression="" durationUnit="min" durationField="" startExpression="" enabled="0">
     <fixedRange>
       <start></start>
       <end></end>
     </fixedRange>
   </temporal>
-  <elevation extrusion="0" symbology="Line" zoffset="0" respectLayerSymbol="1" zscale="1" binding="Centroid" extrusionEnabled="0" clamping="Terrain" showMarkerSymbolInSurfacePlots="0" customToleranceEnabled="1" type="IndividualFeatures">
+  <elevation customToleranceEnabled="1" zscale="1" zoffset="0" clamping="Terrain" type="IndividualFeatures" extrusionEnabled="0" showMarkerSymbolInSurfacePlots="0" binding="Centroid" extrusion="0" symbology="Line" respectLayerSymbol="1">
     <data-defined-properties>
       <Option type="Map">
-        <Option value="" name="name" type="QString"/>
+        <Option value="" type="QString" name="name"/>
         <Option name="properties"/>
-        <Option value="collection" name="type" type="QString"/>
+        <Option value="collection" type="QString" name="type"/>
       </Option>
     </data-defined-properties>
     <profileLineSymbol>
-      <symbol is_animated="0" frame_rate="10" alpha="1" name="" force_rhr="0" type="line" clip_to_extent="1">
+      <symbol is_animated="0" type="line" force_rhr="0" clip_to_extent="1" name="" alpha="1" frame_rate="10">
         <data_defined_properties>
           <Option type="Map">
-            <Option value="" name="name" type="QString"/>
+            <Option value="" type="QString" name="name"/>
             <Option name="properties"/>
-            <Option value="collection" name="type" type="QString"/>
+            <Option value="collection" type="QString" name="type"/>
           </Option>
         </data_defined_properties>
-        <layer enabled="1" locked="0" class="SimpleLine" pass="0" id="{d2368809-dbf3-4d60-bf41-f1e883bd0be8}">
+        <layer locked="0" class="SimpleLine" id="{8beb393a-8ca2-42e1-9e9f-ecb4c12fb8a0}" pass="0" enabled="1">
           <Option type="Map">
-            <Option value="0" name="align_dash_pattern" type="QString"/>
-            <Option value="square" name="capstyle" type="QString"/>
-            <Option value="5;2" name="customdash" type="QString"/>
-            <Option value="3x:0,0,0,0,0,0" name="customdash_map_unit_scale" type="QString"/>
-            <Option value="MM" name="customdash_unit" type="QString"/>
-            <Option value="0" name="dash_pattern_offset" type="QString"/>
-            <Option value="3x:0,0,0,0,0,0" name="dash_pattern_offset_map_unit_scale" type="QString"/>
-            <Option value="MM" name="dash_pattern_offset_unit" type="QString"/>
-            <Option value="0" name="draw_inside_polygon" type="QString"/>
-            <Option value="bevel" name="joinstyle" type="QString"/>
-            <Option value="133,182,111,255,rgb:0.5215686,0.7137255,0.4352941,1" name="line_color" type="QString"/>
-            <Option value="solid" name="line_style" type="QString"/>
-            <Option value="0.6" name="line_width" type="QString"/>
-            <Option value="MM" name="line_width_unit" type="QString"/>
-            <Option value="0" name="offset" type="QString"/>
-            <Option value="3x:0,0,0,0,0,0" name="offset_map_unit_scale" type="QString"/>
-            <Option value="MM" name="offset_unit" type="QString"/>
-            <Option value="0" name="ring_filter" type="QString"/>
-            <Option value="0" name="trim_distance_end" type="QString"/>
-            <Option value="3x:0,0,0,0,0,0" name="trim_distance_end_map_unit_scale" type="QString"/>
-            <Option value="MM" name="trim_distance_end_unit" type="QString"/>
-            <Option value="0" name="trim_distance_start" type="QString"/>
-            <Option value="3x:0,0,0,0,0,0" name="trim_distance_start_map_unit_scale" type="QString"/>
-            <Option value="MM" name="trim_distance_start_unit" type="QString"/>
-            <Option value="0" name="tweak_dash_pattern_on_corners" type="QString"/>
-            <Option value="0" name="use_custom_dash" type="QString"/>
-            <Option value="3x:0,0,0,0,0,0" name="width_map_unit_scale" type="QString"/>
+            <Option value="0" type="QString" name="align_dash_pattern"/>
+            <Option value="square" type="QString" name="capstyle"/>
+            <Option value="5;2" type="QString" name="customdash"/>
+            <Option value="3x:0,0,0,0,0,0" type="QString" name="customdash_map_unit_scale"/>
+            <Option value="MM" type="QString" name="customdash_unit"/>
+            <Option value="0" type="QString" name="dash_pattern_offset"/>
+            <Option value="3x:0,0,0,0,0,0" type="QString" name="dash_pattern_offset_map_unit_scale"/>
+            <Option value="MM" type="QString" name="dash_pattern_offset_unit"/>
+            <Option value="0" type="QString" name="draw_inside_polygon"/>
+            <Option value="bevel" type="QString" name="joinstyle"/>
+            <Option value="232,113,141,255,rgb:0.9098039,0.4431373,0.5529412,1" type="QString" name="line_color"/>
+            <Option value="solid" type="QString" name="line_style"/>
+            <Option value="0.6" type="QString" name="line_width"/>
+            <Option value="MM" type="QString" name="line_width_unit"/>
+            <Option value="0" type="QString" name="offset"/>
+            <Option value="3x:0,0,0,0,0,0" type="QString" name="offset_map_unit_scale"/>
+            <Option value="MM" type="QString" name="offset_unit"/>
+            <Option value="0" type="QString" name="ring_filter"/>
+            <Option value="0" type="QString" name="trim_distance_end"/>
+            <Option value="3x:0,0,0,0,0,0" type="QString" name="trim_distance_end_map_unit_scale"/>
+            <Option value="MM" type="QString" name="trim_distance_end_unit"/>
+            <Option value="0" type="QString" name="trim_distance_start"/>
+            <Option value="3x:0,0,0,0,0,0" type="QString" name="trim_distance_start_map_unit_scale"/>
+            <Option value="MM" type="QString" name="trim_distance_start_unit"/>
+            <Option value="0" type="QString" name="tweak_dash_pattern_on_corners"/>
+            <Option value="0" type="QString" name="use_custom_dash"/>
+            <Option value="3x:0,0,0,0,0,0" type="QString" name="width_map_unit_scale"/>
           </Option>
           <data_defined_properties>
             <Option type="Map">
-              <Option value="" name="name" type="QString"/>
+              <Option value="" type="QString" name="name"/>
               <Option name="properties"/>
-              <Option value="collection" name="type" type="QString"/>
+              <Option value="collection" type="QString" name="type"/>
             </Option>
           </data_defined_properties>
         </layer>
       </symbol>
     </profileLineSymbol>
     <profileFillSymbol>
-      <symbol is_animated="0" frame_rate="10" alpha="1" name="" force_rhr="0" type="fill" clip_to_extent="1">
+      <symbol is_animated="0" type="fill" force_rhr="0" clip_to_extent="1" name="" alpha="1" frame_rate="10">
         <data_defined_properties>
           <Option type="Map">
-            <Option value="" name="name" type="QString"/>
+            <Option value="" type="QString" name="name"/>
             <Option name="properties"/>
-            <Option value="collection" name="type" type="QString"/>
+            <Option value="collection" type="QString" name="type"/>
           </Option>
         </data_defined_properties>
-        <layer enabled="1" locked="0" class="SimpleFill" pass="0" id="{4e5b1279-2389-46f3-abec-257367ef7b88}">
+        <layer locked="0" class="SimpleFill" id="{4197ced3-0bd6-458c-8271-6fe02dc24502}" pass="0" enabled="1">
           <Option type="Map">
-            <Option value="3x:0,0,0,0,0,0" name="border_width_map_unit_scale" type="QString"/>
-            <Option value="133,182,111,255,rgb:0.5215686,0.7137255,0.4352941,1" name="color" type="QString"/>
-            <Option value="bevel" name="joinstyle" type="QString"/>
-            <Option value="0,0" name="offset" type="QString"/>
-            <Option value="3x:0,0,0,0,0,0" name="offset_map_unit_scale" type="QString"/>
-            <Option value="MM" name="offset_unit" type="QString"/>
-            <Option value="95,130,79,255,rgb:0.372549,0.5098039,0.3109178,1" name="outline_color" type="QString"/>
-            <Option value="solid" name="outline_style" type="QString"/>
-            <Option value="0.2" name="outline_width" type="QString"/>
-            <Option value="MM" name="outline_width_unit" type="QString"/>
-            <Option value="solid" name="style" type="QString"/>
+            <Option value="3x:0,0,0,0,0,0" type="QString" name="border_width_map_unit_scale"/>
+            <Option value="232,113,141,255,rgb:0.9098039,0.4431373,0.5529412,1" type="QString" name="color"/>
+            <Option value="bevel" type="QString" name="joinstyle"/>
+            <Option value="0,0" type="QString" name="offset"/>
+            <Option value="3x:0,0,0,0,0,0" type="QString" name="offset_map_unit_scale"/>
+            <Option value="MM" type="QString" name="offset_unit"/>
+            <Option value="166,81,101,255,rgb:0.6498512,0.3165179,0.3949645,1" type="QString" name="outline_color"/>
+            <Option value="solid" type="QString" name="outline_style"/>
+            <Option value="0.2" type="QString" name="outline_width"/>
+            <Option value="MM" type="QString" name="outline_width_unit"/>
+            <Option value="solid" type="QString" name="style"/>
           </Option>
           <data_defined_properties>
             <Option type="Map">
-              <Option value="" name="name" type="QString"/>
+              <Option value="" type="QString" name="name"/>
               <Option name="properties"/>
-              <Option value="collection" name="type" type="QString"/>
+              <Option value="collection" type="QString" name="type"/>
             </Option>
           </data_defined_properties>
         </layer>
       </symbol>
     </profileFillSymbol>
     <profileMarkerSymbol>
-      <symbol is_animated="0" frame_rate="10" alpha="1" name="" force_rhr="0" type="marker" clip_to_extent="1">
+      <symbol is_animated="0" type="marker" force_rhr="0" clip_to_extent="1" name="" alpha="1" frame_rate="10">
         <data_defined_properties>
           <Option type="Map">
-            <Option value="" name="name" type="QString"/>
+            <Option value="" type="QString" name="name"/>
             <Option name="properties"/>
-            <Option value="collection" name="type" type="QString"/>
+            <Option value="collection" type="QString" name="type"/>
           </Option>
         </data_defined_properties>
-        <layer enabled="1" locked="0" class="SimpleMarker" pass="0" id="{28dbede9-075a-493b-ad60-4620480f7e5a}">
+        <layer locked="0" class="SimpleMarker" id="{0a7dea99-746e-4b57-b322-9d055166bd07}" pass="0" enabled="1">
           <Option type="Map">
-            <Option value="0" name="angle" type="QString"/>
-            <Option value="square" name="cap_style" type="QString"/>
-            <Option value="133,182,111,255,rgb:0.5215686,0.7137255,0.4352941,1" name="color" type="QString"/>
-            <Option value="1" name="horizontal_anchor_point" type="QString"/>
-            <Option value="bevel" name="joinstyle" type="QString"/>
-            <Option value="diamond" name="name" type="QString"/>
-            <Option value="0,0" name="offset" type="QString"/>
-            <Option value="3x:0,0,0,0,0,0" name="offset_map_unit_scale" type="QString"/>
-            <Option value="MM" name="offset_unit" type="QString"/>
-            <Option value="95,130,79,255,rgb:0.372549,0.5098039,0.3109178,1" name="outline_color" type="QString"/>
-            <Option value="solid" name="outline_style" type="QString"/>
-            <Option value="0.2" name="outline_width" type="QString"/>
-            <Option value="3x:0,0,0,0,0,0" name="outline_width_map_unit_scale" type="QString"/>
-            <Option value="MM" name="outline_width_unit" type="QString"/>
-            <Option value="diameter" name="scale_method" type="QString"/>
-            <Option value="3" name="size" type="QString"/>
-            <Option value="3x:0,0,0,0,0,0" name="size_map_unit_scale" type="QString"/>
-            <Option value="MM" name="size_unit" type="QString"/>
-            <Option value="1" name="vertical_anchor_point" type="QString"/>
+            <Option value="0" type="QString" name="angle"/>
+            <Option value="square" type="QString" name="cap_style"/>
+            <Option value="232,113,141,255,rgb:0.9098039,0.4431373,0.5529412,1" type="QString" name="color"/>
+            <Option value="1" type="QString" name="horizontal_anchor_point"/>
+            <Option value="bevel" type="QString" name="joinstyle"/>
+            <Option value="diamond" type="QString" name="name"/>
+            <Option value="0,0" type="QString" name="offset"/>
+            <Option value="3x:0,0,0,0,0,0" type="QString" name="offset_map_unit_scale"/>
+            <Option value="MM" type="QString" name="offset_unit"/>
+            <Option value="166,81,101,255,rgb:0.6498512,0.3165179,0.3949645,1" type="QString" name="outline_color"/>
+            <Option value="solid" type="QString" name="outline_style"/>
+            <Option value="0.2" type="QString" name="outline_width"/>
+            <Option value="3x:0,0,0,0,0,0" type="QString" name="outline_width_map_unit_scale"/>
+            <Option value="MM" type="QString" name="outline_width_unit"/>
+            <Option value="diameter" type="QString" name="scale_method"/>
+            <Option value="3" type="QString" name="size"/>
+            <Option value="3x:0,0,0,0,0,0" type="QString" name="size_map_unit_scale"/>
+            <Option value="MM" type="QString" name="size_unit"/>
+            <Option value="1" type="QString" name="vertical_anchor_point"/>
           </Option>
           <data_defined_properties>
             <Option type="Map">
-              <Option value="" name="name" type="QString"/>
+              <Option value="" type="QString" name="name"/>
               <Option name="properties"/>
-              <Option value="collection" name="type" type="QString"/>
+              <Option value="collection" type="QString" name="type"/>
             </Option>
           </data_defined_properties>
         </layer>
       </symbol>
     </profileMarkerSymbol>
   </elevation>
-  <renderer-v2 forceraster="0" symbollevels="0" referencescale="-1" type="singleSymbol" enableorderby="0">
+  <renderer-v2 symbollevels="0" type="singleSymbol" referencescale="-1" enableorderby="0" forceraster="0">
     <symbols>
-      <symbol is_animated="0" frame_rate="10" alpha="1" name="0" force_rhr="0" type="fill" clip_to_extent="1">
+      <symbol is_animated="0" type="fill" force_rhr="0" clip_to_extent="1" name="0" alpha="1" frame_rate="10">
         <data_defined_properties>
           <Option type="Map">
-            <Option value="" name="name" type="QString"/>
+            <Option value="" type="QString" name="name"/>
             <Option name="properties"/>
-            <Option value="collection" name="type" type="QString"/>
+            <Option value="collection" type="QString" name="type"/>
           </Option>
         </data_defined_properties>
-        <layer enabled="1" locked="0" class="SimpleFill" pass="0" id="{a2472829-fb2b-4ac4-88f7-24b8cda7f614}">
+        <layer locked="0" class="SimpleFill" id="{8f38c8cf-593c-4c8c-9cce-61d7cefcf13d}" pass="0" enabled="1">
           <Option type="Map">
-            <Option value="3x:0,0,0,0,0,0" name="border_width_map_unit_scale" type="QString"/>
-            <Option value="255,153,204,255,rgb:1,0.6,0.8,1" name="color" type="QString"/>
-            <Option value="bevel" name="joinstyle" type="QString"/>
-            <Option value="0,0" name="offset" type="QString"/>
-            <Option value="3x:0,0,0,0,0,0" name="offset_map_unit_scale" type="QString"/>
-            <Option value="MM" name="offset_unit" type="QString"/>
-            <Option value="255,153,204,255,rgb:1,0.6,0.8,1" name="outline_color" type="QString"/>
-            <Option value="no" name="outline_style" type="QString"/>
-            <Option value="1" name="outline_width" type="QString"/>
-            <Option value="Pixel" name="outline_width_unit" type="QString"/>
-            <Option value="solid" name="style" type="QString"/>
+            <Option value="3x:0,0,0,0,0,0" type="QString" name="border_width_map_unit_scale"/>
+            <Option value="255,153,204,255,rgb:1,0.6,0.8,1" type="QString" name="color"/>
+            <Option value="bevel" type="QString" name="joinstyle"/>
+            <Option value="0,0" type="QString" name="offset"/>
+            <Option value="3x:0,0,0,0,0,0" type="QString" name="offset_map_unit_scale"/>
+            <Option value="MM" type="QString" name="offset_unit"/>
+            <Option value="255,153,204,255,rgb:1,0.6,0.8,1" type="QString" name="outline_color"/>
+            <Option value="no" type="QString" name="outline_style"/>
+            <Option value="1" type="QString" name="outline_width"/>
+            <Option value="Pixel" type="QString" name="outline_width_unit"/>
+            <Option value="solid" type="QString" name="style"/>
           </Option>
           <data_defined_properties>
             <Option type="Map">
-              <Option value="" name="name" type="QString"/>
+              <Option value="" type="QString" name="name"/>
               <Option name="properties"/>
-              <Option value="collection" name="type" type="QString"/>
+              <Option value="collection" type="QString" name="type"/>
             </Option>
           </data_defined_properties>
         </layer>
@@ -182,9 +182,9 @@
     <sizescale/>
     <data-defined-properties>
       <Option type="Map">
-        <Option value="" name="name" type="QString"/>
+        <Option value="" type="QString" name="name"/>
         <Option name="properties"/>
-        <Option value="collection" name="type" type="QString"/>
+        <Option value="collection" type="QString" name="type"/>
       </Option>
     </data-defined-properties>
   </renderer-v2>
@@ -197,7 +197,7 @@
   <blendMode>0</blendMode>
   <featureBlendMode>0</featureBlendMode>
   <layerOpacity>1</layerOpacity>
-  <geometryOptions geometryPrecision="0" removeDuplicateNodes="0">
+  <geometryOptions removeDuplicateNodes="0" geometryPrecision="0">
     <activeChecks type="StringList">
       <Option value="" type="QString"/>
     </activeChecks>
@@ -205,983 +205,983 @@
   </geometryOptions>
   <legend type="default-vector" showLabelLegend="0"/>
   <fieldConfiguration>
-    <field name="temakode" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="temakode">
       <editWidget type="">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="temanavn" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="temanavn">
       <editWidget type="">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="objekt_id" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="objekt_id">
       <editWidget type="">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="versions_id" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="versions_id">
       <editWidget type="">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="systid_fra" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="systid_fra">
       <editWidget type="DateTime">
         <config>
           <Option type="Map">
-            <Option value="true" name="allow_null" type="bool"/>
-            <Option value="true" name="calendar_popup" type="bool"/>
-            <Option value="yyyy-MM-dd HH:mm:ss" name="display_format" type="QString"/>
-            <Option value="yyyy-MM-ddTHH:mm:ss" name="field_format" type="QString"/>
+            <Option value="true" type="bool" name="allow_null"/>
+            <Option value="true" type="bool" name="calendar_popup"/>
+            <Option value="yyyy-MM-dd HH:mm:ss" type="QString" name="display_format"/>
+            <Option value="yyyy-MM-ddTHH:mm:ss" type="QString" name="field_format"/>
           </Option>
         </config>
       </editWidget>
     </field>
-    <field name="systid_til" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="systid_til">
       <editWidget type="DateTime">
         <config>
           <Option type="Map">
-            <Option value="true" name="allow_null" type="bool"/>
-            <Option value="true" name="calendar_popup" type="bool"/>
-            <Option value="yyyy-MM-dd HH:mm:ss" name="display_format" type="QString"/>
-            <Option value="yyyy-MM-ddTHH:mm:ss" name="field_format" type="QString"/>
+            <Option value="true" type="bool" name="allow_null"/>
+            <Option value="true" type="bool" name="calendar_popup"/>
+            <Option value="yyyy-MM-dd HH:mm:ss" type="QString" name="display_format"/>
+            <Option value="yyyy-MM-ddTHH:mm:ss" type="QString" name="field_format"/>
           </Option>
         </config>
       </editWidget>
     </field>
-    <field name="oprettet" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="oprettet">
       <editWidget type="DateTime">
         <config>
           <Option type="Map">
-            <Option value="true" name="allow_null" type="bool"/>
-            <Option value="true" name="calendar_popup" type="bool"/>
-            <Option value="yyyy-MM-dd HH:mm:ss" name="display_format" type="QString"/>
-            <Option value="yyyy-MM-ddTHH:mm:ss" name="field_format" type="QString"/>
+            <Option value="true" type="bool" name="allow_null"/>
+            <Option value="true" type="bool" name="calendar_popup"/>
+            <Option value="yyyy-MM-dd HH:mm:ss" type="QString" name="display_format"/>
+            <Option value="yyyy-MM-ddTHH:mm:ss" type="QString" name="field_format"/>
           </Option>
         </config>
       </editWidget>
     </field>
-    <field name="cvr_kode" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="cvr_kode">
       <editWidget type="ValueMap">
         <config>
           <Option type="Map">
-            <Option name="map" type="List">
+            <Option type="List" name="map">
               <Option type="Map">
-                <Option value="{2839923C-8B7D-419E-B84B-CA2FE9B80EC7}" name="&lt;ingen værdi>" type="QString"/>
+                <Option value="{2839923C-8B7D-419E-B84B-CA2FE9B80EC7}" type="QString" name="&lt;ingen værdi>"/>
               </Option>
               <Option type="Map">
-                <Option value="10000001" name="supercykelstisekretariatet" type="QString"/>
+                <Option value="10000001" type="QString" name="supercykelstisekretariatet"/>
               </Option>
               <Option type="Map">
-                <Option value="10000002" name="Tommeruppernes Lokalråd" type="QString"/>
+                <Option value="10000002" type="QString" name="Tommeruppernes Lokalråd"/>
               </Option>
               <Option type="Map">
-                <Option value="10000003" name="geoinfovejle" type="QString"/>
+                <Option value="10000003" type="QString" name="geoinfovejle"/>
               </Option>
               <Option type="Map">
-                <Option value="10000004" name="sporapp" type="QString"/>
+                <Option value="10000004" type="QString" name="sporapp"/>
               </Option>
               <Option type="Map">
-                <Option value="10000005" name="undervisning" type="QString"/>
+                <Option value="10000005" type="QString" name="undervisning"/>
               </Option>
               <Option type="Map">
-                <Option value="10000006" name="GeoInfoSonderborg" type="QString"/>
+                <Option value="10000006" type="QString" name="GeoInfoSonderborg"/>
               </Option>
               <Option type="Map">
-                <Option value="10000007" name="Kyst Til Kyst" type="QString"/>
+                <Option value="10000007" type="QString" name="Kyst Til Kyst"/>
               </Option>
               <Option type="Map">
-                <Option value="10000008" name="Naturpark Lillebælt" type="QString"/>
+                <Option value="10000008" type="QString" name="Naturpark Lillebælt"/>
               </Option>
               <Option type="Map">
-                <Option value="10000009" name="itu_anastassia" type="QString"/>
+                <Option value="10000009" type="QString" name="itu_anastassia"/>
               </Option>
               <Option type="Map">
-                <Option value="10000010" name="CT_marcoberends" type="QString"/>
+                <Option value="10000010" type="QString" name="CT_marcoberends"/>
               </Option>
               <Option type="Map">
-                <Option value="10000011" name="Havmiljøvogterne" type="QString"/>
+                <Option value="10000011" type="QString" name="Havmiljøvogterne"/>
               </Option>
               <Option type="Map">
-                <Option value="10000012" name="Kongeåsti" type="QString"/>
+                <Option value="10000012" type="QString" name="Kongeåsti"/>
               </Option>
               <Option type="Map">
-                <Option value="10000014" name="Slagelse Brand og Redning" type="QString"/>
+                <Option value="10000014" type="QString" name="Slagelse Brand og Redning"/>
               </Option>
               <Option type="Map">
-                <Option value="10000015" name="Mona Jepsen" type="QString"/>
+                <Option value="10000015" type="QString" name="Mona Jepsen"/>
               </Option>
               <Option type="Map">
-                <Option value="10294819" name="Konkurrence- og Forbrugerstyrelsen" type="QString"/>
+                <Option value="10294819" type="QString" name="Konkurrence- og Forbrugerstyrelsen"/>
               </Option>
               <Option type="Map">
-                <Option value="11259979" name="Frederiksberg Kommune" type="QString"/>
+                <Option value="11259979" type="QString" name="Frederiksberg Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="11715311" name="Lyngby-Taarbæk Kommune" type="QString"/>
+                <Option value="11715311" type="QString" name="Lyngby-Taarbæk Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="11931316" name="Ishøj Kommune" type="QString"/>
+                <Option value="11931316" type="QString" name="Ishøj Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="12881517" name="Dragør Kommune" type="QString"/>
+                <Option value="12881517" type="QString" name="Dragør Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="15524286" name="geoinfo" type="QString"/>
+                <Option value="15524286" type="QString" name="geoinfo"/>
               </Option>
               <Option type="Map">
-                <Option value="16287180" name="Forsvarsministeriets Ejendomsstyrelse" type="QString"/>
+                <Option value="16287180" type="QString" name="Forsvarsministeriets Ejendomsstyrelse"/>
               </Option>
               <Option type="Map">
-                <Option value="17156616" name="Dansk e-Mobilitet" type="QString"/>
+                <Option value="17156616" type="QString" name="Dansk e-Mobilitet"/>
               </Option>
               <Option type="Map">
-                <Option value="18282690" name="Destination Fyn" type="QString"/>
+                <Option value="18282690" type="QString" name="Destination Fyn"/>
               </Option>
               <Option type="Map">
-                <Option value="18957981" name="Ringsted Kommune" type="QString"/>
+                <Option value="18957981" type="QString" name="Ringsted Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="19438414" name="Gentofte Kommune" type="QString"/>
+                <Option value="19438414" type="QString" name="Gentofte Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="19501817" name="Høje-Taastrup Kommune" type="QString"/>
+                <Option value="19501817" type="QString" name="Høje-Taastrup Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="19583910" name="Vallensbæk Kommune" type="QString"/>
+                <Option value="19583910" type="QString" name="Vallensbæk Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="20014784" name="Geopartner Landinspektører A/S" type="QString"/>
+                <Option value="20014784" type="QString" name="Geopartner Landinspektører A/S"/>
               </Option>
               <Option type="Map">
-                <Option value="20310413" name="Tårnby Kommune" type="QString"/>
+                <Option value="20310413" type="QString" name="Tårnby Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="23717382" name="Hærvejen" type="QString"/>
+                <Option value="23717382" type="QString" name="Hærvejen"/>
               </Option>
               <Option type="Map">
-                <Option value="23795515" name="Samsø Kommune" type="QString"/>
+                <Option value="23795515" type="QString" name="Samsø Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="24208257" name="Mejeriet" type="QString"/>
+                <Option value="24208257" type="QString" name="Mejeriet"/>
               </Option>
               <Option type="Map">
-                <Option value="25118359" name="Norlys" type="QString"/>
+                <Option value="25118359" type="QString" name="Norlys"/>
               </Option>
               <Option type="Map">
-                <Option value="25775635" name="Christiansø" type="QString"/>
+                <Option value="25775635" type="QString" name="Christiansø"/>
               </Option>
               <Option type="Map">
-                <Option value="25798376" name="Miljøstyrelsen" type="QString"/>
+                <Option value="25798376" type="QString" name="Miljøstyrelsen"/>
               </Option>
               <Option type="Map">
-                <Option value="26696348" name="Bornholms Regionskommune" type="QString"/>
+                <Option value="26696348" type="QString" name="Bornholms Regionskommune"/>
               </Option>
               <Option type="Map">
-                <Option value="27782515" name="Idrættens Analyseinstitut" type="QString"/>
+                <Option value="27782515" type="QString" name="Idrættens Analyseinstitut"/>
               </Option>
               <Option type="Map">
-                <Option value="28297947" name="EWII" type="QString"/>
+                <Option value="28297947" type="QString" name="EWII"/>
               </Option>
               <Option type="Map">
-                <Option value="28326858" name="Nordsjællands Brandvæsen" type="QString"/>
+                <Option value="28326858" type="QString" name="Nordsjællands Brandvæsen"/>
               </Option>
               <Option type="Map">
-                <Option value="28856075" name="Ærø Kommune" type="QString"/>
+                <Option value="28856075" type="QString" name="Ærø Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29188327" name="Furesø Kommune" type="QString"/>
+                <Option value="29188327" type="QString" name="Furesø Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29188335" name="Fredensborg Kommune" type="QString"/>
+                <Option value="29188335" type="QString" name="Fredensborg Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29188378" name="Rudersdal Kommune" type="QString"/>
+                <Option value="29188378" type="QString" name="Rudersdal Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29188386" name="Egedal Kommune" type="QString"/>
+                <Option value="29188386" type="QString" name="Egedal Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29188416" name="Halsnæs Kommune" type="QString"/>
+                <Option value="29188416" type="QString" name="Halsnæs Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29188440" name="Gribskov Kommune" type="QString"/>
+                <Option value="29188440" type="QString" name="Gribskov Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29188459" name="Odsherred Kommune" type="QString"/>
+                <Option value="29188459" type="QString" name="Odsherred Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29188475" name="Faxe Kommune" type="QString"/>
+                <Option value="29188475" type="QString" name="Faxe Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29188505" name="Slagelse Kommune" type="QString"/>
+                <Option value="29188505" type="QString" name="Slagelse Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29188548" name="Lejre Kommune" type="QString"/>
+                <Option value="29188548" type="QString" name="Lejre Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29188572" name="Lolland Kommune" type="QString"/>
+                <Option value="29188572" type="QString" name="Lolland Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29188599" name="Guldborgsund Kommune" type="QString"/>
+                <Option value="29188599" type="QString" name="Guldborgsund Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29188645" name="Faaborg-Midtfyn Kommune" type="QString"/>
+                <Option value="29188645" type="QString" name="Faaborg-Midtfyn Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29188947" name="Nordfyns Kommune" type="QString"/>
+                <Option value="29188947" type="QString" name="Nordfyns Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29188955" name="Langeland Kommune" type="QString"/>
+                <Option value="29188955" type="QString" name="Langeland Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189129" name="Frederikssund Kommune" type="QString"/>
+                <Option value="29189129" type="QString" name="Frederikssund Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189366" name="Hillerød Kommune" type="QString"/>
+                <Option value="29189366" type="QString" name="Hillerød Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189374" name="Køge Kommune" type="QString"/>
+                <Option value="29189374" type="QString" name="Køge Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189382" name="Hjørring Kommune" type="QString"/>
+                <Option value="29189382" type="QString" name="Hjørring Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189404" name="Roskilde Kommune" type="QString"/>
+                <Option value="29189404" type="QString" name="Roskilde Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189420" name="Aalborg Kommune" type="QString"/>
+                <Option value="29189420" type="QString" name="Aalborg Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189439" name="Jammerbugt Kommune" type="QString"/>
+                <Option value="29189439" type="QString" name="Jammerbugt Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189447" name="Holbæk Kommune" type="QString"/>
+                <Option value="29189447" type="QString" name="Holbæk Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189455" name="Mariagerfjord Kommune" type="QString"/>
+                <Option value="29189455" type="QString" name="Mariagerfjord Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189463" name="Rebild Kommune" type="QString"/>
+                <Option value="29189463" type="QString" name="Rebild Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189471" name="Vesthimmerlands Kommune" type="QString"/>
+                <Option value="29189471" type="QString" name="Vesthimmerlands Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189498" name="Frederikshavn Kommune" type="QString"/>
+                <Option value="29189498" type="QString" name="Frederikshavn Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189501" name="Brønderslev Kommune" type="QString"/>
+                <Option value="29189501" type="QString" name="Brønderslev Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189560" name="Thisted Kommune" type="QString"/>
+                <Option value="29189560" type="QString" name="Thisted Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189579" name="Skive Kommune" type="QString"/>
+                <Option value="29189579" type="QString" name="Skive Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189587" name="Hedensted Kommune" type="QString"/>
+                <Option value="29189587" type="QString" name="Hedensted Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189595" name="Kalundborg Kommune" type="QString"/>
+                <Option value="29189595" type="QString" name="Kalundborg Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189609" name="Ringkøbing-Skjern Kommune" type="QString"/>
+                <Option value="29189609" type="QString" name="Ringkøbing-Skjern Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189617" name="Ikast-Brande Kommune" type="QString"/>
+                <Option value="29189617" type="QString" name="Ikast-Brande Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189625" name="Næstved Kommune" type="QString"/>
+                <Option value="29189625" type="QString" name="Næstved Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189633" name="Skanderborg Kommune" type="QString"/>
+                <Option value="29189633" type="QString" name="Skanderborg Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189641" name="Silkeborg Kommune" type="QString"/>
+                <Option value="29189641" type="QString" name="Silkeborg Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189668" name="Randers Kommune" type="QString"/>
+                <Option value="29189668" type="QString" name="Randers Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189676" name="Vordingborg Kommune" type="QString"/>
+                <Option value="29189676" type="QString" name="Vordingborg Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189684" name="Middelfart Kommune" type="QString"/>
+                <Option value="29189684" type="QString" name="Middelfart Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189692" name="Assens Kommune" type="QString"/>
+                <Option value="29189692" type="QString" name="Assens Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189706" name="Kerteminde Kommune" type="QString"/>
+                <Option value="29189706" type="QString" name="Kerteminde Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189714" name="Favrskov Kommune" type="QString"/>
+                <Option value="29189714" type="QString" name="Favrskov Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189722" name="Nyborg Kommune" type="QString"/>
+                <Option value="29189722" type="QString" name="Nyborg Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189730" name="Svendborg Kommune" type="QString"/>
+                <Option value="29189730" type="QString" name="Svendborg Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189757" name="Haderslev Kommune" type="QString"/>
+                <Option value="29189757" type="QString" name="Haderslev Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189765" name="Billund Kommune" type="QString"/>
+                <Option value="29189765" type="QString" name="Billund Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189773" name="Sønderborg Kommune" type="QString"/>
+                <Option value="29189773" type="QString" name="Sønderborg Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189781" name="Tønder Kommune" type="QString"/>
+                <Option value="29189781" type="QString" name="Tønder Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189803" name="Esbjerg Kommune" type="QString"/>
+                <Option value="29189803" type="QString" name="Esbjerg Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189811" name="Varde Kommune" type="QString"/>
+                <Option value="29189811" type="QString" name="Varde Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189838" name="Vejen Kommune" type="QString"/>
+                <Option value="29189838" type="QString" name="Vejen Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189846" name="Viborg Kommune" type="QString"/>
+                <Option value="29189846" type="QString" name="Viborg Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189854" name="Aabenraa Kommune" type="QString"/>
+                <Option value="29189854" type="QString" name="Aabenraa Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189889" name="Horsens Kommune" type="QString"/>
+                <Option value="29189889" type="QString" name="Horsens Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189897" name="Kolding Kommune" type="QString"/>
+                <Option value="29189897" type="QString" name="Kolding Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189900" name="Vejle Kommune" type="QString"/>
+                <Option value="29189900" type="QString" name="Vejle Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189919" name="Herning Kommune" type="QString"/>
+                <Option value="29189919" type="QString" name="Herning Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189927" name="Holstebro Kommune" type="QString"/>
+                <Option value="29189927" type="QString" name="Holstebro Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189935" name="Lemvig Kommune" type="QString"/>
+                <Option value="29189935" type="QString" name="Lemvig Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189951" name="Struer Kommune" type="QString"/>
+                <Option value="29189951" type="QString" name="Struer Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189978" name="Syddjurs Kommune" type="QString"/>
+                <Option value="29189978" type="QString" name="Syddjurs Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189986" name="Norddjurs Kommune" type="QString"/>
+                <Option value="29189986" type="QString" name="Norddjurs Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29189994" name="Sorø Kommune" type="QString"/>
+                <Option value="29189994" type="QString" name="Sorø Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="29208654" name="Stevns Kommune" type="QString"/>
+                <Option value="29208654" type="QString" name="Stevns Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="31210917" name="Fanø Kommune" type="QString"/>
+                <Option value="31210917" type="QString" name="Fanø Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="31351901" name="Spor" type="QString"/>
+                <Option value="31351901" type="QString" name="Spor"/>
               </Option>
               <Option type="Map">
-                <Option value="32264328" name="Odder Kommune" type="QString"/>
+                <Option value="32264328" type="QString" name="Odder Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="32468349" name="CLEVER A/S" type="QString"/>
+                <Option value="32468349" type="QString" name="CLEVER A/S"/>
               </Option>
               <Option type="Map">
-                <Option value="33157274" name="Naturstyrelsen" type="QString"/>
+                <Option value="33157274" type="QString" name="Naturstyrelsen"/>
               </Option>
               <Option type="Map">
-                <Option value="33284114" name="Styrelsen for Dataforsyning og Effektivisering" type="QString"/>
+                <Option value="33284114" type="QString" name="Styrelsen for Dataforsyning og Effektivisering"/>
               </Option>
               <Option type="Map">
-                <Option value="34009570" name="Beredskab &amp; Sikkerhed" type="QString"/>
+                <Option value="34009570" type="QString" name="Beredskab &amp; Sikkerhed"/>
               </Option>
               <Option type="Map">
-                <Option value="34206228" name="Erhvervshus Fyn P/S" type="QString"/>
+                <Option value="34206228" type="QString" name="Erhvervshus Fyn P/S"/>
               </Option>
               <Option type="Map">
-                <Option value="34897034" name="Destination Sjælland A/S" type="QString"/>
+                <Option value="34897034" type="QString" name="Destination Sjælland A/S"/>
               </Option>
               <Option type="Map">
-                <Option value="35147268" name="Nationalpark Mols Bjerge" type="QString"/>
+                <Option value="35147268" type="QString" name="Nationalpark Mols Bjerge"/>
               </Option>
               <Option type="Map">
-                <Option value="35209115" name="Odense Kommune" type="QString"/>
+                <Option value="35209115" type="QString" name="Odense Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="35379193" name="MapCentia" type="QString"/>
+                <Option value="35379193" type="QString" name="MapCentia"/>
               </Option>
               <Option type="Map">
-                <Option value="35432795" name="Sydvestjysk Brandvæsen" type="QString"/>
+                <Option value="35432795" type="QString" name="Sydvestjysk Brandvæsen"/>
               </Option>
               <Option type="Map">
-                <Option value="35434399" name="Midt- og Sydsjællands Brand &amp; Redning" type="QString"/>
+                <Option value="35434399" type="QString" name="Midt- og Sydsjællands Brand &amp; Redning"/>
               </Option>
               <Option type="Map">
-                <Option value="35438718" name="Brand &amp; Redning Sønderjylland" type="QString"/>
+                <Option value="35438718" type="QString" name="Brand &amp; Redning Sønderjylland"/>
               </Option>
               <Option type="Map">
-                <Option value="35439862" name="Sydøstjyllands Brandvæsen" type="QString"/>
+                <Option value="35439862" type="QString" name="Sydøstjyllands Brandvæsen"/>
               </Option>
               <Option type="Map">
-                <Option value="35440178" name="Hovedstadens Beredskab" type="QString"/>
+                <Option value="35440178" type="QString" name="Hovedstadens Beredskab"/>
               </Option>
               <Option type="Map">
-                <Option value="36146702" name="Dansk Cykelturisme" type="QString"/>
+                <Option value="36146702" type="QString" name="Dansk Cykelturisme"/>
               </Option>
               <Option type="Map">
-                <Option value="36471271" name="DKNT" type="QString"/>
+                <Option value="36471271" type="QString" name="DKNT"/>
               </Option>
               <Option type="Map">
-                <Option value="36920483" name="Friluftsguiden" type="QString"/>
+                <Option value="36920483" type="QString" name="Friluftsguiden"/>
               </Option>
               <Option type="Map">
-                <Option value="36957379" name="Urban Creators ApS" type="QString"/>
+                <Option value="36957379" type="QString" name="Urban Creators ApS"/>
               </Option>
               <Option type="Map">
-                <Option value="36986719" name="Geopark Odsherred" type="QString"/>
+                <Option value="36986719" type="QString" name="Geopark Odsherred"/>
               </Option>
               <Option type="Map">
-                <Option value="37121851" name="Blaffernationen" type="QString"/>
+                <Option value="37121851" type="QString" name="Blaffernationen"/>
               </Option>
               <Option type="Map">
-                <Option value="37137502" name="Midtjysk Brand &amp; Redning" type="QString"/>
+                <Option value="37137502" type="QString" name="Midtjysk Brand &amp; Redning"/>
               </Option>
               <Option type="Map">
-                <Option value="37164712" name="Østjyllands Brandvæsen" type="QString"/>
+                <Option value="37164712" type="QString" name="Østjyllands Brandvæsen"/>
               </Option>
               <Option type="Map">
-                <Option value="37176478" name="Nationalparkfond Skjoldungernes Land" type="QString"/>
+                <Option value="37176478" type="QString" name="Nationalparkfond Skjoldungernes Land"/>
               </Option>
               <Option type="Map">
-                <Option value="37197580" name="Vestsjællands Brandvæsen" type="QString"/>
+                <Option value="37197580" type="QString" name="Vestsjællands Brandvæsen"/>
               </Option>
               <Option type="Map">
-                <Option value="37207969" name="Brand &amp; Redning Midtvest" type="QString"/>
+                <Option value="37207969" type="QString" name="Brand &amp; Redning Midtvest"/>
               </Option>
               <Option type="Map">
-                <Option value="37242985" name="TrekantBrand" type="QString"/>
+                <Option value="37242985" type="QString" name="TrekantBrand"/>
               </Option>
               <Option type="Map">
-                <Option value="37265209" name="Beredskab Fyn" type="QString"/>
+                <Option value="37265209" type="QString" name="Beredskab Fyn"/>
               </Option>
               <Option type="Map">
-                <Option value="37500186" name="Nordiq Group A/S" type="QString"/>
+                <Option value="37500186" type="QString" name="Nordiq Group A/S"/>
               </Option>
               <Option type="Map">
-                <Option value="39170418" name="OK A.M.B.A." type="QString"/>
+                <Option value="39170418" type="QString" name="OK A.M.B.A."/>
               </Option>
               <Option type="Map">
-                <Option value="40220321" name="Herslev Bylaug" type="QString"/>
+                <Option value="40220321" type="QString" name="Herslev Bylaug"/>
               </Option>
               <Option type="Map">
-                <Option value="40632301" name="Beredskab 4K" type="QString"/>
+                <Option value="40632301" type="QString" name="Beredskab 4K"/>
               </Option>
               <Option type="Map">
-                <Option value="40657339" name="Spirii" type="QString"/>
+                <Option value="40657339" type="QString" name="Spirii"/>
               </Option>
               <Option type="Map">
-                <Option value="41333014" name="Morsø Kommune" type="QString"/>
+                <Option value="41333014" type="QString" name="Morsø Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="41575727" name="SAMSIK" type="QString"/>
+                <Option value="41575727" type="QString" name="SAMSIK"/>
               </Option>
               <Option type="Map">
-                <Option value="41668385" name="Monta ApS" type="QString"/>
+                <Option value="41668385" type="QString" name="Monta ApS"/>
               </Option>
               <Option type="Map">
-                <Option value="42309443" name="qLER ApS" type="QString"/>
+                <Option value="42309443" type="QString" name="qLER ApS"/>
               </Option>
               <Option type="Map">
-                <Option value="42885746" name="E.ON" type="QString"/>
+                <Option value="42885746" type="QString" name="E.ON"/>
               </Option>
               <Option type="Map">
-                <Option value="43324942" name="Frie Fodspor ApS" type="QString"/>
+                <Option value="43324942" type="QString" name="Frie Fodspor ApS"/>
               </Option>
               <Option type="Map">
-                <Option value="44023911" name="Greve Kommune" type="QString"/>
+                <Option value="44023911" type="QString" name="Greve Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="44999056" name="Skoldahl Consulting I/S" type="QString"/>
+                <Option value="44999056" type="QString" name="Skoldahl Consulting I/S"/>
               </Option>
               <Option type="Map">
-                <Option value="45973328" name="Læsø Kommune" type="QString"/>
+                <Option value="45973328" type="QString" name="Læsø Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="48233511" name="Sweco Danmark A/S" type="QString"/>
+                <Option value="48233511" type="QString" name="Sweco Danmark A/S"/>
               </Option>
               <Option type="Map">
-                <Option value="55133018" name="Aarhus Kommune" type="QString"/>
+                <Option value="55133018" type="QString" name="Aarhus Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="55606617" name="Hvidovre Kommune" type="QString"/>
+                <Option value="55606617" type="QString" name="Hvidovre Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="56230718" name="Friluftsrådet" type="QString"/>
+                <Option value="56230718" type="QString" name="Friluftsrådet"/>
               </Option>
               <Option type="Map">
-                <Option value="58271713" name="Ballerup Kommune" type="QString"/>
+                <Option value="58271713" type="QString" name="Ballerup Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="60183112" name="Allerød Kommune" type="QString"/>
+                <Option value="60183112" type="QString" name="Allerød Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="62547413" name="kl" type="QString"/>
+                <Option value="62547413" type="QString" name="kl"/>
               </Option>
               <Option type="Map">
-                <Option value="62761113" name="Gladsaxe Kommune" type="QString"/>
+                <Option value="62761113" type="QString" name="Gladsaxe Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="63640719" name="Herlev Kommune" type="QString"/>
+                <Option value="63640719" type="QString" name="Herlev Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="64502018" name="Helsingør Kommune" type="QString"/>
+                <Option value="64502018" type="QString" name="Helsingør Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="64942212" name="Københavns Kommune" type="QString"/>
+                <Option value="64942212" type="QString" name="Københavns Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="65113015" name="Brøndby Kommune" type="QString"/>
+                <Option value="65113015" type="QString" name="Brøndby Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="65120119" name="Glostrup Kommune" type="QString"/>
+                <Option value="65120119" type="QString" name="Glostrup Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="65307316" name="Rødovre Kommune" type="QString"/>
+                <Option value="65307316" type="QString" name="Rødovre Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="65471353" name="Hejls Multihus" type="QString"/>
+                <Option value="65471353" type="QString" name="Hejls Multihus"/>
               </Option>
               <Option type="Map">
-                <Option value="66137112" name="Albertslund Kommune" type="QString"/>
+                <Option value="66137112" type="QString" name="Albertslund Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="68534917" name="Solrød Kommune" type="QString"/>
+                <Option value="68534917" type="QString" name="Solrød Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="69116418" name="Fredericia Kommune" type="QString"/>
+                <Option value="69116418" type="QString" name="Fredericia Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="70960516" name="Hørsholm Kommune" type="QString"/>
+                <Option value="70960516" type="QString" name="Hørsholm Kommune"/>
               </Option>
               <Option type="Map">
-                <Option value="99999999" name="Nan" type="QString"/>
+                <Option value="99999999" type="QString" name="Nan"/>
               </Option>
               <Option type="Map">
-                <Option value="100000113" name="Helsingør Kommunes Beredskab" type="QString"/>
+                <Option value="100000113" type="QString" name="Helsingør Kommunes Beredskab"/>
               </Option>
             </Option>
           </Option>
         </config>
       </editWidget>
     </field>
-    <field name="cvr_navn" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="cvr_navn">
       <editWidget type="">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="kommunekode" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="kommunekode">
       <editWidget type="">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="bruger_id" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="bruger_id">
       <editWidget type="">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="oprindkode" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="oprindkode">
       <editWidget type="ValueMap">
         <config>
           <Option type="Map">
-            <Option name="map" type="List">
+            <Option type="List" name="map">
               <Option type="Map">
-                <Option value="{2839923C-8B7D-419E-B84B-CA2FE9B80EC7}" name="&lt;ingen værdi>" type="QString"/>
+                <Option value="{2839923C-8B7D-419E-B84B-CA2FE9B80EC7}" type="QString" name="&lt;ingen værdi>"/>
               </Option>
               <Option type="Map">
-                <Option value="0" name="Ikke udfyldt" type="QString"/>
+                <Option value="0" type="QString" name="Ikke udfyldt"/>
               </Option>
               <Option type="Map">
-                <Option value="1" name="Ortofoto" type="QString"/>
+                <Option value="1" type="QString" name="Ortofoto"/>
               </Option>
               <Option type="Map">
-                <Option value="2" name="Matrikelkort" type="QString"/>
+                <Option value="2" type="QString" name="Matrikelkort"/>
               </Option>
               <Option type="Map">
-                <Option value="3" name="Opmåling" type="QString"/>
+                <Option value="3" type="QString" name="Opmåling"/>
               </Option>
               <Option type="Map">
-                <Option value="4" name="FOT / Tekniske kort" type="QString"/>
+                <Option value="4" type="QString" name="FOT / Tekniske kort"/>
               </Option>
               <Option type="Map">
-                <Option value="5" name="Modelberegning" type="QString"/>
+                <Option value="5" type="QString" name="Modelberegning"/>
               </Option>
               <Option type="Map">
-                <Option value="6" name="Tegning" type="QString"/>
+                <Option value="6" type="QString" name="Tegning"/>
               </Option>
               <Option type="Map">
-                <Option value="7" name="Felt-/markbesøg" type="QString"/>
+                <Option value="7" type="QString" name="Felt-/markbesøg"/>
               </Option>
               <Option type="Map">
-                <Option value="8" name="Borgeranmeldelse" type="QString"/>
+                <Option value="8" type="QString" name="Borgeranmeldelse"/>
               </Option>
               <Option type="Map">
-                <Option value="9" name="Luftfoto (historiske 1944-1993)" type="QString"/>
+                <Option value="9" type="QString" name="Luftfoto (historiske 1944-1993)"/>
               </Option>
               <Option type="Map">
-                <Option value="10" name="Skråfoto" type="QString"/>
+                <Option value="10" type="QString" name="Skråfoto"/>
               </Option>
               <Option type="Map">
-                <Option value="11" name="Andre foto" type="QString"/>
+                <Option value="11" type="QString" name="Andre foto"/>
               </Option>
               <Option type="Map">
-                <Option value="12" name="3D" type="QString"/>
+                <Option value="12" type="QString" name="3D"/>
               </Option>
             </Option>
           </Option>
         </config>
       </editWidget>
     </field>
-    <field name="oprindelse" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="oprindelse">
       <editWidget type="">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="statuskode" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="statuskode">
       <editWidget type="ValueMap">
         <config>
           <Option type="Map">
-            <Option name="map" type="List">
+            <Option type="List" name="map">
               <Option type="Map">
-                <Option value="{2839923C-8B7D-419E-B84B-CA2FE9B80EC7}" name="&lt;ingen værdi>" type="QString"/>
+                <Option value="{2839923C-8B7D-419E-B84B-CA2FE9B80EC7}" type="QString" name="&lt;ingen værdi>"/>
               </Option>
               <Option type="Map">
-                <Option value="0" name="Ukendt" type="QString"/>
+                <Option value="0" type="QString" name="Ukendt"/>
               </Option>
               <Option type="Map">
-                <Option value="1" name="Kladde" type="QString"/>
+                <Option value="1" type="QString" name="Kladde"/>
               </Option>
               <Option type="Map">
-                <Option value="2" name="Forslag" type="QString"/>
+                <Option value="2" type="QString" name="Forslag"/>
               </Option>
               <Option type="Map">
-                <Option value="3" name="Gældende / Vedtaget" type="QString"/>
+                <Option value="3" type="QString" name="Gældende / Vedtaget"/>
               </Option>
               <Option type="Map">
-                <Option value="4" name="Ikke gældende / Aflyst" type="QString"/>
+                <Option value="4" type="QString" name="Ikke gældende / Aflyst"/>
               </Option>
             </Option>
           </Option>
         </config>
       </editWidget>
     </field>
-    <field name="status" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="status">
       <editWidget type="">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="off_kode" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="off_kode">
       <editWidget type="ValueMap">
         <config>
           <Option type="Map">
-            <Option name="map" type="List">
+            <Option type="List" name="map">
               <Option type="Map">
-                <Option value="{2839923C-8B7D-419E-B84B-CA2FE9B80EC7}" name="&lt;ingen værdi>" type="QString"/>
+                <Option value="{2839923C-8B7D-419E-B84B-CA2FE9B80EC7}" type="QString" name="&lt;ingen værdi>"/>
               </Option>
               <Option type="Map">
-                <Option value="1" name="Synlig for alle" type="QString"/>
+                <Option value="1" type="QString" name="Synlig for alle"/>
               </Option>
               <Option type="Map">
-                <Option value="2" name="Synlig for den ansvarlige myndighed" type="QString"/>
+                <Option value="2" type="QString" name="Synlig for den ansvarlige myndighed"/>
               </Option>
               <Option type="Map">
-                <Option value="3" name="Synlig for alle myndigheder, men ikke offentligheden" type="QString"/>
+                <Option value="3" type="QString" name="Synlig for alle myndigheder, men ikke offentligheden"/>
               </Option>
             </Option>
           </Option>
         </config>
       </editWidget>
     </field>
-    <field name="offentlig" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="offentlig">
       <editWidget type="">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="noegle" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="noegle">
       <editWidget type="">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="note" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="note">
       <editWidget type="">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="ejer" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="ejer">
       <editWidget type="">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="er_del_af" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="er_del_af">
       <editWidget type="">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="etableringstidspunkt" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="etableringstidspunkt">
       <editWidget type="">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="klimatilpasningsfunktion_afledning" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="klimatilpasningsfunktion_afledning">
       <editWidget type="CheckBox">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="klimatilpasningsfunktion_fordampning" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="klimatilpasningsfunktion_fordampning">
       <editWidget type="CheckBox">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="klimatilpasningsfunktion_nedsivning" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="klimatilpasningsfunktion_nedsivning">
       <editWidget type="CheckBox">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="klimatilpasningsfunktion_regulering" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="klimatilpasningsfunktion_regulering">
       <editWidget type="CheckBox">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="klimatilpasningsfunktion_rensning" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="klimatilpasningsfunktion_rensning">
       <editWidget type="CheckBox">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="klimatilpasningsfunktion_reservoir" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="klimatilpasningsfunktion_reservoir">
       <editWidget type="CheckBox">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="indtegningsmetode_kode" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="indtegningsmetode_kode">
       <editWidget type="">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="indtegningsmetode" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="indtegningsmetode">
       <editWidget type="">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="noejagtighedsklasse_kode" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="noejagtighedsklasse_kode">
       <editWidget type="">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="noejagtighedsklasse" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="noejagtighedsklasse">
       <editWidget type="">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="medietype_kode" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="medietype_kode">
       <editWidget type="">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="medietype" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="medietype">
       <editWidget type="">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="forsyningsart_kode" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="forsyningsart_kode">
       <editWidget type="">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="forsyningsart" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="forsyningsart">
       <editWidget type="">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="fareklasse_kode" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="fareklasse_kode">
       <editWidget type="">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="fareklasse" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="fareklasse">
       <editWidget type="">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="sikkerhedshensyn" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="sikkerhedshensyn">
       <editWidget type="">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="driftsstatus_kode" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="driftsstatus_kode">
       <editWidget type="">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="driftsstatus" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="driftsstatus">
       <editWidget type="">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="ejerskabsforhold_kode" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="ejerskabsforhold_kode">
       <editWidget type="">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="ejerskabsforhold" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="ejerskabsforhold">
       <editWidget type="">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="niveautype_kode" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="niveautype_kode">
       <editWidget type="">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="niveautype" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="niveautype">
       <editWidget type="">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="bundkote" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="bundkote">
       <editWidget type="">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="topkote" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="topkote">
       <editWidget type="">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="permanent_vandspejlskote" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="permanent_vandspejlskote">
       <editWidget type="">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="vaadvolumen" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="vaadvolumen">
       <editWidget type="">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="forsinkelsesvolumen" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="forsinkelsesvolumen">
       <editWidget type="">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="gentagelsesperiode" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="gentagelsesperiode">
       <editWidget type="">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="beliggenhedskommune" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="beliggenhedskommune">
       <editWidget type="">
         <config>
           <Option/>
         </config>
       </editWidget>
     </field>
-    <field name="link" configurationFlags="NoFlag">
+    <field configurationFlags="NoFlag" name="link">
       <editWidget type="">
         <config>
           <Option/>
@@ -1190,228 +1190,228 @@
     </field>
   </fieldConfiguration>
   <aliases>
-    <alias field="temakode" index="0" name=""/>
-    <alias field="temanavn" index="1" name=""/>
-    <alias field="objekt_id" index="2" name=""/>
-    <alias field="versions_id" index="3" name=""/>
-    <alias field="systid_fra" index="4" name=""/>
-    <alias field="systid_til" index="5" name=""/>
-    <alias field="oprettet" index="6" name=""/>
-    <alias field="cvr_kode" index="7" name=""/>
-    <alias field="cvr_navn" index="8" name=""/>
-    <alias field="kommunekode" index="9" name=""/>
-    <alias field="bruger_id" index="10" name=""/>
-    <alias field="oprindkode" index="11" name=""/>
-    <alias field="oprindelse" index="12" name=""/>
-    <alias field="statuskode" index="13" name=""/>
-    <alias field="status" index="14" name=""/>
-    <alias field="off_kode" index="15" name=""/>
-    <alias field="offentlig" index="16" name=""/>
-    <alias field="noegle" index="17" name=""/>
-    <alias field="note" index="18" name=""/>
-    <alias field="ejer" index="19" name=""/>
-    <alias field="er_del_af" index="20" name=""/>
-    <alias field="etableringstidspunkt" index="21" name=""/>
-    <alias field="klimatilpasningsfunktion_afledning" index="22" name=""/>
-    <alias field="klimatilpasningsfunktion_fordampning" index="23" name=""/>
-    <alias field="klimatilpasningsfunktion_nedsivning" index="24" name=""/>
-    <alias field="klimatilpasningsfunktion_regulering" index="25" name=""/>
-    <alias field="klimatilpasningsfunktion_rensning" index="26" name=""/>
-    <alias field="klimatilpasningsfunktion_reservoir" index="27" name=""/>
-    <alias field="indtegningsmetode_kode" index="28" name=""/>
-    <alias field="indtegningsmetode" index="29" name=""/>
-    <alias field="noejagtighedsklasse_kode" index="30" name=""/>
-    <alias field="noejagtighedsklasse" index="31" name=""/>
-    <alias field="medietype_kode" index="32" name=""/>
-    <alias field="medietype" index="33" name=""/>
-    <alias field="forsyningsart_kode" index="34" name=""/>
-    <alias field="forsyningsart" index="35" name=""/>
-    <alias field="fareklasse_kode" index="36" name=""/>
-    <alias field="fareklasse" index="37" name=""/>
-    <alias field="sikkerhedshensyn" index="38" name=""/>
-    <alias field="driftsstatus_kode" index="39" name=""/>
-    <alias field="driftsstatus" index="40" name=""/>
-    <alias field="ejerskabsforhold_kode" index="41" name=""/>
-    <alias field="ejerskabsforhold" index="42" name=""/>
-    <alias field="niveautype_kode" index="43" name=""/>
-    <alias field="niveautype" index="44" name=""/>
-    <alias field="bundkote" index="45" name=""/>
-    <alias field="topkote" index="46" name=""/>
-    <alias field="permanent_vandspejlskote" index="47" name=""/>
-    <alias field="vaadvolumen" index="48" name=""/>
-    <alias field="forsinkelsesvolumen" index="49" name=""/>
-    <alias field="gentagelsesperiode" index="50" name=""/>
-    <alias field="beliggenhedskommune" index="51" name=""/>
-    <alias field="link" index="52" name=""/>
+    <alias index="0" name="Temakode (temakode)" field="temakode"/>
+    <alias index="1" name="Temanavn (temanavn)" field="temanavn"/>
+    <alias index="2" name="Objekt-ID (objekt_id)" field="objekt_id"/>
+    <alias index="3" name="Versions-ID (versions_id)" field="versions_id"/>
+    <alias index="4" name="Systemtid fra (systid_fra)" field="systid_fra"/>
+    <alias index="5" name="Systemtid til (systid_til)" field="systid_til"/>
+    <alias index="6" name="Oprettet (oprettet)" field="oprettet"/>
+    <alias index="7" name="Ansvarlig myndighed (cvr_kode)" field="cvr_kode"/>
+    <alias index="8" name="Ansvarlig myndighed, navn (cvr_navn)" field="cvr_navn"/>
+    <alias index="9" name="Kommunekode (kommunekode)" field="kommunekode"/>
+    <alias index="10" name="Bruger-ID (bruger_id)" field="bruger_id"/>
+    <alias index="11" name="Oprindelse (oprindkode)" field="oprindkode"/>
+    <alias index="12" name="Oprindelse – tekst (oprindelse)" field="oprindelse"/>
+    <alias index="13" name="Status (statuskode)" field="statuskode"/>
+    <alias index="14" name="Status – tekst (status)" field="status"/>
+    <alias index="15" name="Offentlig (off_kode)" field="off_kode"/>
+    <alias index="16" name="Offentlig – tekst (offentlig)" field="offentlig"/>
+    <alias index="17" name="Nøgle (noegle)" field="noegle"/>
+    <alias index="18" name="Bemærkning (note)" field="note"/>
+    <alias index="19" name="Ejer (ejer)" field="ejer"/>
+    <alias index="20" name="Er del af (er_del_af)" field="er_del_af"/>
+    <alias index="21" name="Etableringstidspunkt (etableringstidspunkt)" field="etableringstidspunkt"/>
+    <alias index="22" name="Klimatilpasningsfunktion: Afledning (klimatilpasningsfunktion_afledning)" field="klimatilpasningsfunktion_afledning"/>
+    <alias index="23" name="Klimatilpasningsfunktion: Fordampning (klimatilpasningsfunktion_fordampning)" field="klimatilpasningsfunktion_fordampning"/>
+    <alias index="24" name="Klimatilpasningsfunktion: Nedsivning (klimatilpasningsfunktion_nedsivning)" field="klimatilpasningsfunktion_nedsivning"/>
+    <alias index="25" name="Klimatilpasningsfunktion: Regulering (klimatilpasningsfunktion_regulering)" field="klimatilpasningsfunktion_regulering"/>
+    <alias index="26" name="Klimatilpasningsfunktion: Rensning (klimatilpasningsfunktion_rensning)" field="klimatilpasningsfunktion_rensning"/>
+    <alias index="27" name="Klimatilpasningsfunktion: Reservoir (klimatilpasningsfunktion_reservoir)" field="klimatilpasningsfunktion_reservoir"/>
+    <alias index="28" name="Indtegningsmetode (indtegningsmetode_kode)" field="indtegningsmetode_kode"/>
+    <alias index="29" name="Indtegningsmetode – tekst (indtegningsmetode)" field="indtegningsmetode"/>
+    <alias index="30" name="Nøjagtighedsklasse (noejagtighedsklasse_kode)" field="noejagtighedsklasse_kode"/>
+    <alias index="31" name="Nøjagtighedsklasse – tekst (noejagtighedsklasse)" field="noejagtighedsklasse"/>
+    <alias index="32" name="Medietype (medietype_kode)" field="medietype_kode"/>
+    <alias index="33" name="Medietype – tekst (medietype)" field="medietype"/>
+    <alias index="34" name="Forsyningsart (forsyningsart_kode)" field="forsyningsart_kode"/>
+    <alias index="35" name="Forsyningsart – tekst (forsyningsart)" field="forsyningsart"/>
+    <alias index="36" name="Fareklasse (fareklasse_kode)" field="fareklasse_kode"/>
+    <alias index="37" name="Fareklasse – tekst (fareklasse)" field="fareklasse"/>
+    <alias index="38" name="Sikkerhedshensyn (sikkerhedshensyn)" field="sikkerhedshensyn"/>
+    <alias index="39" name="Driftsstatus (driftsstatus_kode)" field="driftsstatus_kode"/>
+    <alias index="40" name="Driftsstatus – tekst (driftsstatus)" field="driftsstatus"/>
+    <alias index="41" name="Ejerskabsforhold (ejerskabsforhold_kode)" field="ejerskabsforhold_kode"/>
+    <alias index="42" name="Ejerskabsforhold – tekst (ejerskabsforhold)" field="ejerskabsforhold"/>
+    <alias index="43" name="Niveautype (niveautype_kode)" field="niveautype_kode"/>
+    <alias index="44" name="Niveautype – tekst (niveautype)" field="niveautype"/>
+    <alias index="45" name="Bundkote (bundkote)" field="bundkote"/>
+    <alias index="46" name="Topkote (topkote)" field="topkote"/>
+    <alias index="47" name="Permanent vandspejlskote (permanent_vandspejlskote)" field="permanent_vandspejlskote"/>
+    <alias index="48" name="Vådvolumen (vaadvolumen)" field="vaadvolumen"/>
+    <alias index="49" name="Forsinkelsesvolumen (forsinkelsesvolumen)" field="forsinkelsesvolumen"/>
+    <alias index="50" name="Gentagelsesperiode (gentagelsesperiode)" field="gentagelsesperiode"/>
+    <alias index="51" name="Beliggenhedskommune (beliggenhedskommune)" field="beliggenhedskommune"/>
+    <alias index="52" name="Link (link)" field="link"/>
   </aliases>
   <defaults>
-    <default field="temakode" expression="" applyOnUpdate="0"/>
-    <default field="temanavn" expression="" applyOnUpdate="0"/>
-    <default field="objekt_id" expression="" applyOnUpdate="0"/>
-    <default field="versions_id" expression="" applyOnUpdate="0"/>
-    <default field="systid_fra" expression="" applyOnUpdate="0"/>
-    <default field="systid_til" expression="" applyOnUpdate="0"/>
-    <default field="oprettet" expression="" applyOnUpdate="0"/>
-    <default field="cvr_kode" expression="" applyOnUpdate="0"/>
-    <default field="cvr_navn" expression="" applyOnUpdate="0"/>
-    <default field="kommunekode" expression="" applyOnUpdate="0"/>
-    <default field="bruger_id" expression="" applyOnUpdate="0"/>
-    <default field="oprindkode" expression="" applyOnUpdate="0"/>
-    <default field="oprindelse" expression="" applyOnUpdate="0"/>
-    <default field="statuskode" expression="" applyOnUpdate="0"/>
-    <default field="status" expression="" applyOnUpdate="0"/>
-    <default field="off_kode" expression="" applyOnUpdate="0"/>
-    <default field="offentlig" expression="" applyOnUpdate="0"/>
-    <default field="noegle" expression="" applyOnUpdate="0"/>
-    <default field="note" expression="" applyOnUpdate="0"/>
-    <default field="ejer" expression="" applyOnUpdate="0"/>
-    <default field="er_del_af" expression="" applyOnUpdate="0"/>
-    <default field="etableringstidspunkt" expression="" applyOnUpdate="0"/>
-    <default field="klimatilpasningsfunktion_afledning" expression="" applyOnUpdate="0"/>
-    <default field="klimatilpasningsfunktion_fordampning" expression="" applyOnUpdate="0"/>
-    <default field="klimatilpasningsfunktion_nedsivning" expression="" applyOnUpdate="0"/>
-    <default field="klimatilpasningsfunktion_regulering" expression="" applyOnUpdate="0"/>
-    <default field="klimatilpasningsfunktion_rensning" expression="" applyOnUpdate="0"/>
-    <default field="klimatilpasningsfunktion_reservoir" expression="" applyOnUpdate="0"/>
-    <default field="indtegningsmetode_kode" expression="" applyOnUpdate="0"/>
-    <default field="indtegningsmetode" expression="" applyOnUpdate="0"/>
-    <default field="noejagtighedsklasse_kode" expression="" applyOnUpdate="0"/>
-    <default field="noejagtighedsklasse" expression="" applyOnUpdate="0"/>
-    <default field="medietype_kode" expression="" applyOnUpdate="0"/>
-    <default field="medietype" expression="" applyOnUpdate="0"/>
-    <default field="forsyningsart_kode" expression="" applyOnUpdate="0"/>
-    <default field="forsyningsart" expression="" applyOnUpdate="0"/>
-    <default field="fareklasse_kode" expression="" applyOnUpdate="0"/>
-    <default field="fareklasse" expression="" applyOnUpdate="0"/>
-    <default field="sikkerhedshensyn" expression="" applyOnUpdate="0"/>
-    <default field="driftsstatus_kode" expression="" applyOnUpdate="0"/>
-    <default field="driftsstatus" expression="" applyOnUpdate="0"/>
-    <default field="ejerskabsforhold_kode" expression="" applyOnUpdate="0"/>
-    <default field="ejerskabsforhold" expression="" applyOnUpdate="0"/>
-    <default field="niveautype_kode" expression="" applyOnUpdate="0"/>
-    <default field="niveautype" expression="" applyOnUpdate="0"/>
-    <default field="bundkote" expression="" applyOnUpdate="0"/>
-    <default field="topkote" expression="" applyOnUpdate="0"/>
-    <default field="permanent_vandspejlskote" expression="" applyOnUpdate="0"/>
-    <default field="vaadvolumen" expression="" applyOnUpdate="0"/>
-    <default field="forsinkelsesvolumen" expression="" applyOnUpdate="0"/>
-    <default field="gentagelsesperiode" expression="" applyOnUpdate="0"/>
-    <default field="beliggenhedskommune" expression="" applyOnUpdate="0"/>
-    <default field="link" expression="" applyOnUpdate="0"/>
+    <default expression="" applyOnUpdate="0" field="temakode"/>
+    <default expression="" applyOnUpdate="0" field="temanavn"/>
+    <default expression="" applyOnUpdate="0" field="objekt_id"/>
+    <default expression="" applyOnUpdate="0" field="versions_id"/>
+    <default expression="" applyOnUpdate="0" field="systid_fra"/>
+    <default expression="" applyOnUpdate="0" field="systid_til"/>
+    <default expression="" applyOnUpdate="0" field="oprettet"/>
+    <default expression="" applyOnUpdate="0" field="cvr_kode"/>
+    <default expression="" applyOnUpdate="0" field="cvr_navn"/>
+    <default expression="" applyOnUpdate="0" field="kommunekode"/>
+    <default expression="" applyOnUpdate="0" field="bruger_id"/>
+    <default expression="" applyOnUpdate="0" field="oprindkode"/>
+    <default expression="" applyOnUpdate="0" field="oprindelse"/>
+    <default expression="" applyOnUpdate="0" field="statuskode"/>
+    <default expression="" applyOnUpdate="0" field="status"/>
+    <default expression="" applyOnUpdate="0" field="off_kode"/>
+    <default expression="" applyOnUpdate="0" field="offentlig"/>
+    <default expression="" applyOnUpdate="0" field="noegle"/>
+    <default expression="" applyOnUpdate="0" field="note"/>
+    <default expression="" applyOnUpdate="0" field="ejer"/>
+    <default expression="" applyOnUpdate="0" field="er_del_af"/>
+    <default expression="" applyOnUpdate="0" field="etableringstidspunkt"/>
+    <default expression="" applyOnUpdate="0" field="klimatilpasningsfunktion_afledning"/>
+    <default expression="" applyOnUpdate="0" field="klimatilpasningsfunktion_fordampning"/>
+    <default expression="" applyOnUpdate="0" field="klimatilpasningsfunktion_nedsivning"/>
+    <default expression="" applyOnUpdate="0" field="klimatilpasningsfunktion_regulering"/>
+    <default expression="" applyOnUpdate="0" field="klimatilpasningsfunktion_rensning"/>
+    <default expression="" applyOnUpdate="0" field="klimatilpasningsfunktion_reservoir"/>
+    <default expression="" applyOnUpdate="0" field="indtegningsmetode_kode"/>
+    <default expression="" applyOnUpdate="0" field="indtegningsmetode"/>
+    <default expression="" applyOnUpdate="0" field="noejagtighedsklasse_kode"/>
+    <default expression="" applyOnUpdate="0" field="noejagtighedsklasse"/>
+    <default expression="" applyOnUpdate="0" field="medietype_kode"/>
+    <default expression="" applyOnUpdate="0" field="medietype"/>
+    <default expression="" applyOnUpdate="0" field="forsyningsart_kode"/>
+    <default expression="" applyOnUpdate="0" field="forsyningsart"/>
+    <default expression="" applyOnUpdate="0" field="fareklasse_kode"/>
+    <default expression="" applyOnUpdate="0" field="fareklasse"/>
+    <default expression="" applyOnUpdate="0" field="sikkerhedshensyn"/>
+    <default expression="" applyOnUpdate="0" field="driftsstatus_kode"/>
+    <default expression="" applyOnUpdate="0" field="driftsstatus"/>
+    <default expression="" applyOnUpdate="0" field="ejerskabsforhold_kode"/>
+    <default expression="" applyOnUpdate="0" field="ejerskabsforhold"/>
+    <default expression="" applyOnUpdate="0" field="niveautype_kode"/>
+    <default expression="" applyOnUpdate="0" field="niveautype"/>
+    <default expression="" applyOnUpdate="0" field="bundkote"/>
+    <default expression="" applyOnUpdate="0" field="topkote"/>
+    <default expression="" applyOnUpdate="0" field="permanent_vandspejlskote"/>
+    <default expression="" applyOnUpdate="0" field="vaadvolumen"/>
+    <default expression="" applyOnUpdate="0" field="forsinkelsesvolumen"/>
+    <default expression="" applyOnUpdate="0" field="gentagelsesperiode"/>
+    <default expression="" applyOnUpdate="0" field="beliggenhedskommune"/>
+    <default expression="" applyOnUpdate="0" field="link"/>
   </defaults>
   <constraints>
-    <constraint field="temakode" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="temanavn" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="objekt_id" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="versions_id" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="systid_fra" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="systid_til" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="oprettet" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="cvr_kode" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="cvr_navn" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="kommunekode" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="bruger_id" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="oprindkode" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="oprindelse" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="statuskode" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="status" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="off_kode" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="offentlig" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="noegle" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="note" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="ejer" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="er_del_af" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="etableringstidspunkt" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="klimatilpasningsfunktion_afledning" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="klimatilpasningsfunktion_fordampning" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="klimatilpasningsfunktion_nedsivning" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="klimatilpasningsfunktion_regulering" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="klimatilpasningsfunktion_rensning" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="klimatilpasningsfunktion_reservoir" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="indtegningsmetode_kode" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="indtegningsmetode" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="noejagtighedsklasse_kode" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="noejagtighedsklasse" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="medietype_kode" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="medietype" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="forsyningsart_kode" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="forsyningsart" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="fareklasse_kode" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="fareklasse" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="sikkerhedshensyn" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="driftsstatus_kode" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="driftsstatus" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="ejerskabsforhold_kode" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="ejerskabsforhold" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="niveautype_kode" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="niveautype" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="bundkote" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="topkote" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="permanent_vandspejlskote" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="vaadvolumen" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="forsinkelsesvolumen" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="gentagelsesperiode" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="beliggenhedskommune" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
-    <constraint field="link" constraints="0" notnull_strength="0" unique_strength="0" exp_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="temakode" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="temanavn" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="objekt_id" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="versions_id" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="systid_fra" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="systid_til" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="oprettet" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="cvr_kode" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="cvr_navn" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="kommunekode" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="bruger_id" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="oprindkode" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="oprindelse" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="statuskode" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="status" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="off_kode" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="offentlig" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="noegle" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="note" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="ejer" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="er_del_af" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="etableringstidspunkt" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="klimatilpasningsfunktion_afledning" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="klimatilpasningsfunktion_fordampning" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="klimatilpasningsfunktion_nedsivning" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="klimatilpasningsfunktion_regulering" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="klimatilpasningsfunktion_rensning" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="klimatilpasningsfunktion_reservoir" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="indtegningsmetode_kode" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="indtegningsmetode" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="noejagtighedsklasse_kode" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="noejagtighedsklasse" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="medietype_kode" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="medietype" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="forsyningsart_kode" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="forsyningsart" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="fareklasse_kode" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="fareklasse" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="sikkerhedshensyn" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="driftsstatus_kode" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="driftsstatus" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="ejerskabsforhold_kode" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="ejerskabsforhold" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="niveautype_kode" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="niveautype" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="bundkote" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="topkote" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="permanent_vandspejlskote" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="vaadvolumen" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="forsinkelsesvolumen" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="gentagelsesperiode" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="beliggenhedskommune" notnull_strength="0"/>
+    <constraint constraints="0" unique_strength="0" exp_strength="0" field="link" notnull_strength="0"/>
   </constraints>
   <constraintExpressions>
-    <constraint field="temakode" exp="" desc=""/>
-    <constraint field="temanavn" exp="" desc=""/>
-    <constraint field="objekt_id" exp="" desc=""/>
-    <constraint field="versions_id" exp="" desc=""/>
-    <constraint field="systid_fra" exp="" desc=""/>
-    <constraint field="systid_til" exp="" desc=""/>
-    <constraint field="oprettet" exp="" desc=""/>
-    <constraint field="cvr_kode" exp="" desc=""/>
-    <constraint field="cvr_navn" exp="" desc=""/>
-    <constraint field="kommunekode" exp="" desc=""/>
-    <constraint field="bruger_id" exp="" desc=""/>
-    <constraint field="oprindkode" exp="" desc=""/>
-    <constraint field="oprindelse" exp="" desc=""/>
-    <constraint field="statuskode" exp="" desc=""/>
-    <constraint field="status" exp="" desc=""/>
-    <constraint field="off_kode" exp="" desc=""/>
-    <constraint field="offentlig" exp="" desc=""/>
-    <constraint field="noegle" exp="" desc=""/>
-    <constraint field="note" exp="" desc=""/>
-    <constraint field="ejer" exp="" desc=""/>
-    <constraint field="er_del_af" exp="" desc=""/>
-    <constraint field="etableringstidspunkt" exp="" desc=""/>
-    <constraint field="klimatilpasningsfunktion_afledning" exp="" desc=""/>
-    <constraint field="klimatilpasningsfunktion_fordampning" exp="" desc=""/>
-    <constraint field="klimatilpasningsfunktion_nedsivning" exp="" desc=""/>
-    <constraint field="klimatilpasningsfunktion_regulering" exp="" desc=""/>
-    <constraint field="klimatilpasningsfunktion_rensning" exp="" desc=""/>
-    <constraint field="klimatilpasningsfunktion_reservoir" exp="" desc=""/>
-    <constraint field="indtegningsmetode_kode" exp="" desc=""/>
-    <constraint field="indtegningsmetode" exp="" desc=""/>
-    <constraint field="noejagtighedsklasse_kode" exp="" desc=""/>
-    <constraint field="noejagtighedsklasse" exp="" desc=""/>
-    <constraint field="medietype_kode" exp="" desc=""/>
-    <constraint field="medietype" exp="" desc=""/>
-    <constraint field="forsyningsart_kode" exp="" desc=""/>
-    <constraint field="forsyningsart" exp="" desc=""/>
-    <constraint field="fareklasse_kode" exp="" desc=""/>
-    <constraint field="fareklasse" exp="" desc=""/>
-    <constraint field="sikkerhedshensyn" exp="" desc=""/>
-    <constraint field="driftsstatus_kode" exp="" desc=""/>
-    <constraint field="driftsstatus" exp="" desc=""/>
-    <constraint field="ejerskabsforhold_kode" exp="" desc=""/>
-    <constraint field="ejerskabsforhold" exp="" desc=""/>
-    <constraint field="niveautype_kode" exp="" desc=""/>
-    <constraint field="niveautype" exp="" desc=""/>
-    <constraint field="bundkote" exp="" desc=""/>
-    <constraint field="topkote" exp="" desc=""/>
-    <constraint field="permanent_vandspejlskote" exp="" desc=""/>
-    <constraint field="vaadvolumen" exp="" desc=""/>
-    <constraint field="forsinkelsesvolumen" exp="" desc=""/>
-    <constraint field="gentagelsesperiode" exp="" desc=""/>
-    <constraint field="beliggenhedskommune" exp="" desc=""/>
-    <constraint field="link" exp="" desc=""/>
+    <constraint exp="" field="temakode" desc=""/>
+    <constraint exp="" field="temanavn" desc=""/>
+    <constraint exp="" field="objekt_id" desc=""/>
+    <constraint exp="" field="versions_id" desc=""/>
+    <constraint exp="" field="systid_fra" desc=""/>
+    <constraint exp="" field="systid_til" desc=""/>
+    <constraint exp="" field="oprettet" desc=""/>
+    <constraint exp="" field="cvr_kode" desc=""/>
+    <constraint exp="" field="cvr_navn" desc=""/>
+    <constraint exp="" field="kommunekode" desc=""/>
+    <constraint exp="" field="bruger_id" desc=""/>
+    <constraint exp="" field="oprindkode" desc=""/>
+    <constraint exp="" field="oprindelse" desc=""/>
+    <constraint exp="" field="statuskode" desc=""/>
+    <constraint exp="" field="status" desc=""/>
+    <constraint exp="" field="off_kode" desc=""/>
+    <constraint exp="" field="offentlig" desc=""/>
+    <constraint exp="" field="noegle" desc=""/>
+    <constraint exp="" field="note" desc=""/>
+    <constraint exp="" field="ejer" desc=""/>
+    <constraint exp="" field="er_del_af" desc=""/>
+    <constraint exp="" field="etableringstidspunkt" desc=""/>
+    <constraint exp="" field="klimatilpasningsfunktion_afledning" desc=""/>
+    <constraint exp="" field="klimatilpasningsfunktion_fordampning" desc=""/>
+    <constraint exp="" field="klimatilpasningsfunktion_nedsivning" desc=""/>
+    <constraint exp="" field="klimatilpasningsfunktion_regulering" desc=""/>
+    <constraint exp="" field="klimatilpasningsfunktion_rensning" desc=""/>
+    <constraint exp="" field="klimatilpasningsfunktion_reservoir" desc=""/>
+    <constraint exp="" field="indtegningsmetode_kode" desc=""/>
+    <constraint exp="" field="indtegningsmetode" desc=""/>
+    <constraint exp="" field="noejagtighedsklasse_kode" desc=""/>
+    <constraint exp="" field="noejagtighedsklasse" desc=""/>
+    <constraint exp="" field="medietype_kode" desc=""/>
+    <constraint exp="" field="medietype" desc=""/>
+    <constraint exp="" field="forsyningsart_kode" desc=""/>
+    <constraint exp="" field="forsyningsart" desc=""/>
+    <constraint exp="" field="fareklasse_kode" desc=""/>
+    <constraint exp="" field="fareklasse" desc=""/>
+    <constraint exp="" field="sikkerhedshensyn" desc=""/>
+    <constraint exp="" field="driftsstatus_kode" desc=""/>
+    <constraint exp="" field="driftsstatus" desc=""/>
+    <constraint exp="" field="ejerskabsforhold_kode" desc=""/>
+    <constraint exp="" field="ejerskabsforhold" desc=""/>
+    <constraint exp="" field="niveautype_kode" desc=""/>
+    <constraint exp="" field="niveautype" desc=""/>
+    <constraint exp="" field="bundkote" desc=""/>
+    <constraint exp="" field="topkote" desc=""/>
+    <constraint exp="" field="permanent_vandspejlskote" desc=""/>
+    <constraint exp="" field="vaadvolumen" desc=""/>
+    <constraint exp="" field="forsinkelsesvolumen" desc=""/>
+    <constraint exp="" field="gentagelsesperiode" desc=""/>
+    <constraint exp="" field="beliggenhedskommune" desc=""/>
+    <constraint exp="" field="link" desc=""/>
   </constraintExpressions>
   <expressionfields/>
   <attributeactions/>
-  <attributetableconfig sortOrder="0" actionWidgetStyle="dropDown" sortExpression="">
+  <attributetableconfig sortExpression="" actionWidgetStyle="dropDown" sortOrder="0">
     <columns/>
   </attributetableconfig>
   <conditionalstyles>
@@ -1427,286 +1427,286 @@
   <featformsuppress>0</featformsuppress>
   <editorlayout>tablayout</editorlayout>
   <attributeEditorForm>
-    <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-      <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+    <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+      <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
     </labelStyle>
-    <attributeEditorContainer visibilityExpressionEnabled="0" horizontalStretch="0" groupBox="0" verticalStretch="0" collapsedExpression="" columnCount="1" visibilityExpression="" collapsed="0" name="Generelt" type="Tab" collapsedExpressionEnabled="0" showLabel="1">
-      <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-        <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+    <attributeEditorContainer collapsedExpression="" showLabel="1" horizontalStretch="0" groupBox="0" collapsed="0" type="Tab" visibilityExpressionEnabled="0" verticalStretch="0" columnCount="1" name="Generelt" collapsedExpressionEnabled="0" visibilityExpression="">
+      <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+        <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
       </labelStyle>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="7" name="cvr_kode" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="7" name="cvr_kode">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="11" name="oprindkode" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="11" name="oprindkode">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="13" name="statuskode" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="13" name="statuskode">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="15" name="off_kode" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="15" name="off_kode">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
     </attributeEditorContainer>
-    <attributeEditorContainer visibilityExpressionEnabled="0" horizontalStretch="0" groupBox="0" verticalStretch="0" collapsedExpression="" columnCount="1" visibilityExpression="" collapsed="0" name="Bassin" type="Tab" collapsedExpressionEnabled="0" showLabel="1">
-      <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-        <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+    <attributeEditorContainer collapsedExpression="" showLabel="1" horizontalStretch="0" groupBox="0" collapsed="0" type="Tab" visibilityExpressionEnabled="0" verticalStretch="0" columnCount="1" name="Bassin" collapsedExpressionEnabled="0" visibilityExpression="">
+      <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+        <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
       </labelStyle>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="18" name="note" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="18" name="note">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="19" name="ejer" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="19" name="ejer">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="20" name="er_del_af" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="20" name="er_del_af">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="21" name="etableringstidspunkt" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="21" name="etableringstidspunkt">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="22" name="klimatilpasningsfunktion_afledning" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="22" name="klimatilpasningsfunktion_afledning">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="23" name="klimatilpasningsfunktion_fordampning" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="23" name="klimatilpasningsfunktion_fordampning">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="24" name="klimatilpasningsfunktion_nedsivning" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="24" name="klimatilpasningsfunktion_nedsivning">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="25" name="klimatilpasningsfunktion_regulering" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="25" name="klimatilpasningsfunktion_regulering">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="26" name="klimatilpasningsfunktion_rensning" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="26" name="klimatilpasningsfunktion_rensning">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="27" name="klimatilpasningsfunktion_reservoir" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="27" name="klimatilpasningsfunktion_reservoir">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="28" name="indtegningsmetode_kode" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="28" name="indtegningsmetode_kode">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="30" name="noejagtighedsklasse_kode" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="30" name="noejagtighedsklasse_kode">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="32" name="medietype_kode" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="32" name="medietype_kode">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="34" name="forsyningsart_kode" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="34" name="forsyningsart_kode">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="36" name="fareklasse_kode" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="36" name="fareklasse_kode">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="38" name="sikkerhedshensyn" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="38" name="sikkerhedshensyn">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="39" name="driftsstatus_kode" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="39" name="driftsstatus_kode">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="41" name="ejerskabsforhold_kode" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="41" name="ejerskabsforhold_kode">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="43" name="niveautype_kode" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="43" name="niveautype_kode">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="45" name="bundkote" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="45" name="bundkote">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="46" name="topkote" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="46" name="topkote">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="47" name="permanent_vandspejlskote" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="47" name="permanent_vandspejlskote">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="48" name="vaadvolumen" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="48" name="vaadvolumen">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="49" name="forsinkelsesvolumen" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="49" name="forsinkelsesvolumen">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="50" name="gentagelsesperiode" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="50" name="gentagelsesperiode">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="51" name="beliggenhedskommune" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="51" name="beliggenhedskommune">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="52" name="link" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="52" name="link">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
     </attributeEditorContainer>
-    <attributeEditorContainer visibilityExpressionEnabled="0" horizontalStretch="0" groupBox="0" verticalStretch="0" collapsedExpression="" columnCount="1" visibilityExpression="" collapsed="0" name="Øvrige felter" type="Tab" collapsedExpressionEnabled="0" showLabel="1">
-      <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-        <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+    <attributeEditorContainer collapsedExpression="" showLabel="1" horizontalStretch="0" groupBox="0" collapsed="0" type="Tab" visibilityExpressionEnabled="0" verticalStretch="0" columnCount="1" name="Øvrige felter" collapsedExpressionEnabled="0" visibilityExpression="">
+      <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+        <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
       </labelStyle>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="0" name="temakode" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="0" name="temakode">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="1" name="temanavn" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="1" name="temanavn">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="2" name="objekt_id" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="2" name="objekt_id">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="3" name="versions_id" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="3" name="versions_id">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="4" name="systid_fra" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="4" name="systid_fra">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="5" name="systid_til" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="5" name="systid_til">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="6" name="oprettet" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="6" name="oprettet">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="8" name="cvr_navn" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="8" name="cvr_navn">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="9" name="kommunekode" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="9" name="kommunekode">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="10" name="bruger_id" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="10" name="bruger_id">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="12" name="oprindelse" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="12" name="oprindelse">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="14" name="status" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="14" name="status">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="16" name="offentlig" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="16" name="offentlig">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="17" name="noegle" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="17" name="noegle">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="29" name="indtegningsmetode" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="29" name="indtegningsmetode">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="31" name="noejagtighedsklasse" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="31" name="noejagtighedsklasse">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="33" name="medietype" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="33" name="medietype">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="35" name="forsyningsart" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="35" name="forsyningsart">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="37" name="fareklasse" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="37" name="fareklasse">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="40" name="driftsstatus" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="40" name="driftsstatus">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="42" name="ejerskabsforhold" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="42" name="ejerskabsforhold">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
-      <attributeEditorField horizontalStretch="0" verticalStretch="0" index="44" name="niveautype" showLabel="1">
-        <labelStyle labelColor="" overrideLabelColor="0" overrideLabelFont="0">
-          <labelFont bold="0" underline="0" style="" strikethrough="0" italic="0" description="Helvetica,12,-1,5,50,0,0,0,0,0"/>
+      <attributeEditorField showLabel="1" horizontalStretch="0" verticalStretch="0" index="44" name="niveautype">
+        <labelStyle overrideLabelFont="0" labelColor="" overrideLabelColor="0">
+          <labelFont underline="0" italic="0" strikethrough="0" description="Helvetica,12,-1,5,50,0,0,0,0,0" bold="0" style=""/>
         </labelStyle>
       </attributeEditorField>
     </attributeEditorContainer>
