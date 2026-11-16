@@ -11,7 +11,7 @@ import html
 
 from qgis.core import QgsApplication, QgsProject
 from qgis.gui import QgsDockWidget, QgsFilterLineEdit
-from qgis.PyQt.QtCore import QSize, Qt, QUrl, pyqtSignal
+from qgis.PyQt.QtCore import QEvent, QSize, Qt, QTimer, QUrl, pyqtSignal
 from qgis.PyQt.QtGui import QDesktopServices
 from qgis.PyQt.QtWidgets import (QFrame, QHBoxLayout, QLabel, QMenu, QMessageBox, QSizePolicy, QStyledItemDelegate,
                                  QToolButton, QTreeWidget, QTreeWidgetItem, QVBoxLayout, QWidget)
@@ -151,11 +151,12 @@ class GeoFAPanel(QgsDockWidget):
         self.edit_button.setIcon(QgsApplication.getThemeIcon(LOGIN_ICON))
         self.edit_button.toggled.connect(self.edit_toggled)
         row.addWidget(self.edit_button)
-        settings_button = QToolButton()
-        settings_button.setIcon(QgsApplication.getThemeIcon("/mActionOptions.svg"))
-        settings_button.setToolTip("Indstillinger for GeoFA (login, testmiljø og område)")
-        settings_button.clicked.connect(lambda: self.settings_requested.emit())
-        row.addWidget(settings_button)
+        self.settings_button = QToolButton()
+        self.settings_button.setIcon(QgsApplication.getThemeIcon("/mActionOptions.svg"))
+        self.settings_button.setToolTip("Indstillinger for GeoFA (login, testmiljø og område)")
+        self.settings_button.clicked.connect(lambda: self.settings_requested.emit())
+        row.addWidget(self.settings_button)
+        self._fit_buttons_to_search()
         layout.addLayout(row)
 
         # The municipality filter, when one is chosen; a click opens the settings
@@ -293,6 +294,21 @@ class GeoFAPanel(QgsDockWidget):
         action = menu.addAction(QgsApplication.getThemeIcon("/mActionHelpContents.svg"), "Åbn specifikationen")
         action.triggered.connect(lambda checked=False: QDesktopServices.openUrl(QUrl(dataset.spec_page)))
         menu.exec(self.tree.viewport().mapToGlobal(point))
+
+    # ------------------------------------------------------------------ look
+
+    def _fit_buttons_to_search(self):
+        """Square buttons exactly as tall as the search field beside them, so their edges line up.
+        Each Qt style sizes a field and a tool button a pixel or two apart, which shows."""
+        side = self.search.sizeHint().height()
+        for button in (self.edit_button, self.settings_button):
+            button.setFixedSize(side, side)
+
+    def changeEvent(self, event):
+        super().changeEvent(event)
+        # A new font or style in QGIS's options resizes the field; follow once it has
+        if event.type() in (QEvent.Type.FontChange, QEvent.Type.StyleChange):
+            QTimer.singleShot(0, self._fit_buttons_to_search)
 
     # ------------------------------------------------------------------ mode
 

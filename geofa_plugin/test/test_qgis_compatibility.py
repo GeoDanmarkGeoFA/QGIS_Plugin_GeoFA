@@ -758,6 +758,10 @@ class CatalogueTests(unittest.TestCase):
         self.assertFalse(panel.edit_button.isChecked())
         self.assertIn("kun de objekter, der er offentlige", panel.edit_button.toolTip())
         self.assertFalse(panel.edit_button.autoRaise())  # a framed button, as in Geodata Connect
+        # Square and exactly as tall as the search field, so the edges line up in every style
+        side = panel.search.sizeHint().height()
+        for button in (panel.edit_button, panel.settings_button):
+            self.assertEqual((button.minimumWidth(), button.maximumHeight()), (side, side))
         self.assertTrue(panel.area_filter.isHidden())
         panel.set_mode(loader.Mode(edit=False, test=False, username="kom999", kommune="0751"))
         self.assertFalse(panel.area_filter.isHidden())
