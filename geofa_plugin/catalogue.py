@@ -6,11 +6,31 @@ catalogue.json and the styles next to it are generated from the GeoFA specificat
 so the plugin itself holds no list of layers. The code lists themselves are read from
 GeoFA when a layer is added (see codelists.py).
 """
+import hashlib
 import json
 import os
 from dataclasses import dataclass, field
+from xml.etree import ElementTree
 
 from .codelists import Source
+
+# The parts of a QML that make up the fields and the form (QGIS's Fields and Forms style categories)
+FORM_ELEMENTS = ("fieldConfiguration", "aliases", "defaults", "constraints", "constraintExpressions",
+                 "expressionfields", "attributeEditorForm", "editable", "labelOnTop", "reuseLastValue",
+                 "editorlayout", "editform", "editforminit", "featformsuppress")
+
+
+def form_fingerprint(style_path):
+    """A short fingerprint of a style's fields and form (aliases, widgets, defaults, tabs).
+
+    The generator stores it in the catalogue (Dataset.form_version) and the plugin on every
+    layer it adds, so it can tell when a project's layers have an older form than the plugin's.
+    The XML attributes are put in a fixed order first (QGIS writes them in a varying order),
+    so the fingerprint only changes when the form does."""
+    root = ElementTree.parse(style_path).getroot()
+    parts = [ElementTree.canonicalize(ElementTree.tostring(element, encoding="unicode"), strip_text=True)
+             for name in FORM_ELEMENTS for element in root.findall(name)]
+    return hashlib.sha1("\n".join(parts).encode("utf-8")).hexdigest()[:12]
 
 LAYERS_DIR = os.path.join(os.path.dirname(__file__), "layers")
 SYMBOLS_DIR = os.path.join(LAYERS_DIR, "symbols")
@@ -34,6 +54,7 @@ class Dataset:
     purpose: str
     form_version: str = ""  # fingerprint of the style's fields and form, stored on the layers
     code_lists: tuple = field(default=())  # ((field, Source, required), ...)
+    geometry: str = ""  # "MultiPoint", "MultiLineString" or "MultiPolygon" (empty when unknown)
 
     @property
     def style_path(self):
@@ -42,6 +63,13 @@ class Dataset:
     @property
     def pending(self):
         return self.status == "pending"
+
+    def icon(self):
+        """QGIS's icon for the layer's geometry type (point, line, polygon), as in the layer panel."""
+        from qgis.core import QgsApplication, QgsIconUtils, QgsWkbTypes
+        if not self.geometry:
+            return QgsApplication.getThemeIcon("/mIconWfs.svg")
+        return QgsIconUtils.iconForWkbType(QgsWkbTypes.parseType(self.geometry))
 
     def search_text(self):
         """What the search in the panel and QGIS's locator bar matches: title, theme code and table."""
@@ -59,7 +87,8 @@ class Catalogue:
                                      group=group["name"], style=d["style"], status=d.get("spec") or "published",
                                      spec_page=d.get("spec_page") or "", purpose=d.get("purpose") or "",
                                      form_version=d.get("form_version") or "",
-                                     code_lists=self._code_lists(d.get("code_lists") or {}))
+                                     code_lists=self._code_lists(d.get("code_lists") or {}),
+                                     geometry=d.get("geometry") or "")
                              for d in group["datasets"] if d.get("table")])
             for group in data["groups"]
         ]

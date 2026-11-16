@@ -18,9 +18,11 @@ os.environ["QGIS_CUSTOM_CONFIG_PATH"] = os.path.join(TEMP_ROOT, "profile")
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from qgis.core import QgsApplication, QgsAuthMethodConfig, QgsEditorWidgetSetup, QgsSettings, QgsVectorLayer
-from qgis.gui import QgsMessageBar
+from qgis.gui import QgsMessageBar, QgsPasswordLineEdit
 from qgis.PyQt.QtCore import QCoreApplication, QSettings, QUrl
-from qgis.PyQt.QtWidgets import QApplication, QMainWindow, QMenu, QPushButton
+from qgis.PyQt.QtCore import QObject, Qt, pyqtSignal
+from qgis.PyQt.QtGui import QGuiApplication
+from qgis.PyQt.QtWidgets import QApplication, QLabel, QMainWindow, QMenu, QMessageBox, QPushButton
 from qgis.PyQt.QtXml import QDomDocument
 
 APP = QgsApplication.instance() or QgsApplication([], True)
@@ -35,15 +37,33 @@ import geofa_plugin.geofa as geofa_module
 from geofa_plugin.geofa import GeoFA
 from geofa_plugin import credentials
 from geofa_plugin.config import Settings
-from geofa_plugin.config.settings_dialog import ConfigOptionsPage, PASSWORD_SAVED_PLACEHOLDER
-from geofa_plugin import about, codelists, loader
+from geofa_plugin.settings_window import PASSWORD_SAVED_PLACEHOLDER, LoginForm
+from geofa_plugin import about, codelists, htmlfields, loader
 from geofa_plugin.catalogue import Catalogue, catalogue
-from geofa_plugin.panel import GeoFAPanel
+from geofa_plugin.panel import ROLE_GROUP, ROLE_TABLE, GeoFAPanel
+from geofa_plugin.settings_window import SettingsDialog
 
 
 def _messages():
     pushed = []
     return pushed, types.SimpleNamespace(pushMessage=lambda *args, **kwargs: pushed.append(args))
+
+
+class FakeSettingsDialog:
+    """GeoFA's settings window: records that it opened, and does what the test's user does in it."""
+    iface = None
+
+    def __init__(self, settings, parent=None):
+        self.settings = settings
+
+    def exec(self):
+        FakeSettingsDialog.iface.options_opened.append("settings")
+        if FakeSettingsDialog.iface.on_options:
+            FakeSettingsDialog.iface.on_options()
+        return 1
+
+
+geofa_module.SettingsDialog = FakeSettingsDialog  # the real one is tested on its own
 
 
 class FakeIface:
@@ -55,7 +75,8 @@ class FakeIface:
         self.locator_filters = []
         self.pushed, self.message_bar = _messages()
         self.options_opened = []
-        self.on_options = None  # what the user does in the Options dialog
+        self.on_options = None  # what the user does in the settings window
+        FakeSettingsDialog.iface = self
 
     def messageBar(self):
         return self.message_bar
@@ -109,9 +130,8 @@ class CompatibilityTests(unittest.TestCase):
         with patch.object(geofa_module, "QDesktopServices", fake_services):
             plugin.manual_menu.trigger()
         self.assertEqual(opened, [geofa_module.VEJLEDNING_URL])
-        page = ConfigOptionsPage(None, plugin.settings)
-        page.show_password()
-        page.hide_password()
+        form = LoginForm(plugin.settings)
+        self.assertIsInstance(form.password_edit, QgsPasswordLineEdit)  # QGIS's own field, with the eye
         calls = []
         plugin.add_tables = lambda tables: calls.append(tables)
         plugin.layer_locator_filter.triggerResult(types.SimpleNamespace(userData=0))
@@ -187,9 +207,78 @@ class CredentialTests(unittest.TestCase):
         self.assertEqual(QSettings().value(credentials.LEGACY_PASSWORD_KEY, ""), "")
         self.assertEqual(self.stored(), ("Basic", "kom999@fkg", "gammel"))
 
-    def test_settings_page_keeps_password_out_of_settings(self):
+    def test_settings_window_stores_the_login_and_applies_it(self):
         settings = Settings()
-        page = ConfigOptionsPage(None, settings)
+        updates = []
+        settings.settings_updated.connect(lambda: updates.append(True))
+        dialog = SettingsDialog(settings)
+        self.assertEqual(dialog.windowTitle(), "GeoFA – indstillinger")
+        self.assertIsInstance(dialog.form.password_edit, QgsPasswordLineEdit)
+        dialog.form.username_edit.setText("kom997")
+        dialog.form.password_edit.setText("hemmelig")
+        dialog.form.check_box_wfst.setChecked(True)
+        dialog.accept()
+        self.assertEqual(self.stored(), ("Basic", "kom997@fkg", "hemmelig"))
+        self.assertTrue(settings.value("wfst"))
+        self.assertEqual(updates, [True])
+        # Cancel changes nothing
+        dialog = SettingsDialog(settings)
+        dialog.form.username_edit.setText("kom996")
+        dialog.reject()
+        self.assertEqual(settings.value("username"), "kom997")
+
+    def test_without_a_login_the_plugin_is_a_viewer(self):
+        iface = FakeIface()
+        plugin = GeoFA(iface)
+        plugin.initGui()
+        plugin.settings.set_value("wfst", True)  # left over: without a login it can't apply
+        plugin.settings.emit_updated()
+        try:
+            self.assertFalse(plugin.mode.edit)
+            self.assertFalse(plugin.edit_action.isVisible())
+            self.assertTrue(plugin.panel.edit_button.isHidden())
+            credentials.save_login("kom999", "hemmelig")
+            plugin.settings.emit_updated()
+            self.assertTrue(plugin.mode.edit)
+            self.assertTrue(plugin.edit_action.isVisible())
+            self.assertFalse(plugin.panel.edit_button.isHidden())
+        finally:
+            plugin.settings.set_value("wfst", False)
+            credentials.remove_login()
+            plugin.settings.emit_updated()
+            plugin.unload()
+
+    def test_removing_the_login_in_qgis_makes_the_plugin_read_only_at_once(self):
+        credentials.save_login("kom999", "hemmelig")
+        iface = FakeIface()
+        plugin = GeoFA(iface)
+        plugin.initGui()
+        plugin.settings.set_value("wfst", True)
+        plugin.settings.emit_updated()
+        try:
+            self.assertTrue(plugin.mode.edit)
+            # As the user does under Indstillinger › Godkendelse (no settings change in the plugin),
+            # then closes the dialog: QGIS's main window gets focus back
+            QgsApplication.authManager().removeAuthenticationConfig(credentials.AUTHCFG_ID)
+            QGuiApplication.instance().focusWindowChanged.emit(None)
+            self.assertFalse(plugin.mode.edit)
+            self.assertFalse(plugin.edit_action.isVisible())
+            self.assertTrue(plugin.panel.edit_button.isHidden())
+            self.assertIn("fjernet", iface.pushed[-1][1])
+            # And a login stored again brings editing back
+            credentials.save_login("kom999", "hemmelig")
+            QGuiApplication.instance().focusWindowChanged.emit(None)
+            self.assertTrue(plugin.mode.edit)
+            self.assertTrue(plugin.edit_action.isVisible())
+        finally:
+            plugin.settings.set_value("wfst", False)
+            credentials.remove_login()
+            plugin.settings.emit_updated()
+            plugin.unload()
+
+    def test_login_form_keeps_password_out_of_settings(self):
+        settings = Settings()
+        page = LoginForm(settings)
         page.username_edit.setText("kom999")
         page.password_edit.setText("hemmelig")
         page.check_box_wfst.setChecked(True)
@@ -198,7 +287,7 @@ class CredentialTests(unittest.TestCase):
         self.assertEqual(QSettings().value(credentials.LEGACY_PASSWORD_KEY, ""), "")
         self.assertTrue(settings.value("wfst"))
         # The saved password is never shown again, but WFS-T stays available
-        reopened = ConfigOptionsPage(None, settings)
+        reopened = LoginForm(settings)
         self.assertEqual(reopened.password_edit.text(), "")
         self.assertEqual(reopened.password_edit.placeholderText(), PASSWORD_SAVED_PLACEHOLDER)
         self.assertTrue(reopened.check_box_wfst.isEnabled())
@@ -292,7 +381,7 @@ class CredentialTests(unittest.TestCase):
     def test_shared_project_without_login_opens_settings_and_loads_layers(self):
         layers, iface, asked = self._open_shared_project(enter_login=True)
         self.assertEqual(asked, [1])
-        self.assertEqual(iface.options_opened, [geofa_module.OPTIONS_PAGE_NAME])
+        self.assertEqual(iface.options_opened, ["settings"])
         self.assertEqual(layers["shared"].reloads, [SHARED_SOURCE])
         self.assertTrue(layers["shared"].isValid())
         self.assertEqual(layers["anonymous"].reloads, [])
@@ -324,7 +413,7 @@ class CredentialTests(unittest.TestCase):
         layers, iface, asked = self._open_shared_project(
             enter_login=True, document=document, shared_id="placeholder", shared_source="")
         self.assertEqual(asked, [1])
-        self.assertEqual(iface.options_opened, [geofa_module.OPTIONS_PAGE_NAME])
+        self.assertEqual(iface.options_opened, ["settings"])
         self.assertEqual(layers["placeholder"].reloads, [])
         self.assertEqual(layers["anonymous"].reloads, [])
         self.assertEqual(len(iface.pushed), 1)
@@ -361,6 +450,30 @@ class FakeLayer:
 
     def setName(self, name):
         self.layer_name = name
+
+    def id(self):
+        return getattr(self, "layer_id", self.layer_name)
+
+
+class FakeProject(QObject):
+    """A project with layers, and the signals the panel follows."""
+    layersAdded = pyqtSignal(list)
+    layersRemoved = pyqtSignal(list)
+
+    def __init__(self, layers):
+        super().__init__()
+        self.layers, self.removed = layers, []
+        for layer_id, layer in layers.items():
+            layer.layer_id = layer_id
+
+    def mapLayers(self):
+        return self.layers
+
+    def customVariables(self):
+        return {}
+
+    def removeMapLayers(self, ids):
+        self.removed.append(list(ids))
 
 
 def _replace_in_place(project, layer, source, name):
@@ -473,24 +586,77 @@ class CatalogueTests(unittest.TestCase):
         self.assertIn("typename='fkg:fkg.t_5609_cykelkrydspunktsstraekninger'", layer.src)
 
     def test_panel_searches_title_and_theme_code(self):
-        panel = GeoFAPanel(catalogue())
+        panel = GeoFAPanel(catalogue(), project=FakeProject({}))
 
         def shown():
-            proxy = panel.proxy
-            return [proxy.index(c, 0, proxy.index(g, 0)).data()
-                    for g in range(proxy.rowCount()) for c in range(proxy.rowCount(proxy.index(g, 0)))]
+            return [item.text(0) for group in panel.groups() if not group.isHidden()
+                    for item in panel.children(group) if not item.isHidden()]
 
         self.assertEqual(len(shown()), 80)
         panel.search.setText("5800")
         self.assertEqual(shown(), ["Friluftsliv faciliteter, punkter (5800)"])
         panel.search.setText("skole 5710")
         self.assertEqual(shown(), ["Børne- og skoledistrikter (5710)"])
+        panel.search.setText("forsyning")  # a group's name shows all its layers
+        self.assertEqual(len(shown()), len(dict(catalogue().groups)["Forsyning"]))
         panel.set_mode(EDIT_TEST)
         self.assertFalse(panel.test_banner.isHidden())
         self.assertTrue(panel.edit_button.isChecked())
         panel.set_mode(READ)
         self.assertTrue(panel.test_banner.isHidden())
         self.assertFalse(panel.edit_button.isChecked())
+
+    def test_panel_ticks_mirror_the_project(self):
+        prod = FakeLayer(loader.layer_source("t_5800_fac_pkt", READ), table="t_5800_fac_pkt")
+        project = FakeProject({"prod": prod})
+        panel = GeoFAPanel(catalogue(), project=project)
+        panel.set_mode(READ)
+        added, removed = [], []
+        panel.add_requested.connect(added.append)
+        panel.remove_requested.connect(removed.append)
+        group = next(g for g in panel.groups() if g.data(0, ROLE_GROUP) == "Sport, fritid og friluftsliv")
+        items = {item.data(0, ROLE_TABLE): item for item in panel.children(group)}
+        self.assertEqual(items["t_5800_fac_pkt"].checkState(0), Qt.CheckState.Checked)
+        self.assertEqual(items["t_5801_fac_fl"].checkState(0), Qt.CheckState.Unchecked)
+        self.assertEqual(group.checkState(0), Qt.CheckState.PartiallyChecked)
+        self.assertTrue(group.text(0).endswith("· 1 indlæst"))
+        self.assertFalse(items["t_5800_fac_pkt"].icon(0).isNull())  # the geometry type's icon
+        # Ticking adds, unticking removes
+        items["t_5801_fac_fl"].setCheckState(0, Qt.CheckState.Checked)
+        items["t_5800_fac_pkt"].setCheckState(0, Qt.CheckState.Unchecked)
+        self.assertEqual((added, removed), ([["t_5801_fac_fl"]], [["t_5800_fac_pkt"]]))
+        # The ticks show the project, not the click: nothing was really added or removed here
+        self.assertEqual(items["t_5801_fac_fl"].checkState(0), Qt.CheckState.Unchecked)
+        self.assertEqual(items["t_5800_fac_pkt"].checkState(0), Qt.CheckState.Checked)
+        # Ticking the group adds the layers shown that aren't in the project, after asking when there are many
+        panel.search.setText("fac")
+        with patch.object(QMessageBox, "question", lambda *args: QMessageBox.StandardButton.Yes):
+            group.setCheckState(0, Qt.CheckState.Checked)
+        self.assertEqual(added[-1], ["t_5801_fac_fl", "t_5802_fac_li"])
+        # In test, the production layer doesn't count
+        panel.set_mode(TEST_READ)
+        self.assertEqual(items["t_5800_fac_pkt"].checkState(0), Qt.CheckState.Unchecked)
+        # Removing a layer in QGIS clears its tick
+        panel.set_mode(READ)
+        project.layers.clear()
+        project.layersRemoved.emit(["prod"])
+        self.assertEqual(items["t_5800_fac_pkt"].checkState(0), Qt.CheckState.Unchecked)
+        panel.cleanup()
+
+    def test_unticking_removes_layers_but_not_ones_being_edited(self):
+        prod = FakeLayer(loader.layer_source("t_5800_fac_pkt", READ), table="t_5800_fac_pkt")
+        busy = FakeLayer(loader.layer_source("t_5801_fac_fl", READ), table="t_5801_fac_fl", editing=True)
+        test = FakeLayer(loader.layer_source("t_5800_fac_pkt", TEST_READ), table="t_5800_fac_pkt")
+        layers = {"prod": prod, "busy": busy, "test": test}
+        project = FakeProject(layers)
+        iface = FakeIface()
+        plugin = GeoFA(iface)
+        plugin.mode = READ
+        instance = types.SimpleNamespace(instance=lambda: project)
+        with patch.object(loader, "QgsProject", instance), patch.object(geofa_module, "QgsProject", instance):
+            plugin.remove_tables(["t_5800_fac_pkt", "t_5801_fac_fl"])
+        self.assertEqual(project.removed, [["prod"]])  # not the test layer, nor the one being edited
+        self.assertIn("redigering", iface.pushed[0][1])
 
     def test_about_names_the_version_and_links(self):
         text = about.about_text(80)
@@ -521,6 +687,25 @@ class CatalogueTests(unittest.TestCase):
             plugin.settings.emit_updated()
             plugin.unload()
 
+    def test_html_descriptions_are_formatted_until_the_layer_is_edited(self):
+        layer = QgsVectorLayer("Point?crs=EPSG:25832&field=navn:string&field=lang_beskr:string&field=d_l_beskr:string",
+                               "5800", "memory")
+        layer.setEditorWidgetSetup(2, QgsEditorWidgetSetup("Hidden", {}))  # the user's own choice stays
+
+        def widget(index):
+            setup = layer.editorWidgetSetup(index)
+            return setup.type(), setup.config().get("UseHtml")
+
+        self.assertTrue(htmlfields.follow(layer))
+        self.assertEqual(widget(1), ("TextEdit", True))
+        layer.startEditing()
+        self.assertEqual(widget(1), ("TextEdit", False))  # the HTML itself, to edit
+        layer.rollBack()
+        self.assertEqual(widget(1), ("TextEdit", True))
+        self.assertEqual(widget(2), ("Hidden", None))
+        self.assertEqual(widget(0), ("", None))  # not a description: untouched
+        self.assertFalse(htmlfields.follow(QgsVectorLayer("Point?field=navn:string", "x", "memory")))
+
     def test_edit_switch_without_login_opens_settings(self):
         credentials.remove_login()
         iface = FakeIface()
@@ -533,7 +718,7 @@ class CatalogueTests(unittest.TestCase):
             plugin.edit_action.trigger()
             self.assertFalse(plugin.settings.value("wfst"))
             self.assertFalse(plugin.edit_action.isChecked())
-            self.assertEqual(iface.options_opened, [geofa_module.OPTIONS_PAGE_NAME])
+            self.assertEqual(iface.options_opened, ["settings"])
         finally:
             plugin.unload()
 

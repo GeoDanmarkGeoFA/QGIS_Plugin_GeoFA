@@ -36,7 +36,8 @@ class Mode:
 
     @classmethod
     def from_settings(cls, settings):
-        return cls(edit=bool(settings.value("wfst")), test=bool(settings.value("testmiljo")),
+        # Editing needs a stored GeoFA login; without one the plugin only shows the layers
+        return cls(edit=bool(settings.value("wfst")) and credentials.has_login(), test=bool(settings.value("testmiljo")),
                    username=(settings.value("username") or "").strip())
 
 
@@ -139,7 +140,7 @@ def add_dataset(dataset, mode, message_bar, project=None):
     if mode.edit and not credentials.ensure_login(mode.username):
         message_bar.pushMessage(
             "GeoFA", "Der er ikke gemt et GeoFA-login. Indtast brugernavn og kode under "
-                     "Indstillinger › Indstillinger › GeoFA for at kunne redigere.",
+                     "GeoFA › Indstillinger … for at kunne redigere.",
             level=Qgis.MessageLevel.Warning, duration=15)
         return None
     ensure_symbol_path()
