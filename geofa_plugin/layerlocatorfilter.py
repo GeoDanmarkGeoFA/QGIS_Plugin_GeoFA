@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
+"""GeoFA in QGIS's search bar (the locator): words typed find a dataset by its group, title or
+theme code, and the result adds it. "geofa <words>" searches the GeoFA datasets only."""
 from qgis.core import QgsLocatorFilter, QgsLocatorResult
 
 
 class LayerLocatorFilter(QgsLocatorFilter):
     def __init__(self, data=None):
-        super(LayerLocatorFilter, self).__init__()
-        if data is None:
-            self.data = LayerLocatorFilterData()
-        else:
-            self.data = data
+        super().__init__()
+        # Shared with the clones QGIS makes of the filter for its search threads
+        self.data = data or LayerLocatorFilterData()
 
     def set_searchable_layers(self, searchable_layers):
         self.data.set_searchable_layers(searchable_layers)
@@ -20,7 +20,7 @@ class LayerLocatorFilter(QgsLocatorFilter):
         return "geofa"
 
     def displayName(self):
-        return self.tr("GeoFA")
+        return "GeoFA"
 
     def priority(self):
         return QgsLocatorFilter.Priority.Low
@@ -32,56 +32,42 @@ class LayerLocatorFilter(QgsLocatorFilter):
         return QgsLocatorFilter.Flag.FlagFast
 
     def fetchResults(self, query, context, feedback):
-        matching_layers = self.data.get_matching_layers(query)
-        for layer in matching_layers:
+        for layer in self.data.get_matching_layers(query):
             result = QgsLocatorResult()
             result.filter = self
             result.displayString = layer["title"]
-            result.userData = layer["actionindex"]
+            result.userData = layer["index"]
             result.score = 0
-
             self.resultFetched.emit(result)
 
     def triggerResult(self, result):
-        action = self.data.get_action(result.userData)
-        action.trigger()
+        self.data.get_action(result.userData).trigger()
 
 
 class LayerLocatorFilterData:
-    def __init__(self, parent=None):
-        self.actions = []
-        self.searchable_layers = []
+    """The searchable datasets: their result titles, what they are found by, and the menu actions
+    that add them."""
+
+    def __init__(self):
+        self.layers = []
 
     def set_searchable_layers(self, searchable_layers):
-        self.searchable_layers = searchable_layers
-        i = 0
-        self.actions = []
-        for layer in self.searchable_layers:
-            self.actions.append(layer["action"])
-            layer["actionindex"] = i
-            i = i + 1
-            layer["searchstring"] = self.create_search_string(layer)
-            layer["title"] += " (" + layer["category"] + ", GeoFA)"
+        """searchable_layers: [{"title", "category" (the group), "code", "action"}]."""
+        self.layers = [{"index": index, "title": f'{layer["title"]} ({layer["category"]}, GeoFA)',
+                        "search": self.create_search_string(layer), "action": layer["action"]}
+                       for index, layer in enumerate(searchable_layers)]
 
-    def create_search_string(self, layer):
-        search_string = layer["category"] + " " + layer["title"]
-        search_string = search_string.replace("/", " ")
-        search_string = search_string.replace("-", " ")
-        search_string = search_string.replace("navn", " ")
-        return " " + search_string.lower()
+    @staticmethod
+    def create_search_string(layer):
+        """Group, title and theme code (e.g. "5800"), lower case, with / and - as word breaks and a
+        space in front, so a word typed matches the start of a word."""
+        search_string = f'{layer["category"]} {layer["title"]} {layer.get("code", "")}'
+        return " " + search_string.replace("/", " ").replace("-", " ").lower()
 
     def get_matching_layers(self, query):
-        search_terms = query.lower().split()
-        term_count = len(search_terms)
-        matching_layers = []
-        for layer in self.searchable_layers:
-            layer["points"] = 0
-            for term in search_terms:
-                if layer["searchstring"].find(" " + term) > -1:
-                    layer["points"] += 1
-            if layer["points"] == term_count:
-                matching_layers.append(layer)
-        return matching_layers
+        """The layers with a word starting with each word typed."""
+        terms = query.lower().split()
+        return [layer for layer in self.layers if all(" " + term in layer["search"] for term in terms)]
 
     def get_action(self, index):
-        return self.actions[index]
+        return self.layers[index]["action"]

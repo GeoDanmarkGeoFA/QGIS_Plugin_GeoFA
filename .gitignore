@@ -11,3 +11,6 @@ zip_build/
 .idea/
 __pycache__/
 *.pyc
+
+# Local developer folder: copies of the GeoFA sources, test profiles and reports (never committed)
+dev/

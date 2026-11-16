@@ -24,7 +24,7 @@ def auth_username(username):
 
 
 def has_login():
-    """True when a GeoFA login is in the password store (no master password needed)."""
+    """True when a GeoFA login is in the password store. Checking needs no master password."""
     return AUTHCFG_ID in _manager().configIds()
 
 
@@ -38,7 +38,8 @@ def has_password():
 
 
 def save_login(username, password=None):
-    """Store the GeoFA login. With ``password=None`` the existing password is kept.
+    """Store the GeoFA login. With ``password=None`` the stored password is kept, or, if none is
+    stored, the plain-text one older versions kept in QSettings is moved in.
 
     May show QGIS's master password prompt. Returns True when the login is stored.
     """
@@ -68,6 +69,7 @@ def save_login(username, password=None):
     if exists:
         stored = manager.updateAuthenticationConfig(config)
     else:
+        # PyQGIS returns (ok, config) where it binds the config as in/out, and a bool elsewhere
         result = manager.storeAuthenticationConfig(config)
         stored = result[0] if isinstance(result, tuple) else result
     if stored:
@@ -83,7 +85,8 @@ def remove_login():
 
 
 def ensure_login(username):
-    """Make sure a login is stored, moving an old plain-text password in if there is one."""
+    """Whether a login is stored, after first moving an old plain-text password into the password
+    store if there is one."""
     if has_login():
         return True
     if username and legacy_password():
