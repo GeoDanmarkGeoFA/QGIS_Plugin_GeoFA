@@ -11,8 +11,9 @@ from pathlib import Path
 
 from qgis.core import QgsCoordinateReferenceSystem, QgsFeatureRequest, QgsProject, QgsRectangle
 from qgis.gui import QgsAttributeDialog, QgsAttributeEditorContext
-from qgis.PyQt.QtCore import QPoint, QRect, Qt, QTimer
-from qgis.PyQt.QtWidgets import QApplication, QDockWidget, QTabWidget, QWidget
+from qgis.PyQt.QtCore import QPoint, QPointF, QRect, Qt, QTimer
+from qgis.PyQt.QtGui import QColor, QPainter, QPixmap
+from qgis.PyQt.QtWidgets import QApplication, QDockWidget, QTabWidget, QTreeView, QWidget
 from qgis.utils import iface, plugins
 
 OUT = Path(os.environ.get("GEOFA_GUIDE_OUT") or Path.cwd())
@@ -37,6 +38,22 @@ def save(widget, name, rect=None):
     image = widget.grab(rect) if rect is not None else widget.grab()
     image.save(str(OUT / name))
     log(f"saved {name} ({image.width()}x{image.height()})")
+
+
+def save_combined(first, second, name, beside, gap):
+    """Two grabs on one white image, the second beside or below the first, gap screen points apart."""
+    ratio = first.devicePixelRatio()
+    w1, h1, w2, h2 = (first.width() / ratio, first.height() / ratio, second.width() / ratio, second.height() / ratio)
+    width, height = (w1 + gap + w2, max(h1, h2)) if beside else (max(w1, w2), h1 + gap + h2)
+    sheet = QPixmap(int(width * ratio), int(height * ratio))
+    sheet.setDevicePixelRatio(ratio)
+    sheet.fill(QColor("white"))
+    painter = QPainter(sheet)
+    painter.drawPixmap(QPointF(0, 0), first)
+    painter.drawPixmap(QPointF(w1 + gap, 0) if beside else QPointF(0, h1 + gap), second)
+    painter.end()
+    sheet.save(str(OUT / name))
+    log(f"saved {name} ({sheet.width()}x{sheet.height()})")
 
 
 def layer(code):
@@ -139,11 +156,11 @@ def part_login_button():
     """The person button as a user with a stored login sees it (shown only, no login is used)."""
     from geofa.loader import Mode
     panel = plugin().panel
-    panel.set_mode(Mode(edit=False, test=False, username="kom101"), can_edit=True)
+    panel.set_mode(Mode(edit=False, test=False, username="kom101"), has_login=True)
     QApplication.processEvents()
     bottom = panel.search.mapTo(panel, QPoint(0, 0)).y() + panel.search.height() + 10
     save(panel, "login.png", QRect(0, 0, panel.width(), bottom))
-    plugin().update_environment_label()
+    plugin().show_mode()
 
 
 def widgets_of_class(class_name):
@@ -161,9 +178,6 @@ def part_locator():
 
 def part_locator_shot():
     """The result list (sized to its results) stacked on the search box, without the rest of the status bar."""
-    from qgis.PyQt.QtCore import QPointF
-    from qgis.PyQt.QtGui import QColor, QPainter, QPixmap
-    from qgis.PyQt.QtWidgets import QTreeView
     window = iface.mainWindow()
     locator = widgets_of_class("QgsLocatorWidget")[0]
     popup = widgets_of_class("QgsFloatingWidget")[0]
@@ -177,18 +191,7 @@ def part_locator_shot():
     QApplication.processEvents()
     results.resizeColumnToContents(0)  # QGIS sets a narrower column, which cuts the results with "…"
     QApplication.processEvents()
-    top = popup.grab()
-    bottom = locator.grab()
-    ratio = top.devicePixelRatio()
-    sheet = QPixmap(top.width(), top.height() + bottom.height() + int(4 * ratio))
-    sheet.setDevicePixelRatio(ratio)
-    sheet.fill(QColor("white"))
-    painter = QPainter(sheet)
-    painter.drawPixmap(QPointF(0, 0), top)
-    painter.drawPixmap(QPointF(0, top.height() / ratio + 4), bottom)
-    painter.end()
-    sheet.save(str(OUT / "soegefelt.png"))
-    log(f"saved soegefelt.png ({sheet.width()}x{sheet.height()})")
+    save_combined(popup.grab(), locator.grab(), "soegefelt.png", beside=False, gap=4)
     locator.search("")
     window.setFocus()
 
@@ -214,22 +217,8 @@ def part_test_environment_shot():
     tree_bottom = view.mapTo(layers, QPoint(0, 0)).y() + view.sizeHintForRow(0) * 7 + 8
     panel = plugin().panel
     strip_bottom = panel.search.mapTo(panel, QPoint(0, 0)).y() + panel.search.height() + 10
-    left = layers.grab(QRect(0, 0, layers.width(), tree_bottom))
-    right = panel.grab(QRect(0, 0, panel.width(), strip_bottom))
-    from qgis.PyQt.QtCore import QPointF
-    from qgis.PyQt.QtGui import QColor, QPainter, QPixmap
-    ratio = left.devicePixelRatio()
-    gap = 12  # between the two panels, in screen points
-    width = left.width() / ratio + gap + right.width() / ratio
-    sheet = QPixmap(int(width * ratio), max(left.height(), right.height()))
-    sheet.setDevicePixelRatio(ratio)
-    sheet.fill(QColor("white"))
-    painter = QPainter(sheet)
-    painter.drawPixmap(QPointF(0, 0), left)
-    painter.drawPixmap(QPointF(left.width() / ratio + gap, 0), right)
-    painter.end()
-    sheet.save(str(OUT / "testmiljoe.png"))
-    log(f"saved testmiljoe.png ({sheet.width()}x{sheet.height()})")
+    save_combined(layers.grab(QRect(0, 0, layers.width(), tree_bottom)),
+                  panel.grab(QRect(0, 0, panel.width(), strip_bottom)), "testmiljoe.png", beside=True, gap=12)
     plugin().settings.set_value("testmiljo", False)
     plugin().settings.emit_updated()
 

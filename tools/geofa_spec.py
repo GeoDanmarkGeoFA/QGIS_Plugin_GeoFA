@@ -1,6 +1,6 @@
 """Shared helpers for the layer generator: where the inputs live and how spec datasets map to tables.
 
-Source of truth (see dev/README or the plan):
+Sources, in order of authority:
   - which datasets, their groups and order: the Confluence spec page tree (dev/spec/confluence_tree.json)
   - title, fields, required fields, code lists: the spec's Database repo (dev/spec/Database)
   - datasets whose spec page says "Kommer snart" (no Database page yet) are "pending":
@@ -19,6 +19,8 @@ GRAFIK = SPEC / "Grafik"
 PLUGIN = REPO / "geofa_plugin"
 OUT = PLUGIN / "layers"
 REPORTS = REPO / "dev" / "reports"
+WEBMAP_META = "https://geofa-kort.geodanmark.dk/api/meta/fkg/fkg"  # the webmap's own metadata for the fkg schema
+PHOTO_FIELD = re.compile(r"^(geofafoto\d*|gpx_link)$")  # links to GeoFA's photos and GPX files
 
 # Fields every GeoFA theme has (from the spec's generel table) and how the spec page classifies them
 SYSTEM_FIELDS = {"versions_id", "objekt_id", "systid_fra", "systid_til", "oprettet", "temakode", "temanavn", "bruger_id"}
@@ -50,7 +52,7 @@ def clean_title(text):
 
 
 def webmap_layers():
-    # Only the fkg schema: other schemas (e.g. fkg_foto_gpx_link) hold old copies of some tables
+    # Guard: WEBMAP_META already asks for the fkg schema only; other schemas hold old copies of some tables
     return {l["f_table_name"]: l for l in read_json(SPEC / "webmap_meta.json")["data"] if l.get("f_table_schema") == "fkg"}
 
 
@@ -77,8 +79,8 @@ def datasets():
     tree = read_json(SPEC / "confluence_tree.json")
     prod = prod_tables()
     result = []
-    for g_index, group in enumerate(tree):
-        for d_index, d in enumerate(group["datasets"]):
+    for group in tree:
+        for d in group["datasets"]:
             page = d["database_page"]
             if page:
                 table, status = f"t_{page}", "published"
@@ -91,8 +93,7 @@ def datasets():
             meta = spec_meta(table) if table and status == "published" else None
             title = clean_title(meta.get("title")) if meta and meta.get("title") else clean_title(d["page_title"])
             result.append({
-                "group": clean_title(group["group"]), "group_index": g_index, "order": d_index,
-                "table": table, "code": code, "title": title, "page_title": clean_title(d["page_title"]),
+                "group": clean_title(group["group"]), "table": table, "code": code, "title": title, "page_title": clean_title(d["page_title"]),
                 "spec_page_id": d["page_id"], "status": status,
             })
     return result

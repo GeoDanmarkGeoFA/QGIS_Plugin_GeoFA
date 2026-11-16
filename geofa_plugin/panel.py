@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """The GeoFA panel: every GeoFA dataset in the spec's groups, as a list of tick boxes.
 
-Like the Geodata Connect panel, the ticks mirror the project: ticking a layer adds it,
-unticking removes it, and removing it in QGIS's layer panel clears the tick. A group's
+The ticks mirror the project: ticking a layer adds it, unticking removes it, and removing
+it in QGIS's layer panel clears the tick. A group's
 tick shows how many of its layers are in the project (none, some, all), and ticking it
 adds the rest. The ticks follow the chosen environment: in test, a layer is ticked when
 its [TEST] layer is in the project.
@@ -26,6 +26,7 @@ BASE = Qt.ItemFlag.ItemIsEnabled | Qt.ItemFlag.ItemIsSelectable
 CHECKABLE = BASE | Qt.ItemFlag.ItemIsUserCheckable
 ASK_FROM = 4  # adding or removing this many layers at once asks first (adding takes about a second each)
 ROW_HEIGHT = 18  # like a QGIS tree with 16 px icons
+LOGIN_ICON = "/user.svg"  # QGIS's own person icon, for the login button and menu action
 
 # GeoFA's colours: the green of the GeoFA icon, and GeoDanmark's dark green and orange (geodanmark.dk)
 GEOFA_GREEN = "#93c257"
@@ -64,12 +65,14 @@ def _test_strip():
     return strip
 
 
-def _value(state):
+def _state_int(state):
+    """A check state as an int for item data: Qt 6's enums have .value, Qt 5's are ints already."""
     return int(state.value) if hasattr(state, "value") else int(state)
 
 
-class _AiryRows(QStyledItemDelegate):
-    """Rows as tall as in QGIS's own trees, also for the groups (which have no icon)."""
+class _RowHeights(QStyledItemDelegate):
+    """Each row's own height plus 3 px of air, and at least ROW_HEIGHT, so the group rows (which
+    have no icon) are as tall as the layer rows, as in QGIS's own trees."""
 
     def sizeHint(self, option, index):
         size = super().sizeHint(option, index)
@@ -84,9 +87,6 @@ def dataset_tooltip(dataset):
         lines.append("<i>Specifikationen for dette lag kommer snart.</i>")
     lines.append("Sæt hak for at tilføje laget, fjern hakket for at fjerne det. Højreklik for specifikationen.")
     return "<p>" + "<br><br>".join(lines) + "</p>"
-
-
-LOGIN_ICON = "/user.svg"  # QGIS's own person icon
 
 
 def login_tooltip(mode):
@@ -112,7 +112,7 @@ def login_tooltip(mode):
 class GeoFAPanel(QgsDockWidget):
     add_requested = pyqtSignal(list)  # tables
     remove_requested = pyqtSignal(list)  # tables
-    edit_toggled = pyqtSignal(bool)
+    login_toggled = pyqtSignal(bool)  # use of the stored login, from the login button
     settings_requested = pyqtSignal()
 
     def __init__(self, catalogue, parent=None, project=None):
@@ -132,8 +132,8 @@ class GeoFAPanel(QgsDockWidget):
         outer.addWidget(self.test_banner)
         body = QWidget()
         layout = QVBoxLayout(body)
-        # The same air as in the Geodata Connect panel: 10 px under the banner, 8 px at the sides
-        # and between the rows and the buttons
+        # 10 px under the banner, 6 px at the bottom, 8 px at the sides and between the search
+        # row, the municipality filter and the tree
         layout.setContentsMargins(8, 10, 8, 6)
         layout.setSpacing(8)
         outer.addWidget(body, 1)
@@ -144,13 +144,12 @@ class GeoFAPanel(QgsDockWidget):
         self.search.setPlaceholderText("Søg lag eller temakode …")
         self.search.textChanged.connect(self.filter)
         row.addWidget(self.search)
-        # With or without the login, shown as the button's state rather than a banner. Framed
-        # buttons, as in the Geodata Connect panel
-        self.edit_button = QToolButton()
-        self.edit_button.setCheckable(True)
-        self.edit_button.setIcon(QgsApplication.getThemeIcon(LOGIN_ICON))
-        self.edit_button.toggled.connect(self.edit_toggled)
-        row.addWidget(self.edit_button)
+        # The login button: checked while the stored GeoFA login is in use
+        self.login_button = QToolButton()
+        self.login_button.setCheckable(True)
+        self.login_button.setIcon(QgsApplication.getThemeIcon(LOGIN_ICON))
+        self.login_button.toggled.connect(self.login_toggled)
+        row.addWidget(self.login_button)
         self.settings_button = QToolButton()
         self.settings_button.setIcon(QgsApplication.getThemeIcon("/mActionOptions.svg"))
         self.settings_button.setToolTip("Indstillinger for GeoFA (login, testmiljø og område)")
@@ -172,7 +171,7 @@ class GeoFAPanel(QgsDockWidget):
         self.tree = QTreeWidget()
         self.tree.setHeaderHidden(True)
         self.tree.setUniformRowHeights(True)
-        self.tree.setItemDelegate(_AiryRows(self.tree))
+        self.tree.setItemDelegate(_RowHeights(self.tree))
         self.tree.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         self.tree.customContextMenuRequested.connect(self.context_menu)
         self.tree.itemChanged.connect(self._item_changed)
@@ -230,11 +229,11 @@ class GeoFAPanel(QgsDockWidget):
                     state = Qt.CheckState.Checked if item.data(0, ROLE_TABLE) in loaded else Qt.CheckState.Unchecked
                     count += state == Qt.CheckState.Checked
                     item.setCheckState(0, state)
-                    item.setData(0, ROLE_STATE, _value(state))
+                    item.setData(0, ROLE_STATE, _state_int(state))
                 state = (Qt.CheckState.Checked if count == len(children) else
                          Qt.CheckState.PartiallyChecked if count else Qt.CheckState.Unchecked)
                 group_item.setCheckState(0, state)
-                group_item.setData(0, ROLE_STATE, _value(state))
+                group_item.setData(0, ROLE_STATE, _state_int(state))
                 name = group_item.data(0, ROLE_GROUP)
                 group_item.setText(0, f"{name} ({len(children)})" + (f" · {count} indlæst" if count else ""))
         finally:
@@ -243,7 +242,7 @@ class GeoFAPanel(QgsDockWidget):
     def _item_changed(self, item, column):
         """A tick the user set: add or remove at once, then show what the project really holds."""
         state = item.checkState(0)
-        if item.data(0, ROLE_STATE) == _value(state):
+        if item.data(0, ROLE_STATE) == _state_int(state):
             return  # the text changed, not the tick
         table = item.data(0, ROLE_TABLE)
         try:
@@ -298,11 +297,11 @@ class GeoFAPanel(QgsDockWidget):
     # ------------------------------------------------------------------ look
 
     def _fit_buttons_to_search(self):
-        """The buttons at their natural size (as in the Geodata Connect panel), at least as tall as
-        the search field and centred on it exactly. Qt centres in whole pixels, so an odd
-        difference in height leaves a button a pixel high or low; the button grows by that pixel."""
+        """Size the buttons: their natural size, at least as tall as the search field and at least
+        square. Qt centres in whole pixels, so an odd difference in height from the field would
+        leave a button a pixel high or low; the button grows by that pixel instead."""
         field = self.search.sizeHint().height()
-        for button in (self.edit_button, self.settings_button):
+        for button in (self.login_button, self.settings_button):
             natural = button.sizeHint()
             height = max(natural.height(), field)
             height += (height - field) % 2
@@ -316,18 +315,18 @@ class GeoFAPanel(QgsDockWidget):
 
     # ------------------------------------------------------------------ mode
 
-    def set_mode(self, mode, can_edit=True):
-        """can_edit: a GeoFA login is stored. Without one the panel is a viewer, with no edit button."""
+    def set_mode(self, mode, has_login=True):
+        """has_login: a GeoFA login is stored. Without one the panel is a viewer, without the login button."""
         self.test = mode.test
         self.test_banner.setVisible(mode.test)
-        self.edit_button.setVisible(can_edit)
-        self.edit_button.blockSignals(True)
-        self.edit_button.setChecked(mode.edit)
-        self.edit_button.blockSignals(False)
-        self.edit_button.setToolTip(login_tooltip(mode))
-        kommune = getattr(mode, "kommune", "")
-        self.area_filter.setText(f"Kun objekter i {municipalities.display_name(kommune)}" if kommune else "")
-        self.area_filter.setVisible(bool(kommune))
+        self.login_button.setVisible(has_login)
+        self.login_button.blockSignals(True)
+        self.login_button.setChecked(mode.edit)
+        self.login_button.blockSignals(False)
+        self.login_button.setToolTip(login_tooltip(mode))
+        area = f"Kun objekter i {municipalities.display_name(mode.kommune)}" if mode.kommune else ""
+        self.area_filter.setText(area)
+        self.area_filter.setVisible(bool(mode.kommune))
         self.sync()
 
     def cleanup(self):

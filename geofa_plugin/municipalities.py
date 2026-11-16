@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 """The municipality filter: GeoFA layers show only objects inside a chosen municipality.
 
-As in Danmarks Miljøportal's catalogue plugin, each WFS request carries an OGC Intersects filter
-with the municipality's outline, so GeoFA's server sends only those objects. The outlines come
-from GeoFA's own boundaries (tools/fetch_sources.py --municipalities): widened by a small margin
-(50-400 m) and simplified by the same margin, so nothing inside is cut off and the filter fits in
-a request URL (GeoFA's server turns down URLs over ~8 KB).
+Each WFS request carries an OGC Intersects filter with the municipality's outline, so GeoFA's
+server sends only those objects. The outlines come from GeoFA's own boundaries
+(tools/fetch_sources.py --municipalities): each is widened by a margin and simplified by the same
+margin, so nothing inside is cut off and the filter fits in a request URL (GeoFA's server turns
+down URLs over ~8 KB). The margin is the smallest of fetch_sources.py's MUNICIPALITY_MARGINS
+that keeps the filter short enough.
 """
 import json
 import os
@@ -21,16 +22,13 @@ def outlines():
     """{komkode: {"navn", "margin", "polygons"}}, read once."""
     global _outlines
     if _outlines is None:
-        path = os.path.join(LAYERS_DIR, "municipalities.json")
-        _outlines = {}
-        if os.path.exists(path):
-            with open(path, encoding="utf-8") as f:
-                _outlines = json.load(f)
+        with open(os.path.join(LAYERS_DIR, "municipalities.json"), encoding="utf-8") as f:
+            _outlines = json.load(f)
     return _outlines
 
 
 def display_name(komkode):
-    """'Aarhus Kommune' for '0751'; empty for no municipality."""
+    """'Aarhus Kommune' for '0751', 'Christiansø' for '0411', the code itself if unknown, '' for none."""
     if not komkode:
         return ""
     if komkode in NOT_A_MUNICIPALITY:
@@ -59,7 +57,8 @@ def _polygon(polygon):
 def filter_xml(polygons):
     """The OGC filter (Filter Encoding 1.1, GML 3.1.1, for WFS 1.1.0) for objects intersecting the
     polygons. On one line: newlines and indentation would be mangled when QGIS puts the filter
-    into the request URL. tools/fetch_sources.py uses it to keep each outline's filter short."""
+    into the request URL. tools/fetch_sources.py measures each outline's filter with it when it
+    chooses the margin."""
     members = "".join(_polygon(polygon) for polygon in polygons)
     return ('<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc" xmlns:gml="http://www.opengis.net/gml">'
             f"<ogc:Intersects><ogc:PropertyName>{GEOMETRY_COLUMN}</ogc:PropertyName>"

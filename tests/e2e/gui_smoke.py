@@ -5,10 +5,11 @@ viewer). Writes gui_smoke_<QGIS version>.json with a pass/fail per check to the 
 GEOFA_E2E_OUT, and closes QGIS.
 
 Steps, with time in between for GeoFA to answer:
- 1. add Cykelkrydspunktsstrækninger (5609) and Friluftsliv faciliteter, punkter (5800)
+ 1. add Cykelkrydspunktsstrækninger (5609) and Friluftsliv faciliteter, punkter (5800); check aliases,
+    styling and photo links
  2. check ticks, viewer mode, HTML description, live code lists; make 5800's form "older" and run Opdater
  3. re-add 5800 (no duplicate); switch to test; add 5800 from test beside the production one
- 4. back to production; untick 5609 in the panel
+ 4. back to production; untick 5609 in the panel; turn the Aarhus municipality filter on and off
 """
 import json
 import os
@@ -108,7 +109,7 @@ def part_update_forms():
     layer = facility_layer()
     check("panel ticks the added layers", sorted(ticked()) == sorted(l.name() for l in project_layers()), ticked())
     check("viewer without a login: no editing shown",
-          not plugin().edit_action.isVisible() and plugin().panel.edit_button.isHidden())
+          not plugin().login_action.isVisible() and plugin().panel.login_button.isHidden())
     kind, config = widget(layer, "lang_beskr")
     check("lang_beskr shown as HTML", kind == "TextEdit" and config.get("UseHtml"), config)
     size = dropdown_size(layer, "facil_ty_k")

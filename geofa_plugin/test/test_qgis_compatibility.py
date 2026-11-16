@@ -1,4 +1,9 @@
-"""Offline compatibility checks; run with python-qgis(-ltr) and an isolated profile."""
+"""The plugin's offline tests, run in QGIS's Python:
+
+    python-qgis.bat -m unittest discover -s geofa_plugin/test -t .
+
+Each run uses a new throwaway QGIS profile (settings and password store), never the user's own.
+"""
 import json
 import os
 import sys
@@ -17,11 +22,10 @@ TEMP_ROOT = tempfile.mkdtemp(prefix="geofa_qgis_test_")
 os.environ["QGIS_CUSTOM_CONFIG_PATH"] = os.path.join(TEMP_ROOT, "profile")
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from qgis.core import (QgsApplication, QgsAuthMethodConfig, QgsDataSourceUri, QgsEditorWidgetSetup, QgsSettings,
-                       QgsVectorLayer)
+from qgis.core import (QgsApplication, QgsAuthMethodConfig, QgsDataSourceUri, QgsDateTimeFieldFormatter,
+                       QgsEditorWidgetSetup, QgsReadWriteContext, QgsSettings, QgsVectorLayer)
 from qgis.gui import QgsMessageBar, QgsPasswordLineEdit
-from qgis.PyQt.QtCore import QCoreApplication, QFile, QSettings, QUrl
-from qgis.PyQt.QtCore import QObject, Qt, pyqtSignal
+from qgis.PyQt.QtCore import QCoreApplication, QFile, QObject, QSettings, Qt, QUrl, pyqtSignal
 from qgis.PyQt.QtGui import QGuiApplication, QIcon
 from qgis.PyQt.QtWidgets import QApplication, QLabel, QMainWindow, QMenu, QMessageBox, QPushButton
 from qgis.PyQt.QtXml import QDomDocument
@@ -35,15 +39,24 @@ QSettings.setPath(QSettings.Format.IniFormat, QSettings.Scope.UserScope, os.path
 QSettings().setValue("locale/userLocale", "da_DK")
 
 import geofa_plugin.geofa as geofa_module
-import geofa_plugin.settings_window as settings_window_module
-from geofa_plugin.geofa import GeoFA
-from geofa_plugin import credentials
-from geofa_plugin.config import Settings
-from geofa_plugin.settings_window import PASSWORD_SAVED_PLACEHOLDER, OptionsFactory, SettingsForm
-from geofa_plugin import about, codelists, htmlfields, loader, municipalities
+from geofa_plugin import about, codelists, credentials, htmlfields, loader, municipalities
 from geofa_plugin.catalogue import Catalogue, catalogue
+from geofa_plugin.config import Settings
+from geofa_plugin.geofa import GeoFA
 from geofa_plugin.panel import LOGIN_ICON, ROLE_GROUP, ROLE_TABLE, GeoFAPanel
-from geofa_plugin.settings_window import SettingsDialog
+from geofa_plugin.settings_window import ICON, PASSWORD_SAVED_PLACEHOLDER, SettingsDialog, SettingsForm
+
+
+def _reset_plugin_settings():
+    """The plugin's settings as on a new install, so no test depends on what another left behind."""
+    settings = Settings()
+    for key, value in (("username", ""), ("wfst", False), ("testmiljo", False), ("kommune", "")):
+        settings.set_value(key, value)
+
+
+class GeoFATestCase(unittest.TestCase):
+    def setUp(self):
+        _reset_plugin_settings()
 
 
 def _messages():
@@ -53,6 +66,8 @@ def _messages():
 
 class FakeSettingsDialog:
     """GeoFA's settings window: records that it opened, and does what the test's user does in it."""
+    # The plugin creates SettingsDialog itself; the fake reaches the test's iface through this
+    # class attribute, set by the last FakeIface created
     iface = None
 
     def __init__(self, settings, parent=None):
@@ -116,7 +131,7 @@ class FakeIface:
         self.window.removeDockWidget(widget)
 
 
-class CompatibilityTests(unittest.TestCase):
+class CompatibilityTests(GeoFATestCase):
     def test_plugin_settings_and_locator_action(self):
         iface = FakeIface()
         plugin = GeoFA(iface)
@@ -130,8 +145,8 @@ class CompatibilityTests(unittest.TestCase):
         opened = []
         fake_services = types.SimpleNamespace(openUrl=lambda url: opened.append(url.toString()))
         with patch.object(geofa_module, "QDesktopServices", fake_services):
-            plugin.manual_menu.trigger()
-        self.assertEqual(opened, [geofa_module.VEJLEDNING_URL])
+            plugin.guide_action.trigger()
+        self.assertEqual(opened, [about.GUIDE_URL])
         form = SettingsForm(plugin.settings)
         self.assertIsInstance(form.password_edit, QgsPasswordLineEdit)  # QGIS's own field, with the eye
         # The GeoFA page in QGIS's Options, with the same form
@@ -158,7 +173,8 @@ class CompatibilityTests(unittest.TestCase):
         # After unload, a settings change must not touch the deleted menu
         plugin.settings.emit_updated()
 
-    def test_color_dialog_enum(self):
+    def test_vendored_color_setting_enum_exists(self):
+        # The vendored settings manager's Color type uses this enum, in its Qt 6 spelling
         from qgis.PyQt.QtWidgets import QColorDialog
         self.assertIsNotNone(QColorDialog.ColorDialogOption.ShowAlphaChannel)
 
@@ -169,9 +185,7 @@ def _in_temp_root(location):
 
 
 def _auth_db_location():
-    # qgisAuthDatabaseUri() since QGIS 3.30 (may carry a driver prefix); file path before that
-    getter = getattr(QgsApplication, "qgisAuthDatabaseUri", None) or QgsApplication.qgisAuthDatabaseFilePath
-    return getter()
+    return QgsApplication.qgisAuthDatabaseUri()  # may carry a driver prefix
 
 
 SHARED_SOURCE = ("authcfg=geofa01 pagingEnabled='true' typename='fkg:t_5710_born_skole_dis' "
@@ -180,7 +194,7 @@ ANONYMOUS_SOURCE = ("pagingEnabled='false' typename='fkg:fkg.t_5710_born_skole_d
                     "url='https://geofa-test.geodanmark.dk/ows/fkg/fkg'")
 
 
-class CredentialTests(unittest.TestCase):
+class CredentialTests(GeoFATestCase):
     """The GeoFA login lives in QGIS's password store, never in settings or layer sources."""
 
     @classmethod
@@ -197,6 +211,7 @@ class CredentialTests(unittest.TestCase):
             raise unittest.SkipTest("could not set a master password on the throwaway password store")
 
     def setUp(self):
+        super().setUp()
         credentials.remove_login()
 
     def stored(self):
@@ -260,16 +275,16 @@ class CredentialTests(unittest.TestCase):
         plugin.settings.emit_updated()
         try:
             # The panel's menu item has the GeoFA "G", as the Options page
-            g = QIcon(settings_window_module.ICON).pixmap(16, 16).toImage()
+            g = QIcon(ICON).pixmap(16, 16).toImage()
             self.assertEqual(plugin.panel_action.icon().pixmap(16, 16).toImage(), g)
             self.assertFalse(plugin.mode.edit)
-            self.assertFalse(plugin.edit_action.isVisible())
-            self.assertTrue(plugin.panel.edit_button.isHidden())
+            self.assertFalse(plugin.login_action.isVisible())
+            self.assertTrue(plugin.panel.login_button.isHidden())
             credentials.save_login("kom999", "hemmelig")
             plugin.settings.emit_updated()
             self.assertTrue(plugin.mode.edit)
-            self.assertTrue(plugin.edit_action.isVisible())
-            self.assertFalse(plugin.panel.edit_button.isHidden())
+            self.assertTrue(plugin.login_action.isVisible())
+            self.assertFalse(plugin.panel.login_button.isHidden())
         finally:
             plugin.settings.set_value("wfst", False)
             credentials.remove_login()
@@ -290,14 +305,14 @@ class CredentialTests(unittest.TestCase):
             QgsApplication.authManager().removeAuthenticationConfig(credentials.AUTHCFG_ID)
             QGuiApplication.instance().focusWindowChanged.emit(None)
             self.assertFalse(plugin.mode.edit)
-            self.assertFalse(plugin.edit_action.isVisible())
-            self.assertTrue(plugin.panel.edit_button.isHidden())
+            self.assertFalse(plugin.login_action.isVisible())
+            self.assertTrue(plugin.panel.login_button.isHidden())
             self.assertIn("fjernet", iface.pushed[-1][1])
             # And a login stored again brings editing back
             credentials.save_login("kom999", "hemmelig")
             QGuiApplication.instance().focusWindowChanged.emit(None)
             self.assertTrue(plugin.mode.edit)
-            self.assertTrue(plugin.edit_action.isVisible())
+            self.assertTrue(plugin.login_action.isVisible())
         finally:
             plugin.settings.set_value("wfst", False)
             credentials.remove_login()
@@ -389,31 +404,13 @@ class CredentialTests(unittest.TestCase):
         credentials.save_login("kom999", "hemmelig")
         old = ("user='kom999@fkg' password='hemmelig' pagingEnabled='true' typename='fkg:t_5710_born_skole_dis' "
                "url='https://geofa-test.geodanmark.dk/wfs/kom999@fkg/fkg/25832' version='auto'")
-
-        class Layer:
-            def __init__(self, source):
-                self.src = source
-
-            def providerType(self):
-                return "WFS"
-
-            def source(self):
-                return self.src
-
-            def name(self):
-                return "Skoledistrikter"
-
-            def setDataSource(self, source, name, provider):
-                self.src = source
-
-        anonymous = ("pagingEnabled='false' typename='fkg:fkg.t_5710_born_skole_dis' "
-                     "url='https://geofa-test.geodanmark.dk/ows/fkg/fkg'")
-        layers = {"old": Layer(old), "anonymous": Layer(anonymous)}
+        anonymous = ANONYMOUS_SOURCE
+        layers = {"old": FakeLayer(old, name="Skoledistrikter"), "anonymous": FakeLayer(anonymous, name="Skoledistrikter")}
         project = types.SimpleNamespace(mapLayers=lambda: layers, dirty=False)
         project.setDirty = lambda value: setattr(project, "dirty", value)
         iface = FakeIface()
         plugin = GeoFA(iface)
-        plugin.readconfig = lambda: setattr(plugin, "username", "kom999")
+        plugin.mode = loader.Mode(edit=False, test=False, username="kom999")
         with patch.object(geofa_module, "QgsProject", types.SimpleNamespace(instance=lambda: project)):
             plugin.secure_project_layers()
         self.assertIn("authcfg=geofa01", layers["old"].src)
@@ -551,7 +548,7 @@ TEST_READ = loader.Mode(edit=False, test=True, username="kom999")
 EDIT_TEST = loader.Mode(edit=True, test=True, username="kom999")
 
 
-class CatalogueTests(unittest.TestCase):
+class CatalogueTests(GeoFATestCase):
     def test_catalogue_has_every_spec_dataset_and_its_style(self):
         cat = Catalogue()
         self.assertEqual(len(cat.groups), 13)
@@ -622,7 +619,7 @@ class CatalogueTests(unittest.TestCase):
             self.assertEqual(loader.repoint(READ, project)[0], 1)
         self.assertEqual(QgsDataSourceUri(layer.src).param("filter"), "")
 
-    def test_a_swap_leaves_alone_layers_swapped_while_another_loaded(self):
+    def test_layers_swapped_by_a_nested_swap_are_not_swapped_again(self):
         # Loading a WFS layer runs Qt's event loop, where the plugin may swap the layers itself
         layers = {name: FakeLayer(loader.layer_source(table, EDIT), name=name, table=table)
                   for name, table in (("a", "t_5710_born_skole_dis"), ("b", "t_5800_fac_pkt"))}
@@ -753,19 +750,19 @@ class CatalogueTests(unittest.TestCase):
         self.assertEqual(len(shown()), len(dict(catalogue().groups)["Forsyning"]))
         panel.set_mode(EDIT_TEST)
         self.assertFalse(panel.test_banner.isHidden())
-        self.assertTrue(panel.edit_button.isChecked())
+        self.assertTrue(panel.login_button.isChecked())
         # The login button: the login shows the non-public objects too, not only editing
-        self.assertIn("Logget ind som kom999 i testmiljøet", panel.edit_button.toolTip())
-        self.assertIn("ikke er offentlige", panel.edit_button.toolTip())
+        self.assertIn("Logget ind som kom999 i testmiljøet", panel.login_button.toolTip())
+        self.assertIn("ikke er offentlige", panel.login_button.toolTip())
         self.assertTrue(QFile.exists(":/images/themes/default" + LOGIN_ICON))  # QGIS's own icon
         panel.set_mode(READ)
         self.assertTrue(panel.test_banner.isHidden())
-        self.assertFalse(panel.edit_button.isChecked())
-        self.assertIn("kun de objekter, der er offentlige", panel.edit_button.toolTip())
-        self.assertFalse(panel.edit_button.autoRaise())  # a framed button, as in Geodata Connect
+        self.assertFalse(panel.login_button.isChecked())
+        self.assertIn("kun de objekter, der er offentlige", panel.login_button.toolTip())
+        self.assertFalse(panel.login_button.autoRaise())  # a framed button, as in Geodata Connect
         # Natural size or more, and centred exactly on the search field: an even difference in height
         field = panel.search.sizeHint().height()
-        for button in (panel.edit_button, panel.settings_button):
+        for button in (panel.login_button, panel.settings_button):
             width, height = button.maximumWidth(), button.maximumHeight()
             self.assertGreaterEqual(height, max(field, button.sizeHint().height()))
             self.assertGreaterEqual(width, max(height, button.sizeHint().width()))
@@ -856,6 +853,14 @@ class CatalogueTests(unittest.TestCase):
             plugin.settings.emit_updated()
             plugin.unload()
 
+    def test_dates_from_the_editing_endpoint_are_shown(self):
+        # GeoFA's editing endpoint sends date-times as text in PostgreSQL's format
+        layer = QgsVectorLayer("Point?crs=EPSG:25832&field=systid_fra:string", "5800", "memory")
+        layer.loadNamedStyle(catalogue().get("t_5800_fac_pkt").style_path)
+        config = layer.editorWidgetSetup(0).config()
+        shown = QgsDateTimeFieldFormatter().representValue(layer, 0, config, None, "2025-10-07 00:00:29.814198+00")
+        self.assertEqual(shown, "2025-10-07 00:00:29")
+
     def test_html_descriptions_are_formatted_until_the_layer_is_edited(self):
         layer = QgsVectorLayer("Point?crs=EPSG:25832&field=navn:string&field=lang_beskr:string&field=d_l_beskr:string",
                                "5800", "memory")
@@ -874,6 +879,17 @@ class CatalogueTests(unittest.TestCase):
         self.assertEqual(widget(2), ("Hidden", None))
         self.assertEqual(widget(0), ("", None))  # not a description: untouched
         self.assertFalse(htmlfields.follow(QgsVectorLayer("Point?field=navn:string", "x", "memory")))
+        # A project reopened in the same session: a new layer object with the saved id is followed too
+        document = QDomDocument()
+        element = document.createElement("maplayer")
+        layer.writeLayerXml(element, document, QgsReadWriteContext())
+        again = QgsVectorLayer()
+        again.readLayerXml(element, QgsReadWriteContext())
+        self.assertEqual(again.id(), layer.id())
+        self.assertTrue(htmlfields.follow(again))
+        again.startEditing()
+        self.assertEqual(again.editorWidgetSetup(1).config().get("UseHtml"), False)
+        again.rollBack()
 
     def test_edit_switch_without_login_opens_settings(self):
         credentials.remove_login()
@@ -884,9 +900,9 @@ class CatalogueTests(unittest.TestCase):
         plugin.settings.set_value("username", "")
         plugin.settings.emit_updated()
         try:
-            plugin.edit_action.trigger()
+            plugin.login_action.trigger()
             self.assertFalse(plugin.settings.value("wfst"))
-            self.assertFalse(plugin.edit_action.isChecked())
+            self.assertFalse(plugin.login_action.isChecked())
             self.assertEqual(iface.options_opened, ["settings"])
         finally:
             plugin.unload()
@@ -905,7 +921,9 @@ NOT_REGISTERED = json.dumps({"success": False, "message": "fkg.d_5800_kvalitetst
 
 
 class FakeGeoFA:
-    """GeoFA's SQL API: answers per code list table; records what was asked."""
+    """GeoFA's SQL API: answers per code list table; records what was asked.
+
+    The first table name found in the URL answers, so a catch-all such as "fkg.d_" goes last."""
 
     def __init__(self, answers):
         self.answers, self.asked = answers, []
@@ -913,7 +931,8 @@ class FakeGeoFA:
     def __call__(self, url, done):
         self.asked.append(url)
         table = next(t for t in self.answers if urllib.parse.quote(t) in url)
-        done(self.answers[table], None if b'"success": true' in self.answers[table] else "Internal Server Error")
+        ok = json.loads(self.answers[table]).get("success")
+        done(self.answers[table], None if ok else "Internal Server Error")
 
 
 def _facility_layer():
@@ -921,8 +940,9 @@ def _facility_layer():
                           "&field=navn:string", "Friluftsliv faciliteter, punkter (5800)", "memory")
 
 
-class CodeListTests(unittest.TestCase):
+class CodeListTests(GeoFATestCase):
     def setUp(self):
+        super().setUp()
         QgsSettings().remove(codelists.REPORTED_KEY)
         self.dataset = types.SimpleNamespace(code_lists=(("facil_ty_k", FACILITET, True),
                                                          ("kvalitetstjekket_k", KVALITET, False)))
@@ -1026,7 +1046,7 @@ class CodeListTests(unittest.TestCase):
         layer = _facility_layer()
         renderer = layer.renderer().clone()
         layer.setCustomProperty(loader.TABLE_PROPERTY, dataset.table)
-        layer.setMapTipsEnabled(True)  # as in projects from before map tips were switched off
+        layer.setMapTipsEnabled(True)  # as in projects saved by older plugin versions
         project = types.SimpleNamespace(mapLayers=lambda: {"layer": layer})
         self.assertEqual(loader.outdated_layers(project), [(layer, dataset)])
         self.assertTrue(loader.update_form(layer, dataset))

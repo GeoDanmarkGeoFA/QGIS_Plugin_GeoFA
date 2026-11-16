@@ -6,7 +6,7 @@ the environment it was added from, and test layers are named " [TEST]", so the p
 shows which is which. Editing (WFS-T with the user's own login from QGIS's password
 store) applies to the layers from the chosen environment; the others stay read-only.
 """
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 from qgis.PyQt.QtXml import QDomDocument
 from qgis.core import (Qgis, QgsDataSourceUri, QgsExpressionContextUtils, QgsMapLayer, QgsProject, QgsSettings,
@@ -17,6 +17,7 @@ from .catalogue import RENAMED_TABLES, SYMBOLS_DIR, catalogue
 
 PRODUCTION_HOST = "https://geofa.geodanmark.dk"
 TEST_HOST = "https://geofa-test.geodanmark.dk"
+GEOFA_DOMAIN = "geodanmark.dk"  # in the source of every GeoFA layer, from any plugin version
 TABLE_PROPERTY = "geofa/table"  # set on every layer the plugin adds
 FORM_PROPERTY = "geofa/form"  # the form version the layer got (see Dataset.form_version)
 FORM_CATEGORIES = (QgsMapLayer.StyleCategory.Fields | QgsMapLayer.StyleCategory.Forms
@@ -32,6 +33,8 @@ COMMON_PARAMS = {"pagingEnabled": "true", "preferCoordinatesForWfsT11": "false",
 
 @dataclass(frozen=True)
 class Mode:
+    """The settings as they affect the layers. edit: use the stored login (editable layers, which
+    also show the objects that aren't public); test: new layers come from the test environment."""
     edit: bool
     test: bool
     username: str
@@ -82,8 +85,15 @@ def layer_source(table, mode):
 
 
 def _source_key(source):
+    """The parts of a source repoint() compares: a layer whose key differs from its target's gets
+    a new source. A change to COMMON_PARAMS alone doesn't reach layers already in projects."""
     uri = QgsDataSourceUri(source)
     return uri.param("url"), uri.param("typename"), uri.authConfigId(), uri.param("version"), uri.param("filter")
+
+
+def _typename_table(uri):
+    """The table in a GeoFA source's typename (fkg:t_5800_fac_pkt, fkg:fkg.t_5800_fac_pkt, ...)."""
+    return uri.param("typename").split(":")[-1].split(".")[-1]
 
 
 def table_of(layer):
@@ -95,9 +105,9 @@ def table_of(layer):
         return None
     # Layers added by older versions of the plugin: recognise them by their source
     uri = QgsDataSourceUri(layer.source())
-    if "geodanmark.dk" not in uri.param("url"):
+    if GEOFA_DOMAIN not in uri.param("url"):
         return None
-    name = uri.param("typename").split(":")[-1].split(".")[-1]
+    name = _typename_table(uri)
     return RENAMED_TABLES.get(name, name) if name.startswith("t_") else None
 
 
@@ -107,11 +117,12 @@ def in_test(layer):
 
 
 def host_of(layer):
-    """The GeoFA a layer comes from; its code lists are read from the same one."""
+    """The GeoFA host (production or test) a layer comes from; its code lists are read from the same one."""
     return TEST_HOST if in_test(layer) else PRODUCTION_HOST
 
 
 def geofa_layers(project=None):
+    """[(layer, table)] for the project's layers that show a dataset in the catalogue."""
     project = project or QgsProject.instance()
     return [(layer, table) for layer in project.mapLayers().values()
             if (table := table_of(layer)) and catalogue().get(table)]
@@ -124,7 +135,8 @@ def layer_name(name, mode):
 
 
 def ensure_symbol_path():
-    """The styles name their symbols by file name; QGIS finds them in the plugin's symbol folder."""
+    """Add the plugin's symbol folder to QGIS's SVG search paths: the styles name their symbols
+    by file name only."""
     settings = QgsSettings()
     paths = settings.value("svg/searchPathsForSVG", []) or []
     if isinstance(paths, str):
@@ -234,12 +246,12 @@ def target_source(layer, table, mode):
     editable only when editing is on and the layer is from the chosen environment, and
     with the chosen municipality filter."""
     test = in_test(layer)
-    return layer_source(table, Mode(edit=mode.edit and test == mode.test, test=test, username=mode.username,
-                                    kommune=mode.kommune))
+    return layer_source(table, replace(mode, edit=mode.edit and test == mode.test, test=test))
 
 
 def repoint(mode, project=None):
-    """Make the project's GeoFA layers read-only or editable to match the mode.
+    """Give the project's GeoFA layers the sources the mode asks for: read-only or editable, the
+    username and the municipality filter.
 
     Layers never move between production and test, and keep their names.
     Returns (number of layers changed, names of layers being edited, names of layers that
@@ -259,6 +271,8 @@ def repoint(mode, project=None):
             editing.append(layer.name())
             continue
         name = layer.name()
+        # Layers from older versions are recognised only by their source: tag them, so the new
+        # layer (which gets the old one's properties) is recognised by its table
         layer.setCustomProperty(TABLE_PROPERTY, table)
         if replace_layer(project, layer, source, name):
             changed += 1
@@ -286,8 +300,8 @@ def update_form(layer, dataset):
     """Give a layer the plugin's current fields and form: aliases, widgets, defaults, tabs, and
     map tips switched off.
 
-    Its symbology, labels and filter stay as they are. The dropdowns are then filled from
-    GeoFA (codelists.py). Returns whether the style could be read.
+    Its symbology, labels and filter stay as they are; the caller then fills the dropdowns from
+    GeoFA (CodeLists.fill). Returns whether the style could be read.
     """
     _, ok = layer.loadNamedStyle(dataset.style_path, categories=FORM_CATEGORIES)
     if ok:
@@ -296,7 +310,7 @@ def update_form(layer, dataset):
 
 
 def outdated_layers(project=None):
-    """GeoFA layers whose form is older than the plugin's (or from 0.36): [(layer, dataset)]."""
+    """GeoFA layers whose form differs from the plugin's (every layer from 0.36 among them): [(layer, dataset)]."""
     return [(layer, dataset) for layer, table in geofa_layers(project)
             if layer.customProperty(FORM_PROPERTY) != (dataset := catalogue().get(table)).form_version]
 
@@ -336,9 +350,9 @@ def fix_renamed_tables(project=None):
             continue
         uri = QgsDataSourceUri(layer.source())
         typename = uri.param("typename")
-        old = typename.split(":")[-1].split(".")[-1]
-        if "geodanmark.dk" in uri.param("url") and old in RENAMED_TABLES:
-            uri.removeParam("typename")
+        old = _typename_table(uri)
+        if GEOFA_DOMAIN in uri.param("url") and old in RENAMED_TABLES:
+            uri.removeParam("typename")  # setParam would add a second typename, not replace it
             uri.setParam("typename", typename.replace(old, RENAMED_TABLES[old]))
             layer.setCustomProperty(TABLE_PROPERTY, RENAMED_TABLES[old])
             if replace_layer(project, layer, uri.uri(False), layer.name()):

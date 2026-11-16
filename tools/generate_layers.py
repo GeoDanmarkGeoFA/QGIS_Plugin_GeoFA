@@ -1,9 +1,10 @@
 """Generate the plugin's layer catalogue, QML styles and symbols from the GeoFA spec and the webmap's styling.
 
-Run with QGIS 3.44 (oldest supported line) so the QMLs load in QGIS 3.34+ and QGIS 4:
+Run with QGIS 3.44 LTR, the oldest QGIS the tests run on, so the QMLs load in QGIS 3.34+ and QGIS 4:
     python-qgis-ltr.bat tools/generate_layers.py [--only t_5800_fac_pkt,t_5710_born_skole_dis]
 
-Inputs are cached by fetch_sources.py in dev/spec/. Outputs:
+Inputs live in dev/spec/: clones of GeoFA's Database and Grafik repositories, and the files
+tools/fetch_sources.py writes (see the readme). Outputs:
     geofa_plugin/layers/catalogue.json        groups and datasets, in spec order, with where each
                                               field's code list is in GeoFA and a form version
     geofa_plugin/layers/styles/<table>.qml     symbology, labels, edit form, constraints (no code
@@ -12,11 +13,11 @@ Inputs are cached by fetch_sources.py in dev/spec/. Outputs:
     dev/reports/difference_report.md           spec vs webmap vs production WFS
 """
 import argparse
+import functools
 import json
 import os
 import re
 import shutil
-import subprocess
 import sys
 from pathlib import Path
 
@@ -28,6 +29,7 @@ import geofa_spec as spec  # noqa: E402
 
 sys.path.insert(0, str(spec.REPO))
 from geofa_plugin.catalogue import form_fingerprint  # noqa: E402  (the same fingerprint the plugin checks)
+from geofa_plugin.htmlfields import HTML_FIELDS  # noqa: E402
 
 from qgis.core import (  # noqa: E402
     Qgis, QgsApplication, QgsAttributeEditorContainer, QgsAttributeEditorField, QgsCategorizedSymbolRenderer,
@@ -43,8 +45,7 @@ from qgis.PyQt.QtGui import QColor, QFont  # noqa: E402
 
 PIXELS = Qgis.RenderUnit.Pixels
 NULL_VALUE = "{2839923C-8B7D-419E-B84B-CA2FE9B80EC7}"  # how QGIS's ValueMap stores "no value"
-HTML_FIELDS = ("lang_beskr", "uk_l_beskr", "d_l_beskr")  # as in geofa_plugin/htmlfields.py
-PHOTO_FIELD = re.compile(r"^(geofafoto\d*|gpx_link)$")  # links to GeoFA's photos and GPX files
+GENERAL_FIELDS_THEME = "t_5800_fac_pkt"  # any published theme has the general fields and their code lists
 # QGIS's attachment widget as a link only: the file name, opened in the browser on a click
 PHOTO_LINK = {"DocumentViewer": 0, "DocumentViewerHeight": 0, "DocumentViewerWidth": 0, "FileWidget": True,
               "FileWidgetButton": False, "FullUrl": False, "RelativeStorage": 0, "StorageMode": 0, "UseLink": True}
@@ -66,7 +67,8 @@ GRAFIK_URL = re.compile(r"github(?:usercontent)?\.com/GeoDanmarkGeoFA/Grafik/(?:
 # ---------------------------------------------------------------- fields
 
 def spec_fields(dataset):
-    """Field list for a dataset: name, type, kind (system/general/theme/derived/free), required, codes."""
+    """(fields, spec meta or None) for a dataset. Each field has name, qtype, kind
+    (system/general/theme/derived/free), required, codes and source."""
     table = dataset["table"]
     meta = spec.spec_meta(table) if dataset["status"] == "published" else None
     describe = spec.read_json(spec.SPEC / "prod_describe" / f"{table}.json")
@@ -85,10 +87,9 @@ def spec_fields(dataset):
             fields.append({
                 "name": name, "qtype": SPEC_TYPES.get(f.get("_type"), QMetaType.Type.QString),
                 "kind": classify(name, in_theme=name in theme_columns),
-                "required": column is not None and not nullable and name not in ("noegle", "note", "systid_til"),
+                "required": column is not None and not nullable,
                 "codes": [(str(r.get("value")), str(r.get("alias"))) for r in restriction] if restriction else None,
                 "source": code_source(f.get("properties")),
-                "desc": f.get("desc") or "",
             })
         return fields, meta
     # Pending: production WFS fields, code relations from the webmap, general code lists from a published theme
@@ -110,8 +111,7 @@ def spec_fields(dataset):
                 codes = [(str(r["value"]), str(r["alias"])) for r in spec.read_json(cached)]
         kind = "derived" if name in derived else classify(name, in_theme=True)
         fields.append({"name": name, "qtype": XSD_TYPES.get(d["type"].split(":")[-1], QMetaType.Type.QString),
-                       "kind": kind, "required": False, "codes": codes, "source": source, "desc": "",
-                       "relation": rel})
+                       "kind": kind, "required": False, "codes": codes, "source": source})
     return fields, None
 
 
@@ -126,9 +126,10 @@ def code_source(props):
     return [props["_rel"], props["_value"], props["_text"], props.get("_where") or ""]
 
 
+@functools.cache
 def general_code_sources():
     """Code list sources of the general fields (cvr_kode, statuskode, …), from a published theme."""
-    meta = spec.spec_meta("t_5800_fac_pkt")
+    meta = spec.spec_meta(GENERAL_FIELDS_THEME)
     return {name: code_source(meta["fields"][name].get("properties")) for name in spec.GENERAL_CODE_FIELDS
             if code_source(meta["fields"][name].get("properties"))}
 
@@ -145,17 +146,12 @@ def classify(name, in_theme):
     return "theme" if in_theme else "derived"
 
 
-_general_codes = None
-
-
+@functools.cache
 def general_code_lists():
     """cvr_kode/oprindkode/statuskode/off_kode code lists, taken from a published theme."""
-    global _general_codes
-    if _general_codes is None:
-        meta = spec.spec_meta("t_5800_fac_pkt")
-        _general_codes = {name: [(str(r["value"]), str(r["alias"])) for r in meta["fields"][name]["_restriction"]]
-                          for name in spec.GENERAL_CODE_FIELDS if isinstance(meta["fields"][name].get("_restriction"), list)}
-    return _general_codes
+    meta = spec.spec_meta(GENERAL_FIELDS_THEME)
+    return {name: [(str(r["value"]), str(r["alias"])) for r in meta["fields"][name]["_restriction"]]
+            for name in spec.GENERAL_CODE_FIELDS if isinstance(meta["fields"][name].get("_restriction"), list)}
 
 
 # ---------------------------------------------------------------- styling
@@ -293,7 +289,7 @@ def overlay_for(rule, overlay, symbols_dir, used):
     angle = number(rule.get("overlayangle"), 0)
     width = number(rule.get("overlaywidth"), 1)
     if overlay.startswith("hatch") or overlay == "dashed-line-short":
-        # Compared with the webmap's images: its hatch angle is 135° off QGIS's (135 = horizontal, 45 = vertical)
+        # QGIS's line angle is the webmap's hatch angle + 45° (mod 180): webmap 135 is horizontal, 45 vertical
         hatch = QgsLinePatternFillSymbolLayer()
         hatch.setLineAngle((angle + 45) % 180)
         # "dashed-line-short" comes out as solid stripes, much further apart than its size (Nationalpark: 20 px)
@@ -344,7 +340,7 @@ CATEGORY_EXPR = re.compile(r"^'\[(\w+)\]'\s*=\s*'(.*)'$")
 def renderer_for(webmap_layer, geometry, fields, symbols_dir, used):
     rules = spec.parse_loose((webmap_layer or {}).get("class")) or []
     if not rules:
-        sym = QgsSymbol_default(geometry)
+        sym = default_symbol(geometry)
         return QgsSingleSymbolRenderer(sym), "default (no webmap style)"
     parsed = [(CATEGORY_EXPR.match((r.get("expression") or "").strip()), r) for r in rules]
     # A webmap class without an expression draws everything the other classes don't
@@ -472,7 +468,7 @@ def grafik_svg_for_code(theme_code, code, sibling_url):
     return None
 
 
-def QgsSymbol_default(geometry):
+def default_symbol(geometry):
     if geometry == "MultiPoint":
         return QgsMarkerSymbol.createSimple({"name": "circle", "color": "#808080", "size": "2"})
     if geometry == "MultiLineString":
@@ -569,22 +565,28 @@ def alias_for(table, name, names, text_of):
 
 # ---------------------------------------------------------------- forms
 
+def required_input(name, option):
+    """A file fetch_sources.py writes in dev/spec/; the run stops if it's missing, rather than quietly
+    leaving something out of every style."""
+    path = spec.SPEC / name
+    if not path.exists():
+        raise SystemExit(f"{path} is missing: run tools/fetch_sources.py {option} first")
+    return spec.read_json(path)
+
+
 def authority_default():
     """cvr_kode default: the municipality's own CVR when the login is kom###, e.g. kom101 -> Københavns Kommune.
 
-    Replaces the old forms' filtered dropdown, which needed a code table loaded at runtime.
+    A default expression rather than a filtered dropdown, so the form needs no code table at runtime.
     """
-    path = spec.SPEC / "authorities.json"
-    if not path.exists():
-        return None
-    pairs = ", ".join(f"'{k}', '{v}'" for k, v in sorted(spec.read_json(path).items()))
+    pairs = ", ".join(f"'{k}', '{v}'" for k, v in sorted(required_input("authorities.json", "--authorities").items()))
     return f"map_get(map({pairs}), regexp_substr(@geofa_bruger_id, '^kom(\\\\d{{3}})'))"
 
 
-# Field -> (expression, also on update). The plugin sets @geofa_bruger_id to the GeoFA username.
-DEFAULTS = {"bruger_id": ("@geofa_bruger_id", True)}
-if authority_default():
-    DEFAULTS["cvr_kode"] = (authority_default(), False)
+@functools.cache
+def defaults():
+    """Field -> (expression, also on update). The plugin sets @geofa_bruger_id to the GeoFA username."""
+    return {"bruger_id": ("@geofa_bruger_id", True), "cvr_kode": (authority_default(), False)}
 
 
 def has_link(field):
@@ -597,10 +599,9 @@ def has_link(field):
 def theme_defaults(table):
     """temakode and temanavn for a new object, as GeoFA's view fills them in once it's saved:
     the number in the table name and the dataset's own table (e.g. 5800 and 't_5800_fac_pkt_t').
-    Checked against every dataset with public objects in production. A new object would otherwise
-    show 0 and NULL until saved. Not on update: they never change for an object."""
-    code = re.match(r"t_(\d+)_", table).group(1)
-    return {"temakode": (code, False), "temanavn": (f"'{table}_t'", False)}
+    This matches what GeoFA stores for every dataset with public objects in production. A new
+    object would otherwise show 0 and NULL until saved. Not on update: they never change for an object."""
+    return {"temakode": (dataset_code(table), False), "temanavn": (f"'{table}_t'", False)}
 
 
 def number_range(codes):
@@ -630,7 +631,7 @@ def apply_fields_and_form(layer, dataset, fields, text_of, used):
             # As in the old plugin layers: "Facilitettype (facil_ty_k)"
             layer.setFieldAlias(idx, f"{alias} ({f['name']})")
         else:
-            used.setdefault("fields_without_alias", set()).add(f"{dataset['table'][2:6]}:{f['name']}")
+            used.setdefault("fields_without_alias", set()).add(f"{dataset['code']}:{f['name']}")
         editable = f["kind"] in ("general", "theme", "free")
         numbers = number_range(f["codes"])
         if f.get("source"):
@@ -644,7 +645,7 @@ def apply_fields_and_form(layer, dataset, fields, text_of, used):
         elif f["codes"]:
             options = [{"<ingen værdi>": NULL_VALUE}] + [{alias: value} for value, alias in f["codes"]]
             layer.setEditorWidgetSetup(idx, QgsEditorWidgetSetup("ValueMap", {"map": options}))
-            used.setdefault("lists_without_source", set()).add(f"{dataset['table'][2:6]}:{f['name']}")
+            used.setdefault("lists_without_source", set()).add(f"{dataset['code']}:{f['name']}")
         elif f["kind"] == "photo":
             # Links to GeoFA's photos (and GPX files): a link that opens in the browser
             layer.setEditorWidgetSetup(idx, QgsEditorWidgetSetup("ExternalResource", PHOTO_LINK))
@@ -656,15 +657,19 @@ def apply_fields_and_form(layer, dataset, fields, text_of, used):
             layer.setEditorWidgetSetup(idx, QgsEditorWidgetSetup("DateTime", {
                 "display_format": "yyyy-MM-dd", "field_format": "yyyy-MM-dd", "calendar_popup": True, "allow_null": True}))
         elif f["qtype"] == QMetaType.Type.QDateTime:
+            # GeoFA's editing endpoint sends date-times as text in PostgreSQL's format
+            # (2025-10-07 00:00:29.814198+00), which only the ISO reading understands; the read-only
+            # endpoint sends real date-times, for which the format doesn't matter
             layer.setEditorWidgetSetup(idx, QgsEditorWidgetSetup("DateTime", {
-                "display_format": "yyyy-MM-dd HH:mm:ss", "field_format": "yyyy-MM-ddTHH:mm:ss", "calendar_popup": True, "allow_null": True}))
+                "display_format": "yyyy-MM-dd HH:mm:ss", "field_format": "yyyy-MM-ddTHH:mm:ss", "field_iso_format": True,
+                "calendar_popup": True, "allow_null": True}))
         elif f["qtype"] == QMetaType.Type.Bool:
             layer.setEditorWidgetSetup(idx, QgsEditorWidgetSetup("CheckBox", {}))
         if f["required"] and editable:
             layer.setFieldConstraint(idx, QgsFieldConstraints.Constraint.ConstraintNotNull,
                                      QgsFieldConstraints.ConstraintStrength.ConstraintStrengthSoft)
         config.setReadOnly(idx, not editable)
-        default = DEFAULTS.get(f["name"]) or theme_defaults(dataset["table"]).get(f["name"])
+        default = defaults().get(f["name"]) or theme_defaults(dataset["table"]).get(f["name"])
         if default:
             layer.setDefaultValueDefinition(idx, QgsDefaultValue(*default))
         if f["kind"] == "photo":
@@ -681,10 +686,7 @@ def apply_fields_and_form(layer, dataset, fields, text_of, used):
         if not tabs[tab_name] and tab_name == photo_tab_name:
             continue
         container = QgsAttributeEditorContainer(tab_name, root)
-        if hasattr(container, "setType"):
-            container.setType(Qgis.AttributeEditorContainerType.Tab)
-        else:
-            container.setIsGroupBox(False)
+        container.setType(Qgis.AttributeEditorContainerType.Tab)
         for name, idx in tabs[tab_name]:
             if tab_name == photo_tab_name:
                 # Each photo or GPX link only when there is one: QGIS can hide a container but not a
@@ -711,10 +713,10 @@ def apply_fields_and_form(layer, dataset, fields, text_of, used):
 
 # ---------------------------------------------------------------- main
 
+@functools.cache
 def photo_layers():
     """{"environments": {environment: [table, ...]}, "fields": {table: [photo field, ...]}} (fetch_sources.py --photo-layers)."""
-    path = spec.SPEC / "photo_layers.json"
-    return spec.read_json(path) if path.exists() else {"environments": {}, "fields": {}}
+    return required_input("photo_layers.json", "--photo-layers")
 
 
 def add_photo_fields(table, fields):
@@ -723,9 +725,9 @@ def add_photo_fields(table, fields):
     for name in photo_layers()["fields"].get(table, []):
         if name not in names:
             fields.append({"name": name, "qtype": QMetaType.Type.QString, "kind": "photo", "required": False,
-                           "codes": None, "source": None, "desc": ""})
+                           "codes": None, "source": None})
     for f in fields:
-        if PHOTO_FIELD.match(f["name"]):
+        if spec.PHOTO_FIELD.match(f["name"]):
             f["kind"], f["source"], f["codes"] = "photo", None, None
 
 
@@ -751,17 +753,23 @@ def generate(dataset, webmap, symbols_dir, styles_dir, used):
     if not ok:
         raise RuntimeError(f"{dataset['table']}: {message}")
     return {"geometry": geometry, "fields": len(fields), "tabs": tabs, "style": style_note,
-            "dropdowns": sum(1 for f in fields if f.get("source")), "fields_list": fields,
+            "dropdowns": sum(1 for f in fields if f.get("source")),
             # field: [code list table, value column, text column, filter, required]
             "code_lists": {f["name"]: f["source"] + [f["required"]] for f in fields if f.get("source")}}
 
 
 def spec_commit():
-    try:
-        return subprocess.run(["git", "-C", str(spec.SPEC / "Database"), "rev-parse", "--short", "HEAD"],
-                              capture_output=True, text=True, check=True).stdout.strip()
-    except Exception:  # noqa: BLE001
-        return "unknown"
+    """The checked-out commit of the Database clone, read from its .git folder: git itself isn't
+    on the PATH in OSGeo4W's shell."""
+    git = spec.SPEC / "Database" / ".git"
+    head = (git / "HEAD").read_text(encoding="utf-8").strip()
+    if not head.startswith("ref: "):
+        return head[:7]  # a detached HEAD holds the commit itself
+    ref = head[5:]
+    if (git / ref).exists():
+        return (git / ref).read_text(encoding="utf-8").strip()[:7]
+    packed = (git / "packed-refs").read_text(encoding="utf-8") if (git / "packed-refs").exists() else ""
+    return next((line.split()[0][:7] for line in packed.splitlines() if line.endswith(" " + ref)), "unknown")
 
 
 def main():
@@ -770,6 +778,9 @@ def main():
     args = parser.parse_args()
     only = set(args.only.split(",")) if args.only else None
 
+    for clone in (spec.SPEC / "Database", spec.GRAFIK):
+        if not clone.exists():  # without Grafik every symbol would quietly become a plain circle
+            raise SystemExit(f"{clone} is missing: clone it as the readme describes")
     app = QgsApplication([], False)
     app.initQgis()
     styles_dir, symbols_dir = spec.OUT / "styles", spec.OUT / "symbols"
@@ -809,7 +820,7 @@ def main():
         groups[-1]["datasets"].append({
             "table": d["table"], "code": d["code"], "title": d["title"],
             "geometry": GEOMETRY.get(str((webmap.get(d["table"]) or {}).get("type") or "").upper()),
-            "style": f"styles/{d['table']}.qml", "spec": d["status"],
+            "style": f"styles/{d['table']}.qml", "status": d["status"],
             "spec_page": f"https://confluence.kds.dk/pages/viewpage.action?pageId={d['spec_page_id']}",
             "purpose": (props.get("formaal") or "").strip(),
             "form_version": form_fingerprint(spec.OUT / "styles" / f"{d['table']}.qml"),
@@ -817,8 +828,7 @@ def main():
             "photo_environments": [environment for environment, tables in photo_layers()["environments"].items()
                                    if d["table"] in tables],
         })
-    catalogue = {"source": {"spec_commit": spec_commit(), "webmap": "geofa-kort.geodanmark.dk (tag:udgivet)"},
-                 "groups": groups}
+    catalogue = {"source": {"spec_commit": spec_commit(), "webmap": spec.WEBMAP_META}, "groups": groups}
     (spec.OUT / "catalogue.json").write_text(json.dumps(catalogue, ensure_ascii=False, indent=1), encoding="utf-8")
     write_report(datasets, webmap, prod, counts, results, used)
     app.exitQgis()
@@ -845,9 +855,7 @@ def write_report(datasets, webmap, prod, counts, results, used):
     lines += ["", "## Other findings", "",
               "- Datasets with 0 objects may only lack *public* objects: counts are what an anonymous user sees.",
               "- Pending datasets (spec page says 'Kommer snart'): fields come from the production WFS; their own code lists "
-              "are not readable anonymously, so those fields have no dropdowns yet.",
-              "- The released plugin (0.36) loads 5608/5609 as t_5608_cykelknudepunkter / t_5609_cykelknudepunktsstraekninger, "
-              "which no longer exist in production (now cykelkrydspunkter / cykelkrydspunktsstraekninger)."]
+              "are not readable anonymously, so those fields have no dropdowns yet."]
     for key in ("fields_without_alias", "missing_svgs", "unhandled_overlays", "unhandled_rules", "webmap_categories_not_in_spec",
                 "webmap_spelling_differs", "spec_codes_styled_from_grafik", "spec_codes_without_style"):
         if used.get(key):

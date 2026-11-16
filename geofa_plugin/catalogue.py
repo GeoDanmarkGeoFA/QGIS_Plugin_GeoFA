@@ -12,6 +12,8 @@ import os
 from dataclasses import dataclass, field
 from xml.etree import ElementTree
 
+from qgis.core import QgsApplication, QgsIconUtils, QgsWkbTypes
+
 from .codelists import Source
 
 # The parts of a QML that make up the fields, the form and the map tip (QGIS's Fields, Forms and
@@ -45,6 +47,8 @@ RENAMED_TABLES = {
 
 @dataclass(frozen=True)
 class Dataset:
+    """One GeoFA dataset: its table (t_5800_fac_pkt), theme code ("5800"), title, group, style,
+    and where its fields' code lists are."""
     table: str
     code: str
     title: str
@@ -69,13 +73,12 @@ class Dataset:
 
     def icon(self):
         """QGIS's icon for the layer's geometry type (point, line, polygon), as in the layer panel."""
-        from qgis.core import QgsApplication, QgsIconUtils, QgsWkbTypes
         if not self.geometry:
             return QgsApplication.getThemeIcon("/mIconWfs.svg")
         return QgsIconUtils.iconForWkbType(QgsWkbTypes.parseType(self.geometry))
 
     def search_text(self):
-        """What the search in the panel and QGIS's locator bar matches: title, theme code and table."""
+        """What the panel's search matches: title, theme code and table."""
         return f"{self.title} {self.code} {self.table}".lower()
 
 
@@ -83,20 +86,18 @@ class Catalogue:
     def __init__(self, path=None):
         with open(path or os.path.join(LAYERS_DIR, "catalogue.json"), encoding="utf-8") as f:
             data = json.load(f)
-        self.source = data.get("source", {})
         # [(group name, [Dataset, ...]), ...] in the spec's order
-        self.groups = [
-            (group["name"], [Dataset(table=d["table"], code=d.get("code") or "", title=d["title"],
-                                     group=group["name"], style=d["style"], status=d.get("spec") or "published",
-                                     spec_page=d.get("spec_page") or "", purpose=d.get("purpose") or "",
-                                     form_version=d.get("form_version") or "",
-                                     code_lists=self._code_lists(d.get("code_lists") or {}),
-                                     geometry=d.get("geometry") or "",
-                                     photo_environments=tuple(d.get("photo_environments") or ()))
-                             for d in group["datasets"] if d.get("table")])
-            for group in data["groups"]
-        ]
+        self.groups = [(group["name"], [self._dataset(group["name"], d) for d in group["datasets"] if d.get("table")])
+                       for group in data["groups"]]
         self._by_table = {d.table: d for _, datasets in self.groups for d in datasets}
+
+    @classmethod
+    def _dataset(cls, group, d):
+        return Dataset(table=d["table"], code=d.get("code") or "", title=d["title"], group=group, style=d["style"],
+                       status=d.get("status") or "published", spec_page=d.get("spec_page") or "",
+                       purpose=d.get("purpose") or "", form_version=d.get("form_version") or "",
+                       code_lists=cls._code_lists(d.get("code_lists") or {}), geometry=d.get("geometry") or "",
+                       photo_environments=tuple(d.get("photo_environments") or ()))
 
     @staticmethod
     def _code_lists(entries):

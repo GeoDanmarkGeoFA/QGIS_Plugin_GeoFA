@@ -3,10 +3,11 @@
     Runs the GeoFA plugin's end-to-end checks in real QGIS windows (QGIS 3.44 LTR and QGIS 4).
 
 .DESCRIPTION
-    Copies geofa_plugin/ into a fresh QGIS profile under dev/qgis-profile (not committed), starts
-    QGIS with tests/e2e/gui_smoke.py and then with tests/e2e/exit_check.py, and reports each check.
-    GeoFA's production and test environments are only read, anonymously: no login is used or stored.
-    Checks marked (testmiljo) are warnings only: GeoFA's test environment isn't always available.
+    Installs the plugin's release files (tools/build_zip.py --folder, or the given ZIP) in a fresh
+    QGIS profile under dev/qgis-profile (not committed), starts QGIS with tests/e2e/gui_smoke.py and
+    then with tests/e2e/exit_check.py, and reports each check. GeoFA's production and test
+    environments are only read, anonymously: no login is used or stored. Checks whose name ends in
+    "(testmiljø)" are warnings only: GeoFA's test environment isn't always available.
 
 .EXAMPLE
     powershell -ExecutionPolicy Bypass -File tests\e2e\run_e2e.ps1
@@ -15,7 +16,7 @@
 #>
 param(
     [ValidateSet("ltr", "latest")] [string[]] $Versions = @("ltr", "latest"),
-    [string] $Zip = "",  # install the plugin from this release ZIP instead of from geofa_plugin/
+    [string] $Zip = "",  # install the plugin from this release ZIP instead of from geofa_plugin/'s release files
     [string] $OSGeo4W = $(if (Test-Path "$env:LOCALAPPDATA\Programs\OSGeo4W") { "$env:LOCALAPPDATA\Programs\OSGeo4W" } else { "C:\OSGeo4W" }),
     [int] $TimeoutSeconds = 180
 )
@@ -26,14 +27,15 @@ $profileDir = Join-Path $profiles "profiles\e2e"
 $out = Join-Path $repo "dev\reports\e2e"
 $launchers = @{ ltr = @("qgis-ltr.bat", "qgis-ltr-bin"); latest = @("qgis.bat", "qgis-bin") }
 
-# A fresh profile with only this plugin, switched on (the same files as the release ZIP)
+# A fresh profile with only this plugin, switched on
 if (Test-Path $profileDir) { Remove-Item -Recurse -Force $profileDir }
 New-Item -ItemType Directory -Force (Join-Path $profileDir "QGIS"), $out | Out-Null
 if ($Zip) {
     Expand-Archive -Path (Resolve-Path $Zip) -DestinationPath (Join-Path $profileDir "python\plugins") -Force
     Write-Host "Plugin installed from $Zip"
 } else {
-    robocopy (Join-Path $repo "geofa_plugin") (Join-Path $profileDir "python\plugins\geofa") /E /XD test Vejledning __pycache__ /XF .env /NFL /NDL /NJH /NJS /NP | Out-Null
+    & (Join-Path $OSGeo4W "bin\python-qgis-ltr.bat") (Join-Path $repo "tools\build_zip.py") --folder (Join-Path $profileDir "python\plugins") | Out-Null
+    if ($LASTEXITCODE) { Write-Host "Could not install the plugin's release files" -ForegroundColor Red; exit 1 }
 }
 foreach ($ini in "QGIS3.ini", "QGIS4.ini") {
     [IO.File]::WriteAllText((Join-Path $profileDir "QGIS\$ini"), "[PythonPlugins]`r`ngeofa=true`r`n")
@@ -88,7 +90,7 @@ foreach ($version in $Versions) {
 
     Write-Host "== QGIS $version`: closing QGIS with a GeoFA layer loaded"
     $run = Invoke-Qgis $version (Join-Path $PSScriptRoot "exit_check.py")
-    Report ($run.exited -and -not $run.crash -and $run.seconds -lt 90) "QGIS closed in $($run.seconds) s" `
+    Report ($run.exited -and -not $run.crash -and $run.seconds -lt 90) "QGIS started, loaded a layer and closed in $($run.seconds) s" `
         "exited=$($run.exited) crash=$($run.crash)"
 }
 

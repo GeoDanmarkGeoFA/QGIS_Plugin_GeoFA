@@ -2,9 +2,9 @@
 """GeoFA's settings: login, editing, test environment and the municipality filter.
 
 The same form is shown in two places: a small window (GeoFA › Indstillinger … and ⚙ in the
-panel) and a GeoFA page in QGIS's Options (Indstillinger › Indstillinger), like Danmarks
-Miljøportal's plugin. The password is never a setting: it goes into QGIS's password store
-(credentials.py), and the field never shows a stored password again.
+panel) and a GeoFA page in QGIS's Options (Indstillinger › Indstillinger). The password is
+never a setting: it goes into QGIS's password store (credentials.py), and the field never
+shows a stored password again.
 """
 import os
 
@@ -27,7 +27,7 @@ GEOPARTNER_URL = "https://geopartner.dk"
 
 
 def developer_credit():
-    """Who made the plugin, with a link that opens in the browser (as in 0.36's settings)."""
+    """Who made the plugin, with a link that opens in the browser."""
     label = QLabel(f"GeoFA-pluginet er udviklet af <a href='{GEOPARTNER_URL}'>Geopartner</a>.")
     label.setObjectName("developer_credit")
     label.setOpenExternalLinks(True)
@@ -35,11 +35,12 @@ def developer_credit():
 
 
 class SettingsForm(QWidget, SettingDialog):
-    """Username and password (QGIS's password field, with the eye), editing, the test environment
-    and the municipality filter.
+    """Username and password (QGIS's password field, with the eye), use of the login, the test
+    environment and the municipality filter.
 
-    The login widgets are named after the settings (username, wfst, testmiljo), which binds them
-    to the plugin's settings; the municipality is stored by apply() itself. apply() stores it all.
+    The username, wfst and testmiljo widgets are named after their settings, which binds them
+    through SettingDialog. apply() stores those, the municipality (its box is deliberately not
+    bound) and the password (in QGIS's password store).
     """
 
     def __init__(self, settings, parent=None):
@@ -86,27 +87,27 @@ class SettingsForm(QWidget, SettingDialog):
         area.addRow("Kun objekter i", self.municipality_box)
         layout.addLayout(area)
 
-        # Fills the login widgets from the settings; apply() writes them back
+        # Fills the bound widgets from the settings; apply() writes them back
         SettingDialog.__init__(self, settings, UpdateMode.NoUpdate)
         self.reset_password_field()
-        self.on_text_changed()
-        self.username_edit.textChanged.connect(self.on_text_changed)
-        self.password_edit.textChanged.connect(self.on_text_changed)
+        self.update_login_checkbox()
+        self.username_edit.textChanged.connect(self.update_login_checkbox)
+        self.password_edit.textChanged.connect(self.update_login_checkbox)
 
     def reset_password_field(self):
         self.password_edit.clear()
         self.password_edit.setPlaceholderText(PASSWORD_SAVED_PLACEHOLDER if credentials.has_password()
                                               else PASSWORD_PLACEHOLDER)
 
-    def on_text_changed(self):
-        # Editing needs a username and a password (typed now, or stored earlier)
+    def update_login_checkbox(self):
+        """»Brug mit login« needs a username and a password (typed now, or stored earlier)."""
         ready = bool(self.username_edit.text().strip()) and bool(
             self.password_edit.text().strip() or credentials.has_password())
         self.check_box_wfst.setEnabled(ready)
         if not ready:
             self.check_box_wfst.setChecked(False)
 
-    def save_login(self, old_username):
+    def store_login(self, old_username):
         """Store, update or forget the login in QGIS's password store."""
         username = (self.settings.value("username") or "").strip()
         new_password = self.password_edit.text()
@@ -120,7 +121,7 @@ class SettingsForm(QWidget, SettingDialog):
         if not (new_password or username_changed or legacy_pending):
             return  # stored and unchanged: no needless master password prompt
         if not credentials.save_login(username, new_password or None):
-            # Without a stored login, editing can't work
+            # Without a stored login the layers can't use it
             self.settings.set_value("wfst", False)
             self.check_box_wfst.setChecked(False)
             iface.messageBar().pushMessage(
@@ -131,9 +132,9 @@ class SettingsForm(QWidget, SettingDialog):
         old_username = self.settings.value("username")
         self.set_values_from_widgets()
         self.settings.set_value("kommune", self.municipality_box.currentData() or "")
-        self.save_login(old_username)
+        self.store_login(old_username)
         self.reset_password_field()
-        self.on_text_changed()
+        self.update_login_checkbox()
         # The plugin applies the new mode (see GeoFA.apply_settings)
         self.settings.emit_updated()
 

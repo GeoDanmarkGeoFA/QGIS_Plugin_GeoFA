@@ -295,6 +295,7 @@
             <Option type="bool" name="calendar_popup" value="true"/>
             <Option type="QString" name="display_format" value="yyyy-MM-dd HH:mm:ss"/>
             <Option type="QString" name="field_format" value="yyyy-MM-ddTHH:mm:ss"/>
+            <Option type="bool" value="true" name="field_iso_format"/>
           </Option>
         </config>
       </editWidget>
@@ -307,6 +308,7 @@
             <Option type="bool" name="calendar_popup" value="true"/>
             <Option type="QString" name="display_format" value="yyyy-MM-dd HH:mm:ss"/>
             <Option type="QString" name="field_format" value="yyyy-MM-ddTHH:mm:ss"/>
+            <Option type="bool" value="true" name="field_iso_format"/>
           </Option>
         </config>
       </editWidget>
@@ -319,6 +321,7 @@
             <Option type="bool" name="calendar_popup" value="true"/>
             <Option type="QString" name="display_format" value="yyyy-MM-dd HH:mm:ss"/>
             <Option type="QString" name="field_format" value="yyyy-MM-ddTHH:mm:ss"/>
+            <Option type="bool" value="true" name="field_iso_format"/>
           </Option>
         </config>
       </editWidget>

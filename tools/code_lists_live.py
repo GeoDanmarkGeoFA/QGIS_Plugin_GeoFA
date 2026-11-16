@@ -54,6 +54,7 @@ def main():
         if problem:
             failed.append(entry)
     out = ROOT / "dev" / "reports" / "code_lists_live.json"
+    out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(report, ensure_ascii=False, indent=1), encoding="utf-8")
     print(f"{len(used)} code lists, {len(jobs)} reads, {len(failed)} failed -> {out}")
     for entry in failed:

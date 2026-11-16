@@ -3,7 +3,8 @@
     python-qgis-ltr.bat tools/webmap_compare.py            (all datasets with objects)
     python-qgis-ltr.bat tools/webmap_compare.py t_5609_cykelkrydspunktsstraekninger,t_5800_fac_pkt
 
-Writes dev/reports/compare/sheet_NN.png (8 layers per sheet) and extents.json (cached view per table).
+Writes dev/reports/compare/sheet_NN.png (all datasets) or pick_NN.png (the datasets named), 8 layers
+per sheet, and extents.json (cached view per table).
 Read-only, anonymous production requests.
 """
 import json
@@ -17,7 +18,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "tools"))
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
-os.environ.setdefault("QT_QPA_FONTDIR", "C:/Windows/Fonts")
+os.environ.setdefault("QT_QPA_FONTDIR", "C:/Windows/Fonts")  # Windows: the offscreen platform finds no fonts otherwise
 os.environ["QGIS_CUSTOM_CONFIG_PATH"] = str(REPO / "dev" / "qgis-profile" / "check")
 
 import geofa_spec as spec  # noqa: E402
@@ -103,11 +104,8 @@ def main():
             wanted.append(table)
             if view:
                 views.setdefault(table, []).append((view[0], [float(v) for v in view[1].split(":")]))
-        datasets = [dict(d, title=f"{d['title']} – {label}", view=ext) for d in datasets if d["table"] in wanted
-                    for label, ext in views.get(d["table"], [(None, None)])]
-        for d in datasets:
-            if d["view"] is None:
-                d["title"] = d["title"].removesuffix(" – None")
+        datasets = [dict(d, title=f"{d['title']} – {label}" if label else d["title"], view=ext)
+                    for d in datasets if d["table"] in wanted for label, ext in views.get(d["table"], [(None, None)])]
     panels = []
     for d in datasets:
         table = d["table"]

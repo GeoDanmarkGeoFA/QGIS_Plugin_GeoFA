@@ -14,15 +14,15 @@ from pathlib import Path
 from xml.etree import ElementTree
 
 # QGIS, offline and in a throwaway profile, as for the other tests
-from geofa_plugin.test.test_qgis_compatibility import FakeIface  # noqa: F401 (sets up QGIS first)
+from geofa_plugin.test.test_qgis_compatibility import FakeIface  # first: it also starts QGIS for these tests
 
 from qgis.core import QgsExpression, QgsExpressionContext, QgsFeature, QgsField, QgsFields, QgsVectorLayer
 from qgis.PyQt.QtCore import QMetaType
 
 from geofa_plugin import htmlfields
 from geofa_plugin.catalogue import SYMBOLS_DIR, Catalogue, form_fingerprint
-# What the release ZIP leaves out, and the secret check, as tools/build_zip.py does it
-from tools.build_zip import RELEASE_EXCLUDES, SECRET
+# The release ZIP's files and its secret check
+from tools.build_zip import problems, release_files
 
 PLUGIN = Path(__file__).resolve().parents[1]
 
@@ -32,6 +32,19 @@ def _qgs_fields(names):
     for name in names:
         fields.append(QgsField(name, QMetaType.Type.QString))
     return fields
+
+
+def _shows(rule, field_names, values):
+    """(whether a visibility rule shows its container for an object with these text fields and
+    values, the rule's evaluation error or "")."""
+    feature = QgsFeature(_qgs_fields(field_names))
+    for name, value in values.items():
+        feature[name] = value
+    context = QgsExpressionContext()
+    context.setFeature(feature)
+    expression = QgsExpression(rule)
+    shown = bool(expression.evaluate(context))
+    return shown, expression.evalErrorString() if expression.hasEvalError() else ""
 
 
 def _fields(root):
@@ -97,11 +110,22 @@ class StyleTests(unittest.TestCase):
         self.assertGreater(required, 50)
 
     def test_new_objects_get_temakode_and_temanavn_as_geofa_fills_them(self):
-        # GeoFA's view fills them on saving: the number in the table name, and the dataset's own table
+        # The values GeoFA's view gives an object when it's saved: temakode is the number in the
+        # table name, temanavn is '<table>_t'. Set on new objects only (applyOnUpdate 0)
         for table, root in self.styles.items():
             defaults = {d.get("field"): (d.get("expression"), d.get("applyOnUpdate")) for d in root.iter("default")}
             self.assertEqual(defaults["temakode"], (re.match(r"t_(\d+)_", table).group(1), "0"), table)
             self.assertEqual(defaults["temanavn"], (f"'{table}_t'", "0"), table)
+
+    def test_date_times_are_read_as_iso(self):
+        # GeoFA's editing endpoint sends them as text in PostgreSQL's format (2025-10-07 00:00:29.814198+00)
+        found = 0
+        for table, root in self.styles.items():
+            for name, (kind, options) in _fields(root).items():
+                if kind == "DateTime" and "HH" in (options.get("field_format") or ""):
+                    found += 1
+                    self.assertEqual(options.get("field_iso_format"), "true", f"{table}.{name}")
+        self.assertGreaterEqual(found, 240)  # systid_fra, systid_til and oprettet in every dataset
 
     def test_html_descriptions_are_formatted(self):
         found = 0
@@ -131,32 +155,25 @@ class StyleTests(unittest.TestCase):
             # Shown only for objects with a photo (never while editing: the editable layers have no links).
             # The fields are read by name: some editable tables (e.g. 5607's) don't have them, and a rule
             # naming a missing field can't be evaluated, so QGIS would show the tab, empty
-            rule = QgsExpression(tab.get("visibilityExpression") or "")
+            rule = tab.get("visibilityExpression") or ""
             self.assertEqual(tab.get("visibilityExpressionEnabled"), "1", dataset.table)
-            for fields, values, shown in ((["navn"], {}, False), (photos, {}, False),
-                                          (photos, {photos[0]: "https://geofa.geodanmark.dk/foto.jpg"}, True)):
-                feature = QgsFeature(_qgs_fields(fields))
-                for name, value in values.items():
-                    feature[name] = value
-                context = QgsExpressionContext()
-                context.setFeature(feature)
-                self.assertEqual(bool(rule.evaluate(context)), shown, f"{dataset.table}: {fields} {values}")
-                self.assertFalse(rule.hasEvalError(), f"{dataset.table}: {rule.evalErrorString()}")
+            photo = {photos[0]: "https://geofa.geodanmark.dk/foto.jpg"}
+            for fields, values, shown in ((["navn"], {}, False), (photos, {}, False), (photos, photo, True)):
+                self.assertEqual(_shows(rule, fields, values), (shown, ""), f"{dataset.table}: {fields} {values}")
             # Each link in a row of its own, shown only when that field has a link, label above it
             rows = tab.findall("attributeEditorContainer")
             self.assertEqual(sorted(row.get("name") for row in rows), sorted(photos), dataset.table)
             on_top = {f.get("name") for f in root.iter("field") if f.get("labelOnTop") == "1"}
             for row in rows:
+                name = row.get("name")
                 self.assertEqual((row.get("type"), row.get("showLabel")), ("Row", "0"), dataset.table)
-                own = QgsExpression(row.get("visibilityExpression"))
-                for value, shown in (("https://geofa.geodanmark.dk/foto.jpg", True), (None, False)):
-                    feature = QgsFeature(_qgs_fields(photos))
-                    feature[row.get("name")] = value
-                    context = QgsExpressionContext()
-                    context.setFeature(feature)
-                    self.assertEqual(bool(own.evaluate(context)), shown, f"{dataset.table}.{row.get('name')}")
-                self.assertIn(row.get("name"), on_top, dataset.table)
+                rule = row.get("visibilityExpression")
+                self.assertEqual(_shows(rule, photos, {name: "https://geofa.geodanmark.dk/foto.jpg"}), (True, ""), name)
+                self.assertEqual(_shows(rule, photos, {}), (False, ""), f"{dataset.table}.{name}")
+                self.assertIn(name, on_top, dataset.table)
         self.assertTrue({"t_5800_fac_pkt", "t_5607_ladefacilitet", "t_6205_bygningsvurdering"} <= found)
+
+    def test_photo_link_versions_per_environment(self):
         environments = {d.table: d.photo_environments for d in self.datasets}
         self.assertEqual(environments["t_5800_fac_pkt"], ("production", "test"))
         self.assertEqual(environments["t_5607_ladefacilitet"], ("production",))
@@ -176,26 +193,35 @@ class StyleTests(unittest.TestCase):
                     self.assertTrue((Path(SYMBOLS_DIR) / value).exists(), f"{table}: {value}")
 
     def test_form_fingerprint_ignores_attribute_order(self):
-        folder = Path(tempfile.mkdtemp(prefix="geofa_qml_"))
-        one, two = folder / "one.qml", folder / "two.qml"
-        one.write_text('<qgis version="3.44"><aliases><alias field="navn" index="0" name="Navn (navn)"/></aliases>'
-                       '<renderer-v2 type="a"/></qgis>', encoding="utf-8")
-        two.write_text('<qgis version="4.2"><aliases><alias name="Navn (navn)" index="0" field="navn"/></aliases>'
-                       '<renderer-v2 type="b"/></qgis>', encoding="utf-8")
-        self.assertEqual(form_fingerprint(one), form_fingerprint(two))  # symbology and versions don't count
-        two.write_text('<qgis><aliases><alias field="navn" index="0" name="Facilitetnavn (navn)"/></aliases></qgis>',
-                       encoding="utf-8")
-        self.assertNotEqual(form_fingerprint(one), form_fingerprint(two))
+        with tempfile.TemporaryDirectory(prefix="geofa_qml_") as folder:
+            one, two = Path(folder) / "one.qml", Path(folder) / "two.qml"
+            one.write_text('<qgis version="3.44"><aliases><alias field="navn" index="0" name="Navn (navn)"/></aliases>'
+                           '<renderer-v2 type="a"/></qgis>', encoding="utf-8")
+            two.write_text('<qgis version="4.2"><aliases><alias name="Navn (navn)" index="0" field="navn"/></aliases>'
+                           '<renderer-v2 type="b"/></qgis>', encoding="utf-8")
+            self.assertEqual(form_fingerprint(one), form_fingerprint(two))  # symbology and versions don't count
+            two.write_text('<qgis><aliases><alias field="navn" index="0" name="Facilitetnavn (navn)"/></aliases></qgis>',
+                           encoding="utf-8")
+            self.assertNotEqual(form_fingerprint(one), form_fingerprint(two))
 
 
 class PackageTests(unittest.TestCase):
-    """The plugin as packed for plugins.qgis.org: folder geofa/ with geofa_plugin's files, minus tests etc."""
+    """The plugin as tools/build_zip.py packs it for plugins.qgis.org: a folder geofa/ with the
+    release files of geofa_plugin."""
 
     @classmethod
     def setUpClass(cls):
         cls.root = Path(tempfile.mkdtemp(prefix="geofa_package_"))
         cls.package = cls.root / "geofa"
-        shutil.copytree(PLUGIN, cls.package, ignore=shutil.ignore_patterns(*RELEASE_EXCLUDES))
+        cls.files = release_files()
+        for path in cls.files:
+            target = cls.package / path.relative_to(PLUGIN)
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(path, target)
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(cls.root, ignore_errors=True)
 
     def test_metadata_is_complete(self):
         metadata = configparser.ConfigParser(interpolation=None)
@@ -208,18 +234,14 @@ class PackageTests(unittest.TestCase):
         self.assertGreaterEqual(float(general["qgisMaximumVersion"]), 4.0)
         self.assertEqual(general.get("supportsQt6"), "True")  # QGIS 4 lists only plugins that say so
         self.assertTrue((self.package / general["icon"]).exists())
-        # Each version has a changelog entry, newest first
+        # The changelog starts with this version
         self.assertRegex(general["version"], r"^\d+\.\d+\.\d+$")
         self.assertIn(f"version {general['version']},", general["changelog"].splitlines()[0])
 
     def test_package_holds_no_tests_or_credentials(self):
         self.assertFalse((self.package / "test").exists())
-        self.assertFalse(list(self.package.rglob(".env")))
-        self.assertFalse([p for p in self.package.rglob(".*")])  # plugins.qgis.org turns down hidden files
-        for path in self.package.rglob("*"):
-            if path.suffix.lower() in (".py", ".txt", ".json", ".qml", ".md", ".ui", ".xml", ".cfg"):
-                match = SECRET.search(path.read_text(encoding="utf-8", errors="replace"))
-                self.assertIsNone(match, f"{path.relative_to(self.root)}: {match.group(1) if match else ''}")
+        self.assertFalse([p for p in self.package.rglob(".*")])  # .env among them; plugins.qgis.org turns them down
+        self.assertEqual(problems(self.files), [])  # build_zip's secret check, as before every build
 
     def test_package_loads_in_qgis(self):
         sys.path.insert(0, str(self.root))

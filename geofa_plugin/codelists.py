@@ -16,7 +16,8 @@ from qgis.PyQt.QtCore import QObject, QUrl, pyqtSignal
 from qgis.PyQt.QtNetwork import QNetworkRequest
 
 SQL_PATH = "/api/v2/sql/fkg"
-# Lists that failed and were reported; reported again only after they've worked in between
+# Lists that failed and were reported, so a broken list is reported once rather than in every
+# session. A list leaves it when it works again; forget() clears it all
 REPORTED_KEY = "GeoFA/code_list_problems"
 NULL_VALUE = "{2839923C-8B7D-419E-B84B-CA2FE9B80EC7}"  # how QGIS's ValueMap stores "no value"
 NO_VALUE = "<ingen værdi>"
@@ -74,12 +75,11 @@ def parse(data):
 
 
 def dropdown(values):
-    """The dropdown for a code list: the texts shown, the codes stored, after "<ingen værdi>".
+    """The dropdown for a code list: the texts shown, the codes stored.
 
-    Every list starts with "<ingen værdi>", so an empty field reads the same everywhere (not
-    QGIS's "(NULL)"). A field GeoFA requires is marked by its not-null constraint in the style
-    until a value is chosen (a soft one: QGIS warns but doesn't block), and GeoFA's database
-    doesn't accept it empty."""
+    Every list starts with "<ingen værdi>", so an empty field reads the same everywhere rather
+    than as QGIS's "(NULL)". Fields GeoFA requires are marked by a not-null constraint in the
+    style, not here."""
     options = [{NO_VALUE: NULL_VALUE}] + [{text: code} for code, text in values]
     return QgsEditorWidgetSetup("ValueMap", {"map": options})
 
@@ -93,10 +93,8 @@ def apply(layer, entries, lists):
     """Give the layer's coded fields their dropdowns.
 
     entries: [(field, Source, required)]; lists: {Source: [(code, text)], or None if it
-    couldn't be read}. Fields whose list couldn't be read show the codes. Returns the
-    fields that changed.
+    couldn't be read}. Fields whose list couldn't be read show the codes.
     """
-    changed = []
     fields = layer.fields()
     for field, source, _ in entries:
         index = fields.indexOf(field)
@@ -110,8 +108,6 @@ def apply(layer, entries, lists):
         if setup.type() == current.type() and setup.config() == current.config():
             continue
         layer.setEditorWidgetSetup(index, setup)
-        changed.append(field)
-    return changed
 
 
 def _present(layer, dataset):
@@ -127,14 +123,13 @@ _RUNNING = set()  # Python must keep its tasks alive while QGIS runs them
 
 
 class FetchTask(QgsTask):
-    """Reads one URL in a background thread, through QGIS (its proxy and SSL settings).
+    """Reads one URL in a background thread through QGIS's network stack (its proxy and SSL
+    settings); done(data, error) is called on the main thread when it ends.
 
-    Not on QGIS's main thread: a reply finishing there while QGIS was creating a WFS layer
-    crashed QGIS. done(data, error) is called on the main thread when the task ends.
-
-    No cookies either way: GeoFA's SQL API starts a PHP session (PHPSESSID), and in QGIS's
-    shared cookie jar it would be sent with the layers' WFS requests too. The anonymous
-    code list requests need no session.
+    It runs off the main thread because a reply handled there while QGIS is creating a WFS
+    layer can crash QGIS. Cookies are neither sent nor stored: GeoFA's SQL API starts a PHP
+    session (PHPSESSID), which in QGIS's shared cookie jar would also go out with the layers'
+    WFS requests. The anonymous code list requests need no session.
     """
 
     def __init__(self, url, done):
@@ -148,8 +143,7 @@ class FetchTask(QgsTask):
         attribute, control = QNetworkRequest.Attribute, QNetworkRequest.LoadControl
         request.setAttribute(attribute.CookieLoadControlAttribute, control.Manual)
         request.setAttribute(attribute.CookieSaveControlAttribute, control.Manual)
-        if hasattr(request, "setTransferTimeout"):
-            request.setTransferTimeout(TIMEOUT_MS)
+        request.setTransferTimeout(TIMEOUT_MS)
         blocking = QgsBlockingNetworkRequest()
         code = blocking.get(request, True, self.feedback)
         self.data = bytes(blocking.reply().content())
@@ -190,8 +184,7 @@ class CodeLists(QObject):
 
     def __init__(self, fetch=None, parent=None):
         super().__init__(parent)
-        # Looked up at call time, so a test can swap the module's network_fetch
-        self.fetch = fetch or (lambda url, done: network_fetch(url, done))
+        self.fetch = fetch or network_fetch  # fetch(url, done): tests pass a fake GeoFA
         self.lists = {}  # (host, Source) -> [(code, text)], or None when it couldn't be read
         self.reasons = {}  # (host, Source) -> why it couldn't be read
         self.waiting = {}  # (host, Source) -> [batch, ...] while its request is out
@@ -203,7 +196,7 @@ class CodeLists(QObject):
 
     def _reported(self):
         value = QgsSettings().value(REPORTED_KEY, []) or []
-        return set([value] if isinstance(value, str) else value)
+        return set([value] if isinstance(value, str) else value)  # QSettings returns a one-item list as a string
 
     def _set_reported(self, reported):
         QgsSettings().setValue(REPORTED_KEY, sorted(reported))
@@ -217,9 +210,9 @@ class CodeLists(QObject):
     def fill(self, layers):
         """Fill the dropdowns of [(layer, dataset, host)]: at once from lists already read,
         the rest when GeoFA answers."""
-        batch = {"layers": [(layer, _present(layer, dataset), host) for layer, dataset, host in layers], "pending": set()}
-        keys = {(host, source) for _, entries, host in batch["layers"] for _, source, _ in entries}
-        batch["pending"] = {key for key in keys if key not in self.lists}
+        present = [(layer, _present(layer, dataset), host) for layer, dataset, host in layers]
+        keys = {(host, source) for _, entries, host in present for _, source, _ in entries}
+        batch = {"layers": present, "pending": {key for key in keys if key not in self.lists}}
         if not batch["pending"]:
             self._finish(batch)
             return

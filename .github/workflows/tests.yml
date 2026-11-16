@@ -1,4 +1,4 @@
-# The plugin's offline tests, in QGIS's own Docker images for the oldest and newest supported lines.
+# The plugin's offline tests, in QGIS's own Docker images: 3.44 LTR and the newest release (4.2).
 # They don't contact GeoFA (the end-to-end checks against GeoFA are run by hand: tests/e2e/run_e2e.ps1).
 name: Tests
 

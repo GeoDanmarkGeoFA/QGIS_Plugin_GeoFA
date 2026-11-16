@@ -11,7 +11,9 @@ from qgis.core import QgsEditorWidgetSetup
 
 HTML_FIELDS = ("lang_beskr", "uk_l_beskr", "d_l_beskr")
 OWN_WIDGETS = ("TextEdit", "")  # any other widget is the user's own choice and is left alone
-_FOLLOWED = set()  # ids of layers whose editing is followed
+# Set on a layer object once its editing is followed. Not a set of layer ids: QGIS gives a layer
+# its saved id again when a project is reopened, and the new layer object must be followed too
+FOLLOWED_PROPERTY = "geofa_html_followed"
 
 
 def setup(html):
@@ -36,14 +38,10 @@ def show(layer, html):
 
 def follow(layer):
     """Switch the layer's HTML fields as it goes in and out of editing. Returns whether it has any."""
-    try:
-        fields = layer.fields()
-    except AttributeError:  # not a vector layer
+    if not any(layer.fields().indexOf(name) >= 0 for name in HTML_FIELDS):
         return False
-    if not any(fields.indexOf(name) >= 0 for name in HTML_FIELDS):
-        return False
-    if layer.id() not in _FOLLOWED:
-        _FOLLOWED.add(layer.id())
+    if not layer.property(FOLLOWED_PROPERTY):
+        layer.setProperty(FOLLOWED_PROPERTY, True)
         layer.editingStarted.connect(functools.partial(show, layer, False))
         layer.editingStopped.connect(functools.partial(show, layer, True))
     show(layer, not layer.isEditable())

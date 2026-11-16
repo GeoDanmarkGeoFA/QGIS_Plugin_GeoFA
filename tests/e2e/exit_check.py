@@ -1,7 +1,7 @@
 """Open QGIS with the plugin, its panel and a GeoFA layer, then close it as a user would.
 
-Started by run_e2e.ps1 (QGIS runs it via --code); the script times how long QGIS takes to go
-away. Logs to exit_check_<QGIS version>.log in the folder in GEOFA_E2E_OUT.
+Started by run_e2e.ps1 (QGIS runs it via --code), which checks that QGIS exits without a crash
+within 90 s of being started. Logs to exit_check_<QGIS version>.log in the folder in GEOFA_E2E_OUT.
 """
 import os
 from pathlib import Path
