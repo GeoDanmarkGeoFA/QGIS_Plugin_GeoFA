@@ -5,7 +5,8 @@
 .DESCRIPTION
     Installs the plugin's release files (tools/build_zip.py --folder, or the given ZIP) in a fresh
     QGIS profile under dev/qgis-profile (not committed), starts QGIS with tests/e2e/gui_smoke.py and
-    then with tests/e2e/exit_check.py, and reports each check. GeoFA's production and test
+    then with tests/e2e/exit_check.py, and reports each check. Meanwhile tools/layers_live.py reads
+    every layer in the catalogue from GeoFA, and its results are reported last. GeoFA's production and test
     environments are only read, anonymously: no login is used or stored. Checks whose name ends in
     "(testmiljø)" are warnings only: GeoFA's test environment isn't always available.
 
@@ -40,6 +41,15 @@ if ($Zip) {
 foreach ($ini in "QGIS3.ini", "QGIS4.ini") {
     [IO.File]::WriteAllText((Join-Path $profileDir "QGIS\$ini"), "[PythonPlugins]`r`ngeofa=true`r`n")
 }
+
+# Every layer in the catalogue, read from GeoFA without a login (tools/layers_live.py). It takes
+# about ten minutes, so it runs while QGIS is tried below
+$reports = Join-Path $repo "dev\reports"
+$layersReport = Join-Path $reports "layers_live.json"
+Remove-Item $layersReport -ErrorAction SilentlyContinue
+$layersCheck = Start-Process -FilePath (Join-Path $OSGeo4W "bin\python-qgis-ltr.bat") -PassThru -WindowStyle Hidden `
+    -ArgumentList "`"$(Join-Path $repo 'tools\layers_live.py')`" both" `
+    -RedirectStandardOutput (Join-Path $reports "layers_live.log") -RedirectStandardError (Join-Path $reports "layers_live_errors.log")
 
 function Invoke-Qgis([string] $version, [string] $script) {
     $bat, $exe = $launchers[$version]
@@ -92,6 +102,22 @@ foreach ($version in $Versions) {
     $run = Invoke-Qgis $version (Join-Path $PSScriptRoot "exit_check.py")
     Report ($run.exited -and -not $run.crash -and $run.seconds -lt 90) "QGIS started, loaded a layer and closed in $($run.seconds) s" `
         "exited=$($run.exited) crash=$($run.crash)"
+}
+
+Write-Host "== GeoFA: every layer in the catalogue, read without a login"
+$layersCheck.WaitForExit()
+if (Test-Path $layersReport) {
+    $layers = Get-Content $layersReport -Raw -Encoding utf8 | ConvertFrom-Json
+    foreach ($environment in "production", "test") {
+        # "testmiljø" (the file has no BOM, so Windows PowerShell would misread a literal "ø")
+        $suffix = if ($environment -eq "test") { " (testmilj$([char]0xF8))" } else { "" }
+        $read = @($layers | Where-Object environment -eq $environment)
+        $problems = @($read | Where-Object problem)
+        Report ($read.Count -gt 0 -and -not $problems) "$($read.Count) layers read from GeoFA$suffix" "$($problems.Count) failed" ($environment -eq "test")
+        foreach ($entry in $problems) { Report $false "  $($entry.title)$suffix" $entry.problem ($environment -eq "test") }
+    }
+} else {
+    Report $false "layers read from GeoFA" "no report; see $reports\layers_live*.log"
 }
 
 if ($failed) { Write-Host "$failed check(s) failed" -ForegroundColor Red; exit 1 }

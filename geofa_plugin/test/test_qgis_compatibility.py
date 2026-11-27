@@ -23,7 +23,7 @@ os.environ["QGIS_CUSTOM_CONFIG_PATH"] = os.path.join(TEMP_ROOT, "profile")
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from qgis.core import (QgsApplication, QgsAuthMethodConfig, QgsDataSourceUri, QgsDateTimeFieldFormatter,
-                       QgsEditorWidgetSetup, QgsReadWriteContext, QgsSettings, QgsVectorLayer)
+                       QgsEditorWidgetSetup, QgsProject, QgsReadWriteContext, QgsSettings, QgsVectorLayer)
 from qgis.gui import QgsMessageBar, QgsPasswordLineEdit
 from qgis.PyQt.QtCore import QCoreApplication, QFile, QObject, QSettings, Qt, QUrl, pyqtSignal
 from qgis.PyQt.QtGui import QGuiApplication, QIcon
@@ -337,7 +337,7 @@ class CredentialTests(GeoFATestCase):
                 QgsApplication.authManager().removeAuthenticationConfig(credentials.AUTHCFG_ID)
                 QGuiApplication.instance().focusWindowChanged.emit(None)
             depth[0] -= 1
-            return 0, [], []
+            return 0, [], [], []
 
         try:
             with patch.object(loader, "repoint", repoint):
@@ -390,7 +390,9 @@ class CredentialTests(GeoFATestCase):
     def test_wfst_layer_uses_stored_login(self):
         credentials.save_login("kom999", "hemmelig")
         captured, _ = self._create_wfst_layer()
-        self.assertEqual(len(captured), 1)
+        # The second is the public layer tried when the login can't read the dataset
+        self.assertEqual(len(captured), 2)
+        self.assertNotIn("authcfg", captured[1])
         self.assertIn("authcfg=geofa01", captured[0])
         self.assertNotIn("hemmelig", captured[0])
         self.assertNotIn("password", captured[0])
@@ -636,8 +638,8 @@ class CatalogueTests(GeoFATestCase):
             return new
 
         with patch.object(loader, "replace_layer", replace):
-            self.assertEqual(loader.repoint(READ, project), (0, [], []))  # nothing failed, nothing swapped twice
-        self.assertEqual(nested[1], (2, [], []))
+            self.assertEqual(loader.repoint(READ, project), (0, [], [], []))  # nothing failed, nothing swapped twice
+        self.assertEqual(nested[1], (2, [], [], []))
         for name, table in (("a", "t_5710_born_skole_dis"), ("b", "t_5800_fac_pkt")):
             self.assertEqual(layers[name].src, loader.layer_source(table, READ))
 
@@ -682,8 +684,8 @@ class CatalogueTests(GeoFATestCase):
         self.assertIn("url='https://geofa.geodanmark.dk/", old.src)  # production (its photo-link version)
         self.assertEqual(test.src, loader.layer_source("t_5802_fac_li", TEST_READ))
         # Editing in test: only the test layers become editable (not the one being edited)
-        changed, editing, failed = repoint(EDIT_TEST)
-        self.assertEqual((changed, editing, failed), (1, [busy.name()], []))
+        changed, editing, failed, public_only = repoint(EDIT_TEST)
+        self.assertEqual((changed, editing, failed, public_only), (1, [busy.name()], [], []))
         self.assertEqual(test.src, loader.layer_source("t_5802_fac_li", EDIT_TEST))
         self.assertEqual(prod.src, loader.layer_source("t_5710_born_skole_dis", READ))
         # Editing in production: the production layers become editable, the test layers read-only
@@ -714,6 +716,47 @@ class CatalogueTests(GeoFATestCase):
             self.assertIs(loader.add_dataset(dataset, READ, message_bar, project), prod)
             loader.add_dataset(dataset, TEST_READ, message_bar, project)
         self.assertEqual(created, [(loader.layer_source(dataset.table, TEST_READ), dataset.title + " [TEST]")])
+
+    def test_a_dataset_the_login_cannot_read_is_added_with_its_public_objects(self):
+        # GeoFA answers "Insufficient privileges to layer" when a login has no access to a dataset
+        dataset = catalogue().get("t_5104_art_invas")
+        created = []
+
+        def layer(source, name, provider):
+            created.append(source)
+            return QgsVectorLayer("Point?crs=EPSG:25832", name, "memory" if "authcfg" not in source else "none")
+
+        pushed, message_bar = _messages()
+        project = QgsProject()
+        with patch.object(loader, "QgsVectorLayer", layer), patch.object(loader.credentials, "ensure_login",
+                                                                         return_value=True):
+            added = loader.add_dataset(dataset, EDIT, message_bar, project)
+        self.assertEqual(created, [loader.layer_source(dataset.table, EDIT), loader.layer_source(dataset.table, READ)])
+        self.assertTrue(added.isValid())
+        self.assertEqual(added.name(), dataset.title)
+        self.assertIs(project.mapLayer(added.id()), added)
+        self.assertEqual(len(pushed), 1)
+        self.assertIn(f"Dit login har måske ikke adgang til »{dataset.title}«", pushed[0][1])
+
+    def test_a_layer_the_login_cannot_read_keeps_its_public_objects(self):
+        table = "t_5104_art_invas"
+        layer = FakeLayer(loader.layer_source(table, READ), name="Invasive arter", table=table)
+        project = types.SimpleNamespace(mapLayers=lambda: {"layer": layer})
+
+        def replace(project, layer, source, name):  # the login has no access to this dataset
+            return None if "authcfg" in source else _replace_in_place(project, layer, source, name)
+
+        with patch.object(loader, "replace_layer", replace):
+            self.assertEqual(loader.repoint(EDIT, project), (0, [], [], ["Invasive arter"]))
+            self.assertEqual(layer.src, loader.layer_source(table, READ))
+            # It still gets the municipality filter
+            aarhus = loader.Mode(edit=True, test=False, username="kom999", kommune="0751")
+            self.assertEqual(loader.repoint(aarhus, project), (1, [], [], ["Invasive arter"]))
+            self.assertEqual(layer.src, loader.layer_source(table, loader.Mode(edit=False, test=False, username="kom999",
+                                                                               kommune="0751")))
+            # A read-only source that can't be read either is left as it was
+            with patch.object(loader, "replace_layer", lambda *args: None):
+                self.assertEqual(loader.repoint(EDIT, project), (0, [], ["Invasive arter"], []))
 
     def test_test_layers_from_older_versions_get_the_test_suffix(self):
         old_test = FakeLayer("pagingEnabled='false' typename='fkg:fkg.t_5800_fac_pkt' "

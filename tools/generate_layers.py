@@ -335,6 +335,10 @@ def overlay_for(rule, overlay, symbols_dir, used):
 
 
 CATEGORY_EXPR = re.compile(r"^'\[(\w+)\]'\s*=\s*'(.*)'$")
+# Codes a GeoFA code list holds by mistake, which the styles leave out (the dropdowns show GeoFA's list as it is).
+# 22429 repeats 2242's text and definition ("SPOR Fortællinger fra Sporet"), is the only five-digit facility
+# code, and no public object uses it; 2242 has the objects
+CODE_LIST_MISTAKES = {"fkg.d_5800_facilitet": {"22429"}}
 
 
 def renderer_for(webmap_layer, geometry, fields, symbols_dir, used):
@@ -349,15 +353,21 @@ def renderer_for(webmap_layer, geometry, fields, symbols_dir, used):
     if len(parsed) > 1 and len(parsed) + len(otherwise) == len(rules) and len(otherwise) <= 1 \
             and len({m.group(1) for m, _ in parsed}) == 1:
         text_field = parsed[0][0].group(1)
-        # Categorise on the code field when the spec maps the text field to codes, so new objects style at once
-        code_field, text_to_code = None, {}
+        # Categorise on the code field when the spec maps the text field to codes, so new objects style at once.
+        # The webmap styles by text, so a text with more than one code gets the symbol for all of them
+        # (the report lists them), except for codes in a list by mistake
+        code_field, text_to_codes = None, {}
         for f in fields:
             if f["codes"] and text_field_for(f, fields) == text_field:
-                code_field, text_to_code = f["name"], {alias: value for value, alias in f["codes"]}
+                code_field, text_to_codes = f["name"], {}
+                mistakes = CODE_LIST_MISTAKES.get((f["source"] or [None])[0], set())
+                for value, alias in f["codes"]:
+                    if value not in mistakes:
+                        text_to_codes.setdefault(alias, []).append(value)
         table = webmap_layer["f_table_name"]
-        by_key = {normalise(text): text for text in text_to_code}
+        by_key = {normalise(text): text for text in text_to_codes}
         attribute = code_field or text_field
-        entries, styled = [], set()  # (label, value, webmap rule)
+        entries, styled = [], set()  # (label, [values], webmap rule)
         for m, r in parsed:
             webmap_text = m.group(2)
             spec_text = by_key.get(normalise(webmap_text)) if code_field else webmap_text
@@ -368,21 +378,27 @@ def renderer_for(webmap_layer, geometry, fields, symbols_dir, used):
             if spec_text != webmap_text:
                 used.setdefault("webmap_spelling_differs", set()).add(f"{table}: '{webmap_text}' = spec '{spec_text}'")
             styled.add(spec_text)
-            entries.append((spec_text, text_to_code[spec_text] if code_field else spec_text, r))
+            entries.append((spec_text, text_to_codes[spec_text] if code_field else [spec_text], r))
         if code_field:
             template = next((r for _, r in parsed if r.get("symbol")), parsed[0][1])
-            for spec_text in sorted(set(text_to_code) - styled):
+            for spec_text in sorted(set(text_to_codes) - styled):
                 # Grafik's per-code SVGs are point symbols; other codes without a webmap style use the fallback
-                svg = grafik_svg_for_code(dataset_code(table), text_to_code[spec_text], template.get("symbol")) \
-                    if geometry == "MultiPoint" and template.get("symbol") else None
+                codes = text_to_codes[spec_text]
+                svg = next((s for s in (grafik_svg_for_code(dataset_code(table), code, template.get("symbol")) for code in codes)
+                            if s), None) if geometry == "MultiPoint" and template.get("symbol") else None
                 if svg:
-                    entries.append((spec_text, text_to_code[spec_text], dict(template, symbol=svg)))
+                    entries.append((spec_text, codes, dict(template, symbol=svg)))
                     used.setdefault("spec_codes_styled_from_grafik", set()).add(f"{table}: {spec_text}")
                 else:
                     used.setdefault("spec_codes_without_style", set()).add(f"{table}: {spec_text}")
+        for label, values, _ in entries:
+            if len(values) > 1:
+                used.setdefault("texts_with_several_codes", set()).add(f"{table}: '{label}' = {', '.join(values)}")
         # Alphabetical like the webmap, with "Andet", "Ved ikke", "Ukendt" etc. last
         entries.sort(key=lambda e: legend_order(e[0]))
-        categories = [QgsRendererCategory(value, symbol_for(r, geometry, symbols_dir, used), label) for label, value, r in entries]
+        # One legend entry per text: a category holds all of the text's codes
+        categories = [QgsRendererCategory(values if len(values) > 1 else values[0], symbol_for(r, geometry, symbols_dir, used),
+                                          label) for label, values, r in entries]
         # Objects without a type, or with a type that has no symbol (e.g. a code added to the spec later),
         # would otherwise be invisible: they get the webmap's own "everything else" style, or one in the layer's colour
         fallback = symbol_for(otherwise[0], geometry, symbols_dir, used) if otherwise \
@@ -854,10 +870,10 @@ def write_report(datasets, webmap, prod, counts, results, used):
             missing=", ".join(sorted(spec_names - prod_fields)) or "", extra=", ".join(sorted(prod_fields - spec_names)) or ""))
     lines += ["", "## Other findings", "",
               "- Datasets with 0 objects may only lack *public* objects: counts are what an anonymous user sees.",
-              "- Pending datasets (spec page says 'Kommer snart'): fields come from the production WFS; their own code lists "
-              "are not readable anonymously, so those fields have no dropdowns yet."]
+              "- Pending datasets (spec page says 'Kommer snart'): fields come from the production WFS, and their code "
+              "lists from the webmap's field configuration (the plugin reads them from GeoFA when it adds a layer)."]
     for key in ("fields_without_alias", "missing_svgs", "unhandled_overlays", "unhandled_rules", "webmap_categories_not_in_spec",
-                "webmap_spelling_differs", "spec_codes_styled_from_grafik", "spec_codes_without_style"):
+                "webmap_spelling_differs", "spec_codes_styled_from_grafik", "spec_codes_without_style", "texts_with_several_codes"):
         if used.get(key):
             lines.append(f"- {key}: {', '.join(sorted(used[key]))}")
     (spec.REPORTS / "difference_report.md").write_text("\n".join(lines) + "\n", encoding="utf-8")

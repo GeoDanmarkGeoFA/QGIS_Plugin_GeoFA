@@ -91,6 +91,8 @@ Uden login viser lagene de objekter, der er offentlige, og de kan ikke redigeres
 
 Med et GeoFA-login (kommuner og andre myndigheder) ser du også de objekter, der ikke er offentlige, som dit login giver adgang til, og du kan redigere dine egne data.
 
+Et login har ikke nødvendigvis adgang til alle datasæt. Kan et datasæt ikke hentes med dit login, viser laget i stedet de offentlige objekter og kan ikke redigeres; pluginet skriver det i beskedlinjen over kortet. Mangler du adgang, så se [Få et login](#få-et-login).
+
 ### Indtast dit login
 
 1. Vælg **GeoFA › Indstillinger …** (eller **Indstillinger › Indstillinger … › GeoFA** i QGIS).

@@ -48,9 +48,9 @@ python-qgis.bat -m unittest discover -s geofa_plugin/test -t .
 python-qgis-ltr.bat -m unittest discover -s geofa_plugin/test -t .
 ```
 
-GitHub runs the offline tests on every push and pull request, in QGIS 3.44 and 4.2 ([`tests.yml`](.github/workflows/tests.yml)).
+GitHub runs the offline tests on every push and pull request, in QGIS 3.44 and 4.2 ([`tests.yml`](.github/workflows/tests.yml)). Every Monday, and when started by hand under *Actions*, it also reads every layer in the catalogue from GeoFA ([`geofa-layers.yml`](.github/workflows/geofa-layers.yml)).
 
-The end-to-end check installs the plugin's release files in a new QGIS profile and tries them in QGIS 3.44 and 4: adding layers, the panel, code lists, photo links, the municipality filter, the test environment, *Opdater* and closing QGIS. With `-Zip` it installs a built release ZIP instead.
+The end-to-end check installs the plugin's release files in a new QGIS profile and tries them in QGIS 3.44 and 4: adding layers, the panel, code lists, photo links, the municipality filter, the test environment, *Opdater* and closing QGIS. Meanwhile it reads every layer in the catalogue from GeoFA without a login (`tools/layers_live.py`, below). With `-Zip` it installs a built release ZIP instead.
 
 ```
 powershell -ExecutionPolicy Bypass -File tests\e2e\run_e2e.ps1
@@ -88,6 +88,7 @@ Run the generator with QGIS 3.44, so the styles load in QGIS 3.34 and later and 
 Useful checks:
 
 - `python-qgis.bat tools/code_lists_live.py` reports whether every code list can be read from GeoFA.
+- `python-qgis.bat tools/layers_live.py` reads every layer in the catalogue from GeoFA the way the plugin does without a login: is the layer valid, does it have the form's geometry type and fields, can its objects be read, and how many are public. It takes about ten minutes, and fails when a production layer fails.
 - `python-qgis-ltr.bat tools/webmap_compare.py` puts the plugin's layers and the webmap side by side in `dev/reports/compare/`.
 
 ### Releasing
