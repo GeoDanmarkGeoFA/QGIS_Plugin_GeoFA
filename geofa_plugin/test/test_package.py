@@ -16,7 +16,8 @@ from xml.etree import ElementTree
 # QGIS, offline and in a throwaway profile, as for the other tests
 from geofa_plugin.test.test_qgis_compatibility import FakeIface  # first: it also starts QGIS for these tests
 
-from qgis.core import QgsExpression, QgsExpressionContext, QgsFeature, QgsField, QgsFields, QgsVectorLayer
+from qgis.core import (QgsExpression, QgsExpressionContext, QgsFeature, QgsField, QgsFields, QgsRenderContext,
+                       QgsVectorLayer)
 from qgis.PyQt.QtCore import QMetaType
 
 from geofa_plugin import htmlfields
@@ -116,6 +117,33 @@ class StyleTests(unittest.TestCase):
             defaults = {d.get("field"): (d.get("expression"), d.get("applyOnUpdate")) for d in root.iter("default")}
             self.assertEqual(defaults["temakode"], (re.match(r"t_(\d+)_", table).group(1), "0"), table)
             self.assertEqual(defaults["temanavn"], (f"'{table}_t'", "0"), table)
+
+    def test_spor_stories_get_their_symbol_from_code_2242(self):
+        # GeoFA's 5800 code list has "SPOR Fortællinger fra Sporet" as both 2242, which the objects use,
+        # and 22429, by mistake (tools/generate_layers.py, CODE_LIST_MISTAKES)
+        dataset = next(d for d in self.datasets if d.table == "t_5800_fac_pkt")
+        layer = QgsVectorLayer("Point?crs=EPSG:25832&field=facil_ty_k:integer", "5800", "memory")
+        layer.loadNamedStyle(dataset.style_path)
+        renderer = layer.renderer()
+        labels = {item.ruleKey(): item.label() for item in renderer.legendSymbolItems()}
+        context = QgsRenderContext()
+        renderer.startRender(context, layer.fields())
+        try:
+            def feature_with(code):
+                feature = QgsFeature(layer.fields())
+                feature["facil_ty_k"] = code
+                return feature
+
+            def label_for(code):
+                return {labels[key] for key in renderer.legendKeysForFeature(feature_with(code), context)}
+            self.assertEqual(label_for(2242), {"SPOR Fortællinger fra Sporet"})
+            # Other codes are drawn with "Alle andre værdier" (QGIS 3.44 doesn't name its legend entry here)
+            for code in (22429, 999999):
+                self.assertIsNotNone(renderer.symbolForFeature(feature_with(code), context))
+                self.assertLessEqual(label_for(code), {"Alle andre værdier"})
+        finally:
+            renderer.stopRender(context)
+        self.assertEqual(sum(1 for label in labels.values() if label == "SPOR Fortællinger fra Sporet"), 1)
 
     def test_date_times_are_read_as_iso(self):
         # GeoFA's editing endpoint sends them as text in PostgreSQL's format (2025-10-07 00:00:29.814198+00)

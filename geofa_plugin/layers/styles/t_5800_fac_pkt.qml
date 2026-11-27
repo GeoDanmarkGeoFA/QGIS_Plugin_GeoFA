@@ -260,7 +260,7 @@
       <category label="Spang" type="string" uuid="{b3072b2d-3eb6-415b-a6ad-c172948d1c20}" symbol="111" value="1311" render="true"/>
       <category label="Spejderhytte" type="string" uuid="{b2b03113-c420-4c9a-a079-606b750ed369}" symbol="112" value="1082" render="true"/>
       <category label="Spiselig vegetation" type="string" uuid="{18836df4-a45a-432a-a403-db5d0835326b}" symbol="113" value="2151" render="true"/>
-      <category label="SPOR Fortællinger fra Sporet" type="string" uuid="{c649ec8e-1cfa-4e37-9488-aadce7c18a51}" symbol="114" value="22429" render="true"/>
+      <category label="SPOR Fortællinger fra Sporet" type="string" uuid="{c649ec8e-1cfa-4e37-9488-aadce7c18a51}" symbol="114" value="2242" render="true"/>
       <category label="SPOR Startsted" type="string" uuid="{013b47fa-d41c-461e-adc2-8f53a282949f}" symbol="115" value="2252" render="true"/>
       <category label="Stente" type="string" uuid="{deec70e8-a689-4230-8bfa-a8d21b4ba239}" symbol="116" value="1321" render="true"/>
       <category label="Strandhåndboldbane" type="string" uuid="{e8f4d38d-d50e-46e5-b771-b6bf45d2c1e9}" symbol="117" value="4381" render="true"/>

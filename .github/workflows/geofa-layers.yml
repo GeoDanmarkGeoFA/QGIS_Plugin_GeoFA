@@ -1,0 +1,32 @@
+# Reads every layer in the catalogue from GeoFA's production and test environments, without a login,
+# the way the plugin does (tools/layers_live.py). Weekly and by hand rather than on every push: it
+# depends on GeoFA being up, and takes about ten minutes. A production layer that fails fails the
+# run; the test environment's problems are only listed in the log and the report.
+name: GeoFA layers
+
+on:
+  schedule:
+    - cron: "0 5 * * 1"  # Mondays, 05:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  layers:
+    name: Every layer read from GeoFA
+    runs-on: ubuntu-latest
+    container:
+      image: qgis/qgis:3.44
+    env:
+      QT_QPA_PLATFORM: offscreen
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read the layers
+        run: python3 tools/layers_live.py both
+      - name: Keep the report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: layers_live
+          path: dev/reports/layers_live.json

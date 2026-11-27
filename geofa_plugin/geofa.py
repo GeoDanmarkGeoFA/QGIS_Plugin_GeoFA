@@ -245,8 +245,11 @@ class GeoFA:
         Returns the number of layers given a new source."""
         # Don't swap layers while the map is still drawing them
         self.iface.mapCanvas().stopRendering()
-        changed, editing, failed = loader.repoint(mode)
+        changed, editing, failed, public_only = loader.repoint(mode)
         bar = self.iface.messageBar()
+        if public_only:
+            bar.pushMessage("GeoFA", loader.NO_ACCESS_MESSAGE.format(names=_quoted(public_only)),
+                            level=Qgis.MessageLevel.Warning, duration=15)
         if editing:
             bar.pushMessage("GeoFA", f"{_quoted(editing)} er i redigering og blev ikke skiftet. Gem eller fortryd, "
                                      "og skift igen.", level=Qgis.MessageLevel.Warning, duration=15)

@@ -26,6 +26,9 @@ OLD_DOMAIN_SOURCE = "/api/v2/sql/fkg"  # how 0.36 loaded the fkg.d_* tables into
 PHOTO_SCHEMA = "fkg_foto_gpx_link"  # GeoFA's photo-link versions of some tables
 USER_VARIABLE = "geofa_bruger_id"  # the forms fill bruger_id (and cvr_kode) from it
 TEST_SUFFIX = " [TEST]"
+# GeoFA gives each login access to some of its datasets; a layer the login can't read shows the public objects
+NO_ACCESS_MESSAGE = ("Dit login har måske ikke adgang til {names} i GeoFA, så der vises kun de offentlige objekter, "
+                     "uden redigering.")
 # Only the objects in the map view are fetched, page by page
 COMMON_PARAMS = {"pagingEnabled": "true", "preferCoordinatesForWfsT11": "false", "restrictToRequestBBOX": "1",
                  "srsname": "EPSG:25832", "version": "1.1.0"}
@@ -181,7 +184,15 @@ def add_dataset(dataset, mode, message_bar, project=None):
         return None
     ensure_symbol_path()
     set_user_variable(mode.username, project)
-    layer = QgsVectorLayer(layer_source(dataset.table, mode), layer_name(dataset.title, mode), "WFS")
+    name = layer_name(dataset.title, mode)
+    layer = QgsVectorLayer(layer_source(dataset.table, mode), name, "WFS")
+    if not layer.isValid() and mode.edit:
+        # GeoFA gives a login access dataset by dataset; without access, the public objects instead
+        public = QgsVectorLayer(layer_source(dataset.table, replace(mode, edit=False)), name, "WFS")
+        if public.isValid():
+            message_bar.pushMessage("GeoFA", NO_ACCESS_MESSAGE.format(names=f"»{dataset.title}«"),
+                                    level=Qgis.MessageLevel.Warning, duration=15)
+            layer = public
     if not layer.isValid():
         where = "GeoFA's testmiljø" if mode.test else "GeoFA"
         message_bar.pushMessage("GeoFA", f"»{dataset.title}« kunne ikke hentes fra {where}.",
@@ -253,12 +264,14 @@ def repoint(mode, project=None):
     """Give the project's GeoFA layers the sources the mode asks for: read-only or editable, the
     username and the municipality filter.
 
-    Layers never move between production and test, and keep their names.
+    Layers never move between production and test, and keep their names. A layer the login can't
+    read gets the read-only source with the public objects instead.
     Returns (number of layers changed, names of layers being edited, names of layers that
-    couldn't be read in the new mode); the last two are left as they were.
+    couldn't be read in the new mode, names of layers left read-only because the login couldn't
+    read them); layers being edited and layers that couldn't be read are left as they were.
     """
     project = project or QgsProject.instance()
-    changed, editing, failed = 0, [], []
+    changed, editing, failed, public_only = 0, [], [], []
     for layer, table in geofa_layers(project):
         if not _in_project(project, layer):  # swapped or removed while an earlier layer loaded
             continue
@@ -276,9 +289,20 @@ def repoint(mode, project=None):
         layer.setCustomProperty(TABLE_PROPERTY, table)
         if replace_layer(project, layer, source, name):
             changed += 1
-        elif _in_project(project, layer):  # not when it was swapped meanwhile
+            continue
+        if not _in_project(project, layer):  # swapped or removed while the new one loaded
+            continue
+        public = target_source(layer, table, replace(mode, edit=False))
+        if public == source:
             failed.append(name)
-    return changed, editing, failed
+        elif _source_key(layer.source()) == _source_key(public):
+            public_only.append(name)
+        elif replace_layer(project, layer, public, name):
+            changed += 1
+            public_only.append(name)
+        elif _in_project(project, layer):
+            failed.append(name)
+    return changed, editing, failed, public_only
 
 
 def layers_outside(mode, project=None):
