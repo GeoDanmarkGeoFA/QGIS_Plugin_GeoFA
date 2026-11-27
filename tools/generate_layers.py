@@ -870,8 +870,8 @@ def write_report(datasets, webmap, prod, counts, results, used):
             missing=", ".join(sorted(spec_names - prod_fields)) or "", extra=", ".join(sorted(prod_fields - spec_names)) or ""))
     lines += ["", "## Other findings", "",
               "- Datasets with 0 objects may only lack *public* objects: counts are what an anonymous user sees.",
-              "- Pending datasets (spec page says 'Kommer snart'): fields come from the production WFS; their own code lists "
-              "are not readable anonymously, so those fields have no dropdowns yet."]
+              "- Pending datasets (spec page says 'Kommer snart'): fields come from the production WFS, and their code "
+              "lists from the webmap's field configuration (the plugin reads them from GeoFA when it adds a layer)."]
     for key in ("fields_without_alias", "missing_svgs", "unhandled_overlays", "unhandled_rules", "webmap_categories_not_in_spec",
                 "webmap_spelling_differs", "spec_codes_styled_from_grafik", "spec_codes_without_style", "texts_with_several_codes"):
         if used.get(key):
